@@ -1,5 +1,9 @@
+function getAccessToken(): string | null {
+    return localStorage.getItem("ACCESS_TOKEN");
+}
+
 function isUserAuthorized(): boolean {
-    var token = localStorage.getItem("ACCESS_TOKEN");
+    var token = getAccessToken();
     return token !== null
         && token.length !== 0;
 }
