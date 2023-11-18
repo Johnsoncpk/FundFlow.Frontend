@@ -1,10 +1,10 @@
-
 import AuthorizedLayout from "layouts/AuthorizedLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { isUserAuthorized } from "utils/authorization";
 import NotFound from "components/Common/NotFound";
 import Login from "pages/Login";
 import Dashboard from "pages/Dashboard";
-import { isUserAuthorized } from "utils/authorization";
+import Campaign from "pages/Campaign";
 
 const AppRouter: React.FC = () => {
   return (
@@ -13,9 +13,10 @@ const AppRouter: React.FC = () => {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       {
-        isUserAuthorized() &&
+        // !isUserAuthorized() &&
         <Route element={<AuthorizedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/campaign" element={<Campaign />} />
         </Route>
       }
     </Routes>
