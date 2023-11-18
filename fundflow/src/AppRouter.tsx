@@ -1,19 +1,23 @@
 
 import AuthorizedLayout from "layouts/AuthorizedLayout";
+import { Navigate, Route, Routes } from "react-router-dom";
 import NotFound from "components/Common/NotFound";
 import Login from "pages/Login";
-import { Navigate, Route, Routes } from "react-router-dom";
-
+import Dashboard from "pages/Dashboard";
+import { isUserAuthorized } from "utils/authorization";
 
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<NotFound />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
-      <Route element={<AuthorizedLayout />}>
-        <Route path="*" element={<NotFound />} />
-        ... other routes with layout ...
-      </Route>
+      {
+        isUserAuthorized() &&
+        <Route element={<AuthorizedLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      }
     </Routes>
   );
 }

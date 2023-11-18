@@ -2,9 +2,7 @@ import {
     AlipayCircleOutlined,
     LockOutlined,
     MobileOutlined,
-    TaobaoCircleOutlined,
     UserOutlined,
-    WeiboCircleOutlined,
 } from '@ant-design/icons';
 import {
     LoginForm,
@@ -18,11 +16,11 @@ import { Space, Tabs, message, theme } from 'antd';
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
 
-type LoginType = 'phone' | 'account';
+type LoginType = 'founder' | 'donor';
 
 const Login: React.FC = () => {
     const { token } = theme.useToken();
-    const [loginType, setLoginType] = useState<LoginType>('phone');
+    const [loginType, setLoginType] = useState<LoginType>('founder');
 
     const iconStyles: CSSProperties = {
         marginInlineStart: '16px',
@@ -37,14 +35,11 @@ const Login: React.FC = () => {
             <div style={{ backgroundColor: token.colorBgContainer }}>
                 <LoginForm
                     logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
-                    title="Github"
-                    subTitle="全球最大的代码托管平台"
+                    title="FundFlow"
+                    subTitle="Decentralized Crowdfunding Platform"
                     actions={
                         <Space>
-                            其他登录方式
-                            <AlipayCircleOutlined style={iconStyles} />
-                            <TaobaoCircleOutlined style={iconStyles} />
-                            <WeiboCircleOutlined style={iconStyles} />
+                            Others Platform
                         </Space>
                     }
                 >
@@ -53,10 +48,10 @@ const Login: React.FC = () => {
                         activeKey={loginType}
                         onChange={(activeKey) => setLoginType(activeKey as LoginType)}
                     >
-                        <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
-                        <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
+                        <Tabs.TabPane key={'donor'} tab={'Donor'} />
+                        <Tabs.TabPane key={'founder'} tab={'Founder'} />
                     </Tabs>
-                    {loginType === 'account' && (
+                    {loginType === 'donor' && (
                         <>
                             <ProFormText
                                 name="username"
@@ -64,11 +59,11 @@ const Login: React.FC = () => {
                                     size: 'large',
                                     prefix: <UserOutlined className={'prefixIcon'} />,
                                 }}
-                                placeholder={'用户名: admin or user'}
+                                placeholder={'Username: admin or user'}
                                 rules={[
                                     {
                                         required: true,
-                                        message: '请输入用户名!',
+                                        message: 'Please!',
                                     },
                                 ]}
                             />
@@ -88,7 +83,7 @@ const Login: React.FC = () => {
                             />
                         </>
                     )}
-                    {loginType === 'phone' && (
+                    {loginType === 'founder' && (
                         <>
                             <ProFormText
                                 fieldProps={{
