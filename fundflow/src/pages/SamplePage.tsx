@@ -2,7 +2,7 @@ import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { Button } from "antd";
 import { useState } from "react";
 
-const Campaign: React.FC = () => {
+const SamplePage: React.FC = () => {
     const [num, setNum] = useState(40);
     return (
         <PageContainer
@@ -37,11 +37,13 @@ const Campaign: React.FC = () => {
                 }}
             >
 
-                <div>Hi, Campaign</div>
+                {
+                    // do you stuffs here
+                }
 
             </ProCard>
         </PageContainer>
     );
 }
 
-export default Campaign;
+export default SamplePage;

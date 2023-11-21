@@ -8,17 +8,15 @@ import {
   QuestionCircleFilled,
   SearchOutlined,
 } from '@ant-design/icons';
+import enUS from 'antd/locale/en_US';
 import type { ProSettings } from '@ant-design/pro-components';
 import {
-  PageContainer,
-  ProCard,
   ProConfigProvider,
   ProLayout,
   SettingDrawer,
 } from '@ant-design/pro-components';
 import { css } from '@emotion/css';
 import {
-  Button,
   ConfigProvider,
   Divider,
   Dropdown,
@@ -268,14 +266,14 @@ const AuthorizedLayout = () => {
     splitMenus: true,
   });
 
-  const [pathname, setPathname] = useState('/list/sub-page/sub-sub-page1');
-  const [num, setNum] = useState(40);
+  const [pathname, setPathname] = useState('/welcome');
+
   if (typeof document === 'undefined') {
     return <div />;
   }
   return (
     <div
-      id="test-pro-layout"
+      id="pro-layout"
       style={{
         height: '100vh',
         overflow: 'auto',
@@ -283,8 +281,9 @@ const AuthorizedLayout = () => {
     >
       <ProConfigProvider hashed={false}>
         <ConfigProvider
+          locale={enUS}
           getTargetContainer={() => {
-            return document.getElementById('test-pro-layout') || document.body;
+            return document.getElementById('pro-layout') || document.body;
           }}
         >
           <ProLayout
@@ -325,7 +324,7 @@ const AuthorizedLayout = () => {
             avatarProps={{
               src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
               size: 'small',
-              title: '七妮妮',
+              title: 'Johnson',
               render: (props, dom) => {
                 return (
                   <Dropdown
@@ -334,7 +333,7 @@ const AuthorizedLayout = () => {
                         {
                           key: 'logout',
                           icon: <LogoutOutlined />,
-                          label: '退出登录',
+                          label: 'Logout',
                         },
                       ],
                     }}
@@ -384,8 +383,8 @@ const AuthorizedLayout = () => {
                     paddingBlockStart: 12,
                   }}
                 >
-                  <div>© 2021 Made with love</div>
-                  <div>by Ant Design</div>
+                  <div>© 2023 Made with love</div>
+                  <div>by Poor Students</div>
                 </div>
               );
             }}
@@ -401,47 +400,13 @@ const AuthorizedLayout = () => {
             )}
             {...settings}
           >
-            <PageContainer
-              token={{
-                paddingInlinePageContainerContent: num,
-              }}
-              extra={[
-                <Button key="3">操作</Button>,
-                <Button key="2">操作</Button>,
-                <Button
-                  key="1"
-                  type="primary"
-                  onClick={() => {
-                    setNum(num > 0 ? 0 : 40);
-                  }}
-                >
-                  主操作
-                </Button>,
-              ]}
-              subTitle="简单的描述"
-              footer={[
-                <Button key="3">重置</Button>,
-                <Button key="2" type="primary">
-                  提交
-                </Button>,
-              ]}
-            >
-              <ProCard
-                style={{
-                  height: '200vh',
-                  minHeight: 800,
-                }}
-              >
-                <Outlet />
-              </ProCard>
-            </PageContainer>
-
+            <Outlet />
             <SettingDrawer
               pathname={pathname}
               enableDarkTheme
               getContainer={(e: any) => {
                 if (typeof window === 'undefined') return e;
-                return document.getElementById('test-pro-layout');
+                return document.getElementById('pro-layout');
               }}
               settings={settings}
               onSettingChange={(changeSetting) => {
