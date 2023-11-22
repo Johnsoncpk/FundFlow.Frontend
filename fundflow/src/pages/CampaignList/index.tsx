@@ -7,17 +7,23 @@
 export default CampaignList;*/
 
 import React from 'react';
-import { Table } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import { DataSourceItemType } from 'antd/es/auto-complete';
+import { AudioOutlined } from '@ant-design/icons';
+import { Input, Space, Table } from 'antd';
+//import type { SearchProps } from '../Search';
+
 //import moment from 'moment';
 
 interface DataType {
   key: React.Key;
   projectname: string;
-  releasedate: string;
+  releasedate: any;
   desciption: string;
 }
+
+const { Search } = Input;
+//const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
 
 /*const columns: ColumnsType<DataType> = [
     {
@@ -77,7 +83,7 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'releasedate',
     width: 150,
     defaultSortOrder: 'descend',
-    //sorter: (a, b) => a.releasedate - b.releasedate,
+    sorter: (a, b) => a.releasedate - b.releasedate,
     //sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix()
   },
   {
@@ -102,7 +108,8 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
   };
 
 const CampaignList: React.FC = () => (
-  <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 20 }} scroll={{ y: 1000 }} />
+    //<Search placeholder="input search text" onSearch={onSearch} enterButton />
+    <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 20 }} scroll={{ y: 1000 }} />
 );
 
 export default CampaignList;
