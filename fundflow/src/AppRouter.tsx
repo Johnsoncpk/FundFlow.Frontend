@@ -6,6 +6,7 @@ import NotFound from "components/Common/NotFound";
 import Login from "pages/Login";
 import Dashboard from "pages/Dashboard";
 import CampaignForm from "pages/CampaignForm";
+import CampaignList from "pages/CampaignList";
 
 import { isUserAuthorized } from "utils/authorization";
 
@@ -20,6 +21,7 @@ const AppRouter: React.FC = () => {
         <Route element={<AuthorizedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/campaignform" element={<CampaignForm />} />
+          <Route path="/campaignlist" element={<CampaignList />} />
         </Route>
       }
     </Routes>
