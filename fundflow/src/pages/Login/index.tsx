@@ -6,18 +6,31 @@ import {
     LoginFormPage,
     ProConfigProvider,
     ProFormCheckbox,
+    ProFormInstance,
     ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Divider, Space, Tabs, theme } from 'antd';
-import { useState } from 'react';
+import { Button, Divider, Space, Tabs, message, theme } from 'antd';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { StyledGoogleIcon, StyledTwitterIcon } from 'components/ThirdPartyIcon';
+import { loginWithCredentialAsync } from 'utils/authorization';
 
 type LoginType = 'donor' | 'founder';
 
+
+
 const Login: React.FC = () => {
-    const [loginType, setLoginType] = useState<LoginType>('donor');
     const { token } = theme.useToken();
+    const [loginType, setLoginType] = useState<LoginType>('donor');
+
+    const formRef = useRef<
+        ProFormInstance<{
+            username: string;
+            password: string;
+            autoLogin: boolean;
+        }>
+    >();
+
     return (
         <div
             style={{
@@ -58,32 +71,20 @@ const Login: React.FC = () => {
                         </Button>
                     ),
                 }}
-                actions={
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                        }}
-                    >
-                        <Divider plain>
-                            <span
-                                style={{
-                                    color: token.colorTextPlaceholder,
-                                    fontWeight: 'normal',
-                                    fontSize: 14,
-                                }}
-                            >
-                                Other Login Methods
-                            </span>
-                        </Divider>
-                        <Space align="center" size={24}>
-                            <StyledGoogleIcon />
-                            <StyledTwitterIcon />
-                        </Space>
-                    </div>
-                }
+                formRef={formRef}
+                onFinish={async (values) => {
+                    var isLoginSuccess = await loginWithCredentialAsync(
+                        values.username,
+                        values.password,
+                        values.autoLogin,
+                    );
+                    if (!isLoginSuccess) {
+                        message.error('Login failed!');
+                        return;
+                    }
+                    message.success('Login successful!');
+                }}
+                actions={<OtherLoginMethods />}
             >
                 <Tabs
                     centered
@@ -159,6 +160,36 @@ const Login: React.FC = () => {
         </div>
     );
 };
+
+const OtherLoginMethods: React.FC = () => {
+    const { token } = theme.useToken();
+    return (
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+            }}
+        >
+            <Divider plain>
+                <span
+                    style={{
+                        color: token.colorTextPlaceholder,
+                        fontWeight: 'normal',
+                        fontSize: 14,
+                    }}
+                >
+                    Other Login Methods
+                </span>
+            </Divider>
+            <Space align="center" size={24}>
+                <StyledGoogleIcon />
+                <StyledTwitterIcon />
+            </Space>
+        </div>
+    );
+}
 
 const LoginPage = () => {
     return (
