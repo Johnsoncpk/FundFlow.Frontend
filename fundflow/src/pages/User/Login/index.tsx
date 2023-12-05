@@ -13,11 +13,9 @@ import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { StyledGoogleIcon, StyledTwitterIcon } from 'components/ThirdPartyIcon';
-import { loginWithCredentialAsync } from 'utils/authorization';
+import { loginWithCredentialAsync } from 'utils/userHelper';
 
 type LoginType = 'donor' | 'founder';
-
-
 
 const Login: React.FC = () => {
     const { token } = theme.useToken();

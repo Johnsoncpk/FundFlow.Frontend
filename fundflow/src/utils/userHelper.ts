@@ -1,4 +1,7 @@
 import { loginAsync } from "apis/auth";
+import { jwtDecode } from "jwt-decode";
+
+const AccessToken = "ACCESS_TOKEN";
 
 async function loginWithCredentialAsync(
     username: string,
@@ -13,15 +16,16 @@ async function loginWithCredentialAsync(
         return { isSuccess: false, message: response.ErrorMessage };
     }
 
-    if (isAutoLogin) {
-        localStorage.setItem("ACCESS_TOKEN", response.Result.accessToken);
-    }
-
-    throw new Error('Function not implemented.');
+    localStorage.setItem(AccessToken, response.Result.accessToken);
+    return { isSuccess: true };
 }
 
 function getAccessToken(): string | null {
-    return localStorage.getItem("ACCESS_TOKEN");
+    return localStorage.getItem(AccessToken);
+}
+
+const decodedJwt = () => {
+    return isUserAuthorized() ? jwtDecode(getAccessToken()!) : "";
 }
 
 function isUserAuthorized(): boolean {

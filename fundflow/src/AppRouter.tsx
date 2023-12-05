@@ -1,10 +1,11 @@
 import React from "react";
 import AuthorizedLayout from "layouts/AuthorizedLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { isUserAuthorized } from "utils/authorization";
+import { isUserAuthorized } from "utils/userHelper";
 
 const NotFound = React.lazy(() => import('components/Common/NotFound'));
-const Login = React.lazy(() => import('pages/Login'));
+const Register = React.lazy(() => import('pages/User/Register'));
+const Login = React.lazy(() => import('pages/User/Login'));
 const Dashboard = React.lazy(() => import('pages/Dashboard'));
 const CampaignForm = React.lazy(() => import("pages/CampaignForm"));
 const CampaignList = React.lazy(() => import("pages/CampaignList"));
@@ -15,6 +16,7 @@ const AppRouter: React.FC = () => {
     <Routes>
       <Route path="*" element={<NotFound />} />
       <Route path="" element={<Navigate to="/user/login" replace />} />
+      <Route path="user/register" element={<Register />} />
       <Route path="user/login" element={<Login />} />
       {
         //isUserAuthorized() &&
