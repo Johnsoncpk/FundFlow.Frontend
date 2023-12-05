@@ -17,9 +17,10 @@ import { loginWithCredentialAsync } from 'utils/authorization';
 
 type LoginType = 'donor' | 'founder';
 
-const { token } = theme.useToken();
+
 
 const Login: React.FC = () => {
+    const { token } = theme.useToken();
     const [loginType, setLoginType] = useState<LoginType>('donor');
 
     const formRef = useRef<
@@ -161,6 +162,7 @@ const Login: React.FC = () => {
 };
 
 const OtherLoginMethods: React.FC = () => {
+    const { token } = theme.useToken();
     return (
         <div
             style={{
