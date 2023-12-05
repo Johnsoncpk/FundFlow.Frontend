@@ -1,14 +1,13 @@
 import React from "react";
 import AuthorizedLayout from "layouts/AuthorizedLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
-import CampaignForm from "pages/CampaignForm";
-import CampaignList from "pages/CampaignList";
-
 import { isUserAuthorized } from "utils/authorization";
 
 const NotFound = React.lazy(() => import('components/Common/NotFound'));
 const Login = React.lazy(() => import('pages/Login'));
 const Dashboard = React.lazy(() => import('pages/Dashboard'));
+const CampaignForm = React.lazy(() => import("pages/CampaignForm"));
+const CampaignList = React.lazy(() => import("pages/CampaignList"));
 const Campaign = React.lazy(() => import('pages/Campaign'));
 
 const AppRouter: React.FC = () => {
