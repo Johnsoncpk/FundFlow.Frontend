@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
  * Creates an initial 'axios' instance with custom settings.
  */
 const instance = axiosClient.create({
-    baseURL: "http://localhost:44120",
+    baseURL: process.env.REACT_APP_API_ENDPOINT,
     timeout: 5000,
 });
 
