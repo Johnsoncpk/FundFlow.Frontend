@@ -17,6 +17,7 @@ async function loginWithCredentialAsync(
     }
 
     localStorage.setItem(AccessToken, response.Result.accessToken);
+
     return { isSuccess: true };
 }
 
