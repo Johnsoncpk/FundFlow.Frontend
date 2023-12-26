@@ -4,17 +4,64 @@ import {
 } from '@ant-design/icons';
 import {
     LoginFormPage,
-    ProConfigProvider,
     ProFormCheckbox,
     ProFormInstance,
     ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Divider, Space, Tabs, message, theme } from 'antd';
+import { Button, Divider, Space, Tabs, theme } from 'antd';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { StyledGoogleIcon, StyledTwitterIcon } from 'components/ThirdPartyIcon';
 import { isUserAuthorized, loginWithCredentialAsync } from 'utils/userHelper';
 import { useNavigate } from "react-router-dom";
+
+const LoginItem = () => {
+    const { token } = theme.useToken();
+    return (<>
+        <ProFormText
+            name="username"
+            fieldProps={{
+                size: 'large',
+                prefix: (
+                    <UserOutlined
+                        style={{
+                            color: token.colorText,
+                        }}
+                        className={'prefixIcon'}
+                    />
+                ),
+            }}
+            placeholder={'Username'}
+            rules={[
+                {
+                    required: true,
+                    message: 'Username is required!',
+                },
+            ]}
+        />
+        <ProFormText.Password
+            name="password"
+            fieldProps={{
+                size: 'large',
+                prefix: (
+                    <LockOutlined
+                        style={{
+                            color: token.colorText,
+                        }}
+                        className={'prefixIcon'}
+                    />
+                ),
+            }}
+            placeholder={'Password'}
+            rules={[
+                {
+                    required: true,
+                    message: 'Password is required！',
+                },
+            ]}
+        />
+    </>);
+}
 
 const Login: React.FC = () => {
     const { token } = theme.useToken();
@@ -47,7 +94,7 @@ const Login: React.FC = () => {
                 backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
                 title="FundFlow"
                 containerStyle={{
-                    backgroundColor: 'rgba(0, 0, 0,0.65)',
+                    backgroundColor: 'rgba(0, 0, 0,0.75)',
                     backdropFilter: 'blur(4px)',
                 }}
                 subTitle="Decentralized Crowdfunding Platform"
@@ -84,62 +131,14 @@ const Login: React.FC = () => {
 
                     navigate('/dashboard');
                 }}
+                actions={<OtherLoginMethods />}>
 
-                onFinishFailed={async () => { console.log("second") }}
-
-                actions={<OtherLoginMethods />}
-            >
                 <Tabs
                     centered
                     activeKey={'login'}
-                >
-                    <Tabs.TabPane key={'login'} tab={'Login'} />
-                </Tabs>
+                    items={[{ key: 'login', label: 'Login', children: <LoginItem /> }]}
+                />
 
-                <>
-                    <ProFormText
-                        name="username"
-                        fieldProps={{
-                            size: 'large',
-                            prefix: (
-                                <UserOutlined
-                                    style={{
-                                        color: token.colorText,
-                                    }}
-                                    className={'prefixIcon'}
-                                />
-                            ),
-                        }}
-                        placeholder={'Username'}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Username is required!',
-                            },
-                        ]}
-                    />
-                    <ProFormText.Password
-                        name="password"
-                        fieldProps={{
-                            size: 'large',
-                            prefix: (
-                                <LockOutlined
-                                    style={{
-                                        color: token.colorText,
-                                    }}
-                                    className={'prefixIcon'}
-                                />
-                            ),
-                        }}
-                        placeholder={'Password'}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Password is required！',
-                            },
-                        ]}
-                    />
-                </>
                 <div
                     style={{
                         marginBlockEnd: 24,
@@ -192,12 +191,4 @@ const OtherLoginMethods: React.FC = () => {
     );
 }
 
-const LoginPage = () => {
-    return (
-        <ProConfigProvider dark>
-            <Login />
-        </ProConfigProvider>
-    );
-};
-
-export default LoginPage;
+export default Login;

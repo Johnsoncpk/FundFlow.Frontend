@@ -1,5 +1,4 @@
 import { loginAsync } from "apis/auth";
-import { jwtDecode } from "jwt-decode";
 const AccessToken = "ACCESS_TOKEN";
 
 async function loginWithCredentialAsync(
@@ -27,14 +26,6 @@ function setAccessToken(token: string): void {
 function getAccessToken(): string | null {
     return localStorage.getItem(AccessToken);
 }
-
-function getClaims(): any {
-    console.log(decodedJwt().exp);
-}
-
-const decodedJwt = () => {
-    return isUserAuthorized() ? jwtDecode(getAccessToken()!) : {}
-};
 
 function isUserAuthorized(): boolean {
     var token = getAccessToken();
