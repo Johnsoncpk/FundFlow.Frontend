@@ -1,6 +1,7 @@
+import { message } from "antd";
 import axiosClient from "axios";
-import { useNavigate } from "react-router-dom";
-
+import { StandardResult } from "types/results";
+import { getAccessToken, logout } from "utils/userHelper";
 /**
  * Creates an initial 'axios' instance with custom settings.
  */
@@ -12,12 +13,11 @@ const instance = axiosClient.create({
 // Add a request interceptor
 instance.interceptors.request.use(
     (config) => {
-        var token = localStorage.getItem("ACCESS_TOKEN");
+        var token = getAccessToken();
         config.headers.Authorization = token ? `Bearer ${token}` : '';
         return config;
     },
     (error) => {
-        console.log("Error occured while request");
         return Promise.reject(error);
     }
 );
@@ -26,15 +26,13 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     (res) => res,
     (err) => {
-        console.log(err);
         if (err.response.status === 401) {
-            const navigate = useNavigate();
-            localStorage.clear();
-            navigate(window.location.origin);
+            logout();
         }
 
         if (err.response) {
-            return Promise.reject(err.response.data);
+            message.error(err.response.data.errorMessage);
+            return Promise.reject<StandardResult<null>>(err.response.data);
         }
 
         if (err.request) {

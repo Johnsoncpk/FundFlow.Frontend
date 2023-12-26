@@ -38,11 +38,16 @@ const RegisterPage: React.FC = () => {
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
+    minHeight: 280,
+    padding: 24,
   };
 
   return (
     <>
-      <Steps current={current} items={items} />
+      <Steps style={{
+        marginTop: 16,
+        padding: 24,
+      }} current={current} items={items} />
       <div style={contentStyle}>{steps[current].content}</div>
       <div style={{ marginTop: 24 }}>
         {current < steps.length - 1 && (

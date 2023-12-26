@@ -4,9 +4,9 @@ interface PagedResult<T> {
 }
 
 interface StandardResult<T> {
-    StatusCode: number;
-    Result: T;
-    ErrorMessage?: string;
+    statusCode: number;
+    result?: T;
+    errorMessage?: string;
 }
 
 export type {

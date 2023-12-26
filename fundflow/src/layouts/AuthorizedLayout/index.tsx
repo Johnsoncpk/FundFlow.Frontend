@@ -27,6 +27,7 @@ import {
 import React, { useState } from 'react';
 import defaultProps from './_defaultProps';
 import { Outlet } from 'react-router-dom';
+import { logout } from 'utils/userHelper';
 
 const Item: React.FC<{ children: React.ReactNode }> = (props) => {
   const { token } = theme.useToken();
@@ -334,6 +335,9 @@ const AuthorizedLayout = () => {
                           key: 'logout',
                           icon: <LogoutOutlined />,
                           label: 'Logout',
+                          onClick: () => {
+                            logout();
+                          }
                         },
                       ],
                     }}

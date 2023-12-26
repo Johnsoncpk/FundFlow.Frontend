@@ -3,6 +3,7 @@ import AppRouter from 'AppRouter';
 import { BrowserRouter } from 'react-router-dom'
 import { Alert, ConfigProvider } from 'antd';
 import enUS from 'antd/locale/en_US';
+import { Suspense } from 'react';
 
 const { ErrorBoundary } = Alert;
 
@@ -11,7 +12,9 @@ function App() {
     <ConfigProvider locale={enUS}>
       <ErrorBoundary>
         <BrowserRouter>
-          <AppRouter />
+          <Suspense>
+            <AppRouter />
+          </Suspense>
         </BrowserRouter>
       </ErrorBoundary>
     </ConfigProvider>

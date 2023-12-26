@@ -10,16 +10,22 @@ import {
     ProFormText,
 } from '@ant-design/pro-components';
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { StyledGoogleIcon, StyledTwitterIcon } from 'components/ThirdPartyIcon';
-import { loginWithCredentialAsync } from 'utils/userHelper';
-
-type LoginType = 'donor' | 'founder';
+import { isUserAuthorized, loginWithCredentialAsync } from 'utils/userHelper';
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
     const { token } = theme.useToken();
-    const [loginType, setLoginType] = useState<LoginType>('donor');
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isUserAuthorized()) {
+            navigate("/dashboard");
+        }
+    }, [navigate]);
 
     const formRef = useRef<
         ProFormInstance<{
@@ -37,7 +43,6 @@ const Login: React.FC = () => {
             }}
         >
             <LoginFormPage
-                backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
                 logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
                 backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
                 title="FundFlow"
@@ -71,26 +76,24 @@ const Login: React.FC = () => {
                 }}
                 formRef={formRef}
                 onFinish={async (values) => {
-                    var isLoginSuccess = await loginWithCredentialAsync(
+                    await loginWithCredentialAsync(
                         values.username,
                         values.password,
                         values.autoLogin,
                     );
-                    if (!isLoginSuccess) {
-                        message.error('Login failed!');
-                        return;
-                    }
-                    message.success('Login successful!');
+
+                    navigate('/dashboard');
                 }}
+
+                onFinishFailed={async () => { console.log("second") }}
+
                 actions={<OtherLoginMethods />}
             >
                 <Tabs
                     centered
-                    activeKey={loginType}
-                    onChange={(activeKey) => setLoginType(activeKey as LoginType)}
+                    activeKey={'login'}
                 >
-                    <Tabs.TabPane key={'donor'} tab={'Donor Login'} />
-                    <Tabs.TabPane key={'founder'} tab={'Founder Login'} />
+                    <Tabs.TabPane key={'login'} tab={'Login'} />
                 </Tabs>
 
                 <>

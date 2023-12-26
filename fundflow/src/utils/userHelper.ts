@@ -1,33 +1,40 @@
 import { loginAsync } from "apis/auth";
 import { jwtDecode } from "jwt-decode";
-
 const AccessToken = "ACCESS_TOKEN";
 
 async function loginWithCredentialAsync(
     username: string,
     password: string,
-    isAutoLogin: boolean): Promise<{
-        isSuccess: boolean;
-        message?: string;
-    }> {
+    isAutoLogin: boolean): Promise<void> {
 
     var response = await loginAsync(username, password);
-    if (response.StatusCode !== 200) {
-        return { isSuccess: false, message: response.ErrorMessage };
+    if (response.statusCode !== 200) {
+        return;
     }
 
-    localStorage.setItem(AccessToken, response.Result.accessToken);
+    setAccessToken(response.result!.accessToken);
+}
 
-    return { isSuccess: true };
+function logout(): void {
+    localStorage.clear();
+    window.location.replace(window.location.origin);
+}
+
+function setAccessToken(token: string): void {
+    localStorage.setItem(AccessToken, token);
 }
 
 function getAccessToken(): string | null {
     return localStorage.getItem(AccessToken);
 }
 
-const decodedJwt = () => {
-    return isUserAuthorized() ? jwtDecode(getAccessToken()!) : "";
+function getClaims(): any {
+    console.log(decodedJwt().exp);
 }
+
+const decodedJwt = () => {
+    return isUserAuthorized() ? jwtDecode(getAccessToken()!) : {}
+};
 
 function isUserAuthorized(): boolean {
     var token = getAccessToken();
@@ -36,6 +43,8 @@ function isUserAuthorized(): boolean {
 }
 
 export {
+    getAccessToken,
     isUserAuthorized,
+    logout,
     loginWithCredentialAsync
 };
