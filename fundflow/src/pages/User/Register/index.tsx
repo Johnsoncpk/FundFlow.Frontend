@@ -11,8 +11,9 @@ import {
   ProFormTextArea,
   StepsForm,
 } from '@ant-design/pro-components';
-import { message } from 'antd';
+import { Button, message } from 'antd';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -24,6 +25,7 @@ const waitTime = (time: number = 100) => {
 
 const RegisterPage = () => {
   const formRef = useRef<ProFormInstance>();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -50,7 +52,10 @@ const RegisterPage = () => {
         <ProCard
           title={<h1>📝Registration Form</h1>}
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
-          boxShadow>
+          boxShadow
+          extra={
+            <Button onClick={() => { navigate("/"); }} >↩️ Back to login</Button>
+          }>
           <StepsForm<{
             name: string;
           }>
