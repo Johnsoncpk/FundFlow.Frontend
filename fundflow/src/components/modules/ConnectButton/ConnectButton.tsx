@@ -48,9 +48,12 @@ const ConnectButton = () => {
 
   if (data?.user) {
     return (
-      <HStack onClick={handleDisconnect} cursor={'pointer'}>
+      <HStack cursor={'pointer'}>
         <Avatar size="xs" />
         <Text fontWeight="medium">{getEllipsisTxt(data.user.address)}</Text>
+        <Button size="sm" onClick={handleDisconnect} colorScheme="blue">
+          Disconnect
+        </Button>
       </HStack>
     );
   }

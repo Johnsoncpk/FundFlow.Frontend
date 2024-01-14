@@ -42,6 +42,24 @@ const NAV_LINKS: ISubNav[] = [
       },
     ],
   },
+  {
+    label: 'Projects',
+    href: '/projects',
+    children: [
+      {
+        label: 'ERC20',
+        subLabel: 'Get your ERC20 balances',
+        href: '/projects/create',
+        logo: 'token',
+      },
+      {
+        label: 'NFT',
+        subLabel: 'Get your ERC721 an ERC1155 balances',
+        href: '/projects/manage',
+        logo: 'pack',
+      },
+    ],
+  },
 ];
 
 export default NAV_LINKS;
