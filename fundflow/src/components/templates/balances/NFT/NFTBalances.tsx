@@ -1,6 +1,6 @@
 import { Box, Grid, Heading } from '@chakra-ui/react';
 import { useEvmWalletNFTs } from '@moralisweb3/next';
-import { NFTCard } from 'components/modules';
+import { ProjectCard } from 'components/modules';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useNetwork } from 'wagmi';
@@ -23,7 +23,7 @@ const NFTBalances = () => {
       {nfts?.length ? (
         <Grid templateColumns="repeat(auto-fit, minmax(280px, 1fr))" gap={6}>
           {nfts.map((nft, key) => (
-            <NFTCard nft={nft} key={key} />
+            <ProjectCard nft={nft} key={key} />
           ))}
         </Grid>
       ) : (

@@ -4,12 +4,16 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { ProjectCard } from '../ProjectCard';
+import { EvmNft } from 'moralis/common-evm-utils';
 
-const FundFlowSwiper = () => {
+const FundFlowSwiper = (props: { nfts: EvmNft[] | undefined }) => {
+
     return (
-        <Box w={'full'} h={'40vh'} bg={'dark'}>
+        <Box w={'full'} h={'50vh'} bg={'dark'}>
             <Swiper
-                spaceBetween={30}
+                slidesPerView={3}
+                spaceBetween={20}
                 centeredSlides={true}
                 autoplay={{
                     delay: 2500,
@@ -22,15 +26,17 @@ const FundFlowSwiper = () => {
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper"
             >
-                <SwiperSlide>Slide 1</SwiperSlide>
-                <SwiperSlide>Slide 2</SwiperSlide>
-                <SwiperSlide>Slide 3</SwiperSlide>
-                <SwiperSlide>Slide 4</SwiperSlide>
-                <SwiperSlide>Slide 5</SwiperSlide>
-                <SwiperSlide>Slide 6</SwiperSlide>
-                <SwiperSlide>Slide 7</SwiperSlide>
-                <SwiperSlide>Slide 8</SwiperSlide>
-                <SwiperSlide>Slide 9</SwiperSlide>
+                {props.nfts?.length ? (
+                    props.nfts.map((nft, key) => (
+                        <SwiperSlide>
+                            <div onClick={() => { console.log("hi") }}>
+                                <ProjectCard nft={nft} key={key} />
+                            </div>
+                        </SwiperSlide>
+                    ))
+                ) : (
+                    <Box>Looks Like You Are The First User Of The Platform</Box>
+                )}
             </Swiper>
         </Box>
     );
