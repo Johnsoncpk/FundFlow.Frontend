@@ -12,8 +12,19 @@ const FundFlowSwiper = (props: { nfts: EvmNft[] | undefined }) => {
     return (
         <Box w={'full'} h={'50vh'} bg={'dark'}>
             <Swiper
-                slidesPerView={3}
-                spaceBetween={20}
+                slidesPerView={4}
+                spaceBetween={10}
+                breakpoints={{
+                    480: {
+                        slidesPerView: 2,
+                    },
+                    640: {
+                        slidesPerView: 3,
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                    },
+                }}
                 centeredSlides={true}
                 autoplay={{
                     delay: 2500,

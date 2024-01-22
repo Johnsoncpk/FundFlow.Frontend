@@ -1,5 +1,5 @@
 
-import { Text, Image, useColorModeValue, HStack, Stat, StatArrow, StatGroup, StatHelpText, StatLabel, StatNumber, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from '@chakra-ui/react';
+import { Text, Image, useColorModeValue, HStack, Stat, StatArrow, StatGroup, StatHelpText, StatLabel, StatNumber, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, VStack, Box } from '@chakra-ui/react';
 import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { resolveIPFS } from 'utils/resolveIPFS';
 
@@ -29,14 +29,16 @@ const RankTable = (props: { title: string, caption?: string, nfts: EvmNft[] | un
               </Td>
               <Td>
                 <HStack>
-                  <Image
-                    src={resolveIPFS((nft.metadata as { image?: string })?.image)}
-                    alt={'nft'}
-                    minH="auto"
-                    minW="auto"
-                    borderRadius={'5px'}
-                    boxSize="28%"
-                  />
+                  <Box maxW={"120px"} maxHeight="120px" overflow={'hidden'} borderRadius="xl">
+                    <Image
+                      src={resolveIPFS((nft.metadata as { image?: string })?.image)}
+                      alt={'nft'}
+                      minH="120px"
+                      minW="120px"
+                      objectFit="cover"
+                      boxSize="100%"
+                    />
+                  </Box>
                   <VStack alignItems={'flex-start'}>
                     <Text noOfLines={[1, 2]} as={'span'}>{nft?.name}</Text>
                     <Text fontSize={'xs'} as={'span'}>

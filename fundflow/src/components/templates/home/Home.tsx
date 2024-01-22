@@ -19,7 +19,7 @@ const Home = () => {
       <Divider />
       <HStack spacing={8}>
         <VStack >
-          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' nfts={nfts?.slice(5)} />
+          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' nfts={nfts?.slice(5, 10)} />
         </VStack>
         <Divider orientation='vertical' />
         <VStack>

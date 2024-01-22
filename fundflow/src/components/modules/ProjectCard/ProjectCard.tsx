@@ -18,10 +18,10 @@ const ProjectCard: FC<ProjectCardParams> = ({ nft: { name, metadata } }) => {
         <Image
           src={resolveIPFS((metadata as { image?: string })?.image)}
           alt={'nft'}
-          minH="auto"
-          minW="auto"
+          minH="280"
+          minW="280"
           boxSize="100%"
-          objectFit="fill"
+          objectFit="cover"
         />
       </Box>
       <Progress margin={3} value={64} />

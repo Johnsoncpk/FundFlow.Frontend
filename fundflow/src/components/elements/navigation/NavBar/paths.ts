@@ -3,10 +3,6 @@ import { ISubNav } from '../SubNav/SubNav';
 const NAV_LINKS: ISubNav[] = [
   { label: 'Home', href: '/' },
   {
-    label: 'Transactions',
-    href: '/transactions',
-  },
-  {
     label: 'Projects',
     href: '/projects',
     children: [
@@ -23,6 +19,10 @@ const NAV_LINKS: ISubNav[] = [
         logo: 'pack',
       },
     ],
+  },
+  {
+    label: 'Transactions',
+    href: '/transactions',
   },
   {
     label: 'Transfers',
