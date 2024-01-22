@@ -10,7 +10,6 @@ import {
   bscTestnet,
   fantom,
   fantomTestnet,
-  foundry,
   goerli,
   mainnet,
   optimism,
@@ -18,6 +17,7 @@ import {
   polygon,
   polygonMumbai,
   sepolia,
+  hardhat,
 } from '@wagmi/core/chains';
 import { extendTheme } from '@chakra-ui/react';
 import { publicProvider } from 'wagmi/providers/public';
@@ -35,7 +35,6 @@ const { provider, webSocketProvider } = configureChains(
     bscTestnet,
     fantom,
     fantomTestnet,
-    foundry,
     goerli,
     mainnet,
     optimism,
@@ -43,6 +42,7 @@ const { provider, webSocketProvider } = configureChains(
     polygon,
     polygonMumbai,
     sepolia,
+    hardhat
   ],
   [publicProvider()],
 );

@@ -4,14 +4,16 @@ import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { resolveIPFS } from 'utils/resolveIPFS';
 
 
-const RankTable = (props: { title: string, caption: string, nfts: EvmNft[] | undefined }) => {
+const RankTable = (props: { title: string, caption?: string, nfts: EvmNft[] | undefined }) => {
   const hoverTrColor = useColorModeValue('gray.100', 'gray.700');
 
   return (
     <TableContainer>
       <Text fontWeight={'bold'} my={"1"} fontSize='xl' align={'center'}>{props.title}</Text>
       <Table variant='simple'>
-        <TableCaption>{props.caption}</TableCaption>
+        {
+          props.caption && <TableCaption>{props.caption}</TableCaption>
+        }
         <Thead>
           <Tr>
             <Th isNumeric>#</Th>

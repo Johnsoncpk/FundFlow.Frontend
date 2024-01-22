@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <Box textAlign={'center'} w="full" p={6}>
       <Text>
-        📖 Code repo here {' '}
+        📖 repo here {' '}
         <Link href={links.github} isExternal alignItems={'center'}>
           Github <ExternalLinkIcon />
         </Link>
