@@ -15,7 +15,7 @@ type ProjectFilterParamsProps = {
     SetFilterParams: Dispatch<SetStateAction<ProjectFilterParams>>
 }
 
-const SearchSection({ FilterParams, SetFilterParams }): FC<ProjectFilterParamsProps> => {
+const SearchSection: FC<ProjectFilterParamsProps> = ({ FilterParams, SetFilterParams }) => {
     return (
         <HStack>
             <Text fontSize='2xl'>
