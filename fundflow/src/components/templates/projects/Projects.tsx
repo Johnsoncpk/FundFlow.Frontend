@@ -1,19 +1,16 @@
 import {
     VStack,
-    Box,
     Divider,
-    Grid,
     HStack,
-    GridItem,
     Wrap,
     WrapItem,
     Center,
 } from '@chakra-ui/react';
 import { useEvmWalletNFTs } from '@moralisweb3/next';
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
-import { SearchSection } from './SearchSection';
+import { SearchSection, ProjectFilterParams } from './SearchSection';
 import { ProjectCard } from 'components/modules';
 
 const Projects = () => {
@@ -23,13 +20,15 @@ const Projects = () => {
         address: data?.user?.address,
         chain: chain?.id,
     });
+    const [filterParams, setFilterParams] = useState({} as ProjectFilterParams);
+
 
     useEffect(() => console.log('nfts: ', nfts), [nfts]);
 
     return (
         <div>
             <VStack spacing={8}>
-                <SearchSection />
+                <SearchSection FilterParams={filterParams} SetFilterParams={setFilterParams} />
                 <Divider />
                 <HStack>
                     <Wrap spacing='20px'>

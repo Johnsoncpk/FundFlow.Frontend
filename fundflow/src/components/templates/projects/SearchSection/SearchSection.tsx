@@ -4,14 +4,32 @@ import {
     Select,
     Text
 } from '@chakra-ui/react';
+import { Dispatch, FC, SetStateAction } from 'react';
 
-const SearchSection = () => {
+type ProjectFilterParams = {
+    status?: string, keyword?: string, category?: string, sortBy?: string
+}
+
+type ProjectFilterParamsProps = {
+    FilterParams: ProjectFilterParams,
+    SetFilterParams: Dispatch<SetStateAction<ProjectFilterParams>>
+}
+
+const SearchSection({ FilterParams, SetFilterParams }): FC<ProjectFilterParamsProps> => {
     return (
         <HStack>
             <Text fontSize='2xl'>
                 Show me
             </Text>
-            <Select textAlign={'center'} variant='flushed' width={'auto'}>
+            <Select
+                value={FilterParams.status}
+                onChange={(event) => {
+                    SetFilterParams({ status: event.target.value, ...FilterParams })
+                }}
+                textAlign={'center'}
+                variant='flushed'
+                width={'auto'}>
+
                 <option defaultChecked value='all'>All</option>
                 <option value='live'>Live</option>
                 <option value='upComing'>Up Coming</option>
@@ -41,5 +59,6 @@ const SearchSection = () => {
     );
 };
 
-export default SearchSection;
+export default { SearchSection };
+export type { ProjectFilterParams };
 
