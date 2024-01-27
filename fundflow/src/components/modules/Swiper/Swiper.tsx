@@ -4,13 +4,13 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import { ProjectCard } from '../ProjectCard';
+import { ImageCard } from '../ProjectCard';
 import { EvmNft } from 'moralis/common-evm-utils';
 
 const FundFlowSwiper = (props: { nfts: EvmNft[] | undefined }) => {
 
     return (
-        <Box w={'full'} h={'50vh'} bg={'dark'}>
+        <Box w={'full'} h={'40vh'} bg={'dark'}>
             <Swiper
                 slidesPerView={4}
                 spaceBetween={10}
@@ -39,9 +39,9 @@ const FundFlowSwiper = (props: { nfts: EvmNft[] | undefined }) => {
             >
                 {props.nfts?.length ? (
                     props.nfts.map((nft, key) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={key}>
                             <div onClick={() => { console.log("hi") }}>
-                                <ProjectCard nft={nft} key={key} />
+                                <ImageCard nft={nft} key={key} />
                             </div>
                         </SwiperSlide>
                     ))

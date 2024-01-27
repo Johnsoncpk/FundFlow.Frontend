@@ -11,20 +11,20 @@ type ProjectFilterParams = {
 }
 
 type ProjectFilterParamsProps = {
-    FilterParams: ProjectFilterParams,
-    SetFilterParams: Dispatch<SetStateAction<ProjectFilterParams>>
+    filterParams: ProjectFilterParams,
+    setFilterParams: Dispatch<SetStateAction<ProjectFilterParams>>
 }
 
-const SearchSection: FC<ProjectFilterParamsProps> = ({ FilterParams, SetFilterParams }) => {
+const SearchSection: FC<ProjectFilterParamsProps> = ({ filterParams, setFilterParams }) => {
     return (
         <HStack>
             <Text fontSize='2xl'>
                 Show me
             </Text>
             <Select
-                value={FilterParams.status}
+                value={filterParams.status}
                 onChange={(event) => {
-                    SetFilterParams({ status: event.target.value, ...FilterParams })
+                    setFilterParams({ ...filterParams, status: event.target.value })
                 }}
                 textAlign={'center'}
                 variant='flushed'
@@ -34,9 +34,23 @@ const SearchSection: FC<ProjectFilterParamsProps> = ({ FilterParams, SetFilterPa
                 <option value='live'>Live</option>
                 <option value='upComing'>Up Coming</option>
             </Select>
-            <Input variant='flushed' placeholder='Technology' width={'auto'} />
+            <Input
+                value={filterParams.keyword}
+                onChange={(event) => {
+                    setFilterParams({ ...filterParams, keyword: event.target.value })
+                }}
+                variant='flushed'
+                placeholder='Technology'
+                width={'auto'} />
             <Text fontSize='2xl'> projects in</Text>
-            <Select textAlign={'center'} variant='flushed' width={'auto'}>
+            <Select
+                textAlign={'center'}
+                variant='flushed'
+                width={'auto'}
+                value={filterParams.category}
+                onChange={(event) => {
+                    setFilterParams({ ...filterParams, category: event.target.value })
+                }}>
                 <option defaultChecked value='all'>All</option>
                 <option value='art'>Art</option>
                 <option value='comicts'>Comics</option>
@@ -47,7 +61,14 @@ const SearchSection: FC<ProjectFilterParamsProps> = ({ FilterParams, SetFilterPa
                 <option value='file&design'>Film & Video</option>
             </Select>
             <Text fontSize='2xl'>Categories sorted by </Text>
-            <Select textAlign={'center'} variant='flushed' width={'auto'}>
+            <Select
+                textAlign={'center'}
+                variant='flushed'
+                width={'auto'}
+                value={filterParams.sortBy}
+                onChange={(event) => {
+                    setFilterParams({ ...filterParams, sortBy: event.target.value })
+                }}>
                 <option defaultChecked value='all'>Magic</option>
                 <option value='popularity'>Popularity</option>
                 <option value='newesy'>Newest</option>
@@ -59,6 +80,6 @@ const SearchSection: FC<ProjectFilterParamsProps> = ({ FilterParams, SetFilterPa
     );
 };
 
-export default { SearchSection };
+export default SearchSection;
 export type { ProjectFilterParams };
 

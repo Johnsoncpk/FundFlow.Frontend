@@ -9,12 +9,12 @@ const NAV_LINKS: ISubNav[] = [
       {
         label: 'Browse',
         subLabel: 'Search any project you may interested',
-        href: '/projects/browse',
+        href: '/projects',
         logo: 'marketplace',
       },
       {
         label: 'Create',
-        subLabel: 'Creat your crazy project and get funded',
+        subLabel: 'Public your crazy ideas and get funded',
         href: '/projects/create',
         logo: 'pack',
       },

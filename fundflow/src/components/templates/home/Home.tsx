@@ -18,13 +18,9 @@ const Home = () => {
       <Swiper nfts={nfts} />
       <Divider />
       <HStack spacing={8}>
-        <VStack >
-          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' nfts={nfts?.slice(5, 10)} />
-        </VStack>
+        <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' nfts={nfts?.slice(5, 10)} />
         <Divider orientation='vertical' />
-        <VStack>
-          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' nfts={nfts?.slice(0, 5)} />
-        </VStack>
+        <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' nfts={nfts?.slice(0, 5)} />
       </HStack >
     </VStack >
   );
