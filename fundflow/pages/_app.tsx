@@ -24,6 +24,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import "./styles.css";
+import { StepsTheme as Steps } from "chakra-ui-steps";
 
 const { provider, webSocketProvider } = configureChains(
   [
@@ -58,7 +59,12 @@ const config = {
   useSystemColorMode: true,
 };
 
-const theme = extendTheme({ config });
+const theme = extendTheme({
+  config,
+  components: {
+    Steps,
+  }
+});
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (

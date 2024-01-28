@@ -3,7 +3,7 @@ import { Projects } from 'components/templates/projects';
 
 const Browse = () => {
     return (
-        <Default pageName="NFT Balances">
+        <Default pageName="Projects">
             <Projects />
         </Default>
     );

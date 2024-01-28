@@ -25,19 +25,19 @@ const ImageCard: FC<ImageCardParams> = ({ nft: { name, metadata, tokenId } }) =>
                         minW="350"
                         objectPosition={'center'}
                         objectFit="cover"
-                        filter={isOpen ? 'brightness(0.5)' : 'brightness(1)'}
+                        filter={isOpen ? 'brightness(0.3)' : 'brightness(1)'}
                     />
                     <Fade in={isOpen}>
                         <Link as={NextLink} href={`/projects/${tokenId}`}>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} top={'60%'} left={'2%'} fontWeight="semibold" as="h4" noOfLines={[1]} marginTop={2}>
-                                <Text align={'left'} as='b'>{name}</Text>
+                                <Text color={'white'} align={'left'} as='b'>{name}</Text>
                             </Box>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} textAlign={'center'} top={'70%'} left={'3%'}>
-                                <Text fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{resolveIPFS((metadata as { description?: string })?.description)}</Text>
+                                <Text color={'white'} fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{resolveIPFS((metadata as { description?: string })?.description)}</Text>
                             </Box>
                         </Link>
                         <Box mt="1" position={'absolute'} textAlign={'center'} top={'90%'} right={'3%'}>
-                            <Text as='i' fontSize='md' noOfLines={1}>By Jay Oliva</Text>
+                            <Text as='i' color={'white'} fontSize='md' noOfLines={1}>By Jay Oliva</Text>
                         </Box>
                     </Fade>
                     {tokenId}
