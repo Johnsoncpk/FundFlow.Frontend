@@ -23,12 +23,12 @@ const Projects = () => {
 
     const fetchNftBalance = async () => {
         const response = await fetch({ address: data?.user?.address, chain: chain?.id });
-        if (response?.data) {
-            setNftBalance(response.data);
+        if (response) {
+            setNftBalance(response.data.slice(0, Math.random() * 10));
         }
     };
 
-    useEffect(() => { fetchNftBalance().catch(console.error); }, [nftBalance, filterParams]);
+    useEffect(() => { fetchNftBalance().catch(console.error); }, [filterParams]);
 
     return (
         <div>
