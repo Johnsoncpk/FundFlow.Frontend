@@ -1,7 +1,9 @@
 import { Flex, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
-import { Field } from 'formik';
+import { useFormikContext, Field } from 'formik';
 
 export const Form1 = () => {
+  const { values, handleChange, errors, touched } = useFormikContext();
+
   function validateName(value: string) {
     let error
     if (!value) {
@@ -15,19 +17,17 @@ export const Form1 = () => {
   return (
     <Flex flexDir="column" width="100%">
       <Field name='projectTitle' validate={validateName}>
-        {({ field, form }) => (
-          <FormControl isInvalid={form.errors.name && form.touched.name}>
-            <FormLabel>First name</FormLabel>
-            <Input {...field} placeholder='name' />
-            <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-          </FormControl>
-        )}
+        <FormControl isInvalid={errors.projectTitle && touched.projectTitle}>
+          <FormLabel>Project Title</FormLabel>
+          <Input value={values.projectTitle} onChange={handleChange} variant='flushed' placeholder='name' />
+          <FormErrorMessage>{errors.projectTitle}</FormErrorMessage>
+        </FormControl>
       </Field>
       <Field name='projectDescription' validate={validateName}>
         {({ field, form }) => (
           <FormControl isInvalid={form.errors.name && form.touched.name}>
-            <FormLabel>First name</FormLabel>
-            <Input {...field} placeholder='name' />
+            <FormLabel>Project Description</FormLabel>
+            <Input variant='flushed' {...field} placeholder='name' />
             <FormErrorMessage>{form.errors.name}</FormErrorMessage>
           </FormControl>
         )}

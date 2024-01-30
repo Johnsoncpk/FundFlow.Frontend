@@ -1,9 +1,9 @@
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Box } from "@chakra-ui/layout";
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3 } from "./StepForms";
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Form, useFormik } from 'formik';
 
 const steps = [
   {
@@ -30,56 +30,55 @@ export const Create = ({
   });
   const isLastStep = activeStep === steps.length - 1;
   const hasCompletedAllSteps = activeStep === steps.length;
-  const bg = useColorModeValue("gray.200", "gray.700");
+  const bc = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
+
+  const formik = useFormik({
+    initialValues: { projectTitle: '', projectDescription: '' },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+      formik.setSubmitting(false);
+      reset();
+    }
+  })
 
   return (
     <Flex flexDir="column" width="100%">
-      <Formik
-        initialValues={{ projectTitle: '', projectDescription:'' }}
-        onSubmit={(values, actions) => {
-          alert(JSON.stringify(values, null, 2))
-          actions.setSubmitting(false)
-          reset();
-        }}>
-        {(props) => (
-          <Form>
-            <Steps variant={variant} colorScheme="blue" activeStep={activeStep}>
-              {steps.map(({ label, form }, index) => (
-                <Step label={label} key={label}>
-                  <Box sx={{ p: 8, bg, my: 8, rounded: "md" }}>
-                    {form()}
-                  </Box>
-                </Step>
-              ))}
-            </Steps>
-            {hasCompletedAllSteps && (
-              <Box sx={{ bg, my: 8, p: 8, rounded: "md" }}>
-                <Heading fontSize="xl" textAlign={"center"}>
-                  Woohoo! Project Created!!! 🎉
-                </Heading>
+      <Form>
+        <Steps variant={variant} colorScheme="blue" activeStep={activeStep}>
+          {steps.map(({ label, form }, index) => (
+            <Step label={label} key={label + index}>
+              <Box borderWidth={'thin'} sx={{ borderColor: bc, p: 8, my: 8, rounded: "md" }}>
+                {form()}
               </Box>
-            )}
-            <Flex width="100%" justify="flex-end" gap={4}>
-              <Button
-                isDisabled={activeStep === 0}
-                onClick={prevStep}
-                size="sm"
-                variant="ghost"
-              >
-                Prev
-              </Button>
-              {isLastStep ?
-                <Button size="sm" colorScheme='teal' onClick={() => { props.handleSubmit }} isLoading={props.isSubmitting}>
-                  Finish
-                </Button> :
-                <Button size="sm" onClick={nextStep}>
-                  Next
-                </Button>
-              }
-            </Flex>
-          </Form>
+            </Step>
+          ))}
+        </Steps>
+        {hasCompletedAllSteps && (
+          <Box sx={{ my: 8, p: 8, rounded: "md" }}>
+            <Heading fontSize="xl" textAlign={"center"}>
+              Woohoo! Project Created!!! 🎉
+            </Heading>
+          </Box>
         )}
-      </Formik>
+        <Flex width="100%" justify="flex-end" gap={4}>
+          <Button
+            isDisabled={activeStep === 0}
+            onClick={prevStep}
+            size="sm"
+            variant="ghost"
+          >
+            Prev
+          </Button>
+          {isLastStep ?
+            <Button size="sm" colorScheme='teal' onClick={() => { formik.handleSubmit() }} isLoading={formik.isSubmitting}>
+              Finish
+            </Button> :
+            <Button size="sm" onClick={nextStep}>
+              Next
+            </Button>
+          }
+        </Flex>
+      </Form>
     </Flex>
   );
 };
