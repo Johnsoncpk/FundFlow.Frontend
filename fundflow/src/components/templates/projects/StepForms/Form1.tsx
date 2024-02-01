@@ -1,37 +1,65 @@
-import { Flex, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
-import { useFormikContext, Field } from 'formik';
+import { Flex, FormControl, FormErrorMessage, FormLabel, Input, Select, Textarea } from "@chakra-ui/react";
 
-export const Form1 = () => {
-  const { values, handleChange, errors, touched } = useFormikContext();
-
-  function validateName(value: string) {
-    let error
-    if (!value) {
-      error = 'Name is required'
-    } else if (value.toLowerCase() !== 'naruto') {
-      error = "Jeez! You're not a fan 😱"
-    }
-    return error
-  }
+export const Form1 = (register: any, errors: any) => {
 
   return (
-    <Flex flexDir="column" width="100%">
-      <Field name='projectTitle' validate={validateName}>
-        <FormControl isInvalid={errors.projectTitle && touched.projectTitle}>
-          <FormLabel>Project Title</FormLabel>
-          <Input value={values.projectTitle} onChange={handleChange} variant='flushed' placeholder='name' />
-          <FormErrorMessage>{errors.projectTitle}</FormErrorMessage>
-        </FormControl>
-      </Field>
-      <Field name='projectDescription' validate={validateName}>
-        {({ field, form }) => (
-          <FormControl isInvalid={form.errors.name && form.touched.name}>
-            <FormLabel>Project Description</FormLabel>
-            <Input variant='flushed' {...field} placeholder='name' />
-            <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-          </FormControl>
-        )}
-      </Field>
+    <Flex flexDir="column" width="100%" gap={4}>
+      <FormControl>
+        <FormLabel htmlFor='name'>First name</FormLabel>
+        <Input
+          required
+          id='name'
+          placeholder='Stepping Stones'
+          {...register('name', {
+            required: 'This is required',
+            minLength: { value: 4, message: 'Minimum length should be 4' },
+          })}
+        />
+        <FormErrorMessage>
+          {errors.name && <span>This field is required</span>}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl>
+        <FormLabel htmlFor='description'>Description</FormLabel>
+        <Textarea
+          required
+          id='description'
+          placeholder='Recalibrate with Acupoints designed by Oriental Acupuncture methodology. Apex cushioning, energy return, arch support, sustainable!'
+          {...register('description', {
+            required: 'This is required',
+            minLength: { value: 4, message: 'Minimum length should be 4' },
+          })}
+        />
+        <FormErrorMessage>
+          {errors.description && <span>This field is required</span>}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl>
+        <FormLabel htmlFor='name'>Category</FormLabel>
+        {/* duplcaited in SearchSection */}
+        <Select
+          textAlign={'center'}
+          width={'auto'}
+          id='category'
+          {...register('category', {
+            required: 'This is required',
+            minLength: { value: 4, message: 'Minimum length should be 4' },
+          })}>
+          <option defaultChecked value=''>Please choose a category</option>
+          <option value='art'>Art</option>
+          <option value='comicts'>Comics</option>
+          <option value='crafts'>Crafts</option>
+          <option value='dance'>Dance</option>
+          <option value='design'>Design</option>
+          <option value='fashion'>Fashion</option>
+          <option value='file&design'>Film & Video</option>
+        </Select>
+        <FormErrorMessage>
+          {errors.category && <span>This field is required</span>}
+        </FormErrorMessage>
+      </FormControl>
     </Flex>
   );
 };
