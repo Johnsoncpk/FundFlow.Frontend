@@ -1,16 +1,16 @@
 import { Box } from "@chakra-ui/layout";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "./StepForms";
 import { useForm } from "react-hook-form";
 
 const steps = [
   {
-    label: "Project Information",
+    label: "Basic Information",
     form: Form1,
   },
   {
-    label: "Project Setting",
+    label: "Round Setting",
     form: Form2
   },
   {
@@ -49,6 +49,7 @@ export const Create = ({
 
   return (
     <Flex flexDir="column" width="100%">
+      <Text align={'center'} fontSize='3xl' marginBottom={'30px'}>🎨 Create Your Project 🛠️</Text>
       <form onSubmit={(e) => {
         e.preventDefault();
         nextStep();
