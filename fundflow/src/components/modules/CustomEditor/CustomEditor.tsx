@@ -15,7 +15,7 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
-
+import React from 'react';
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
@@ -48,14 +48,13 @@ const editorConfig = {
     namespace: "custom-editor"
 };
 
-export default function Editor() {
+const CustomEditor: React.FC<{ isToolBarShow?: boolean }> = ({ isToolBarShow = true }) => {
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className="editor-container">
-                <ToolbarPlugin />
+                {isToolBarShow && <ToolbarPlugin />}
                 <div className="editor-inner">
                     <RichTextPlugin
-
                         contentEditable={<ContentEditable className="editor-input" />}
                         placeholder={<Placeholder />}
                         ErrorBoundary={LexicalErrorBoundary}
@@ -73,3 +72,5 @@ export default function Editor() {
         </LexicalComposer>
     );
 }
+
+export default CustomEditor;

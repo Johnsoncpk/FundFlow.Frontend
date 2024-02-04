@@ -57,7 +57,8 @@ const RankTable = (props: { title: string, caption?: string, nfts: EvmNft[] | un
                         23.36%
                       </StatHelpText>
                     </Stat>
-                  </StatGroup></Td>
+                  </StatGroup>
+                </Td>
               </Tr>
             ))}
           </Tbody>
