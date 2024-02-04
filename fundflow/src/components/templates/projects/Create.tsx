@@ -34,7 +34,7 @@ export const Create = ({
 }: {
   variant: "circles" | "circles-alt" | "simple" | undefined;
 }) => {
-  const { nextStep, prevStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, reset, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
   const isLastStep = activeStep === steps.length - 1;
@@ -56,7 +56,7 @@ export const Create = ({
       }}>
         <Steps variant={variant} colorScheme="blue" activeStep={activeStep}>
           {steps.map(({ label, form }, index) => (
-            <Step label={label} key={label + index}>
+            <Step label={<Text onClick={() => { setStep(index) }}>{label}</Text>} key={label + index}>
               <Box sx={{ p: 8, my: 8, rounded: "md" }}>
                 {form(register, errors)}
               </Box>
