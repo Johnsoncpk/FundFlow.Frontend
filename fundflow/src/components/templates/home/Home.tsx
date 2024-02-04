@@ -9,8 +9,8 @@ const Home = () => {
   const { data } = useSession();
   const { chain } = useNetwork();
   const { data: nfts } = useEvmWalletNFTs({
-    address: data?.user?.address,
-    chain: chain?.id,
+    address: data?.user?.address ?? "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    chain: chain?.id ?? 1,
   });
 
   return (

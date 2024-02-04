@@ -154,7 +154,7 @@ function RoundSteps(register: any, errors: any) {
       {steps.map(({ title, description, content }, index) => (
         <Step label={
           <Text onClick={() => { setStep(index) }}>
-            {(index === 0 && index !== (steps.length - 1)) ? title : `${title} ${index}`}
+            {(index === 0 || index === steps.length - 1) ? title : `${title} ${index}`}
           </Text>
         }
           description={description}
