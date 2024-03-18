@@ -3,7 +3,10 @@ import { Swiper } from 'components/modules/Swiper';
 import { useSession } from 'next-auth/react';
 import { useNetwork } from 'wagmi';
 import RankTable from './RankTable';
-import { useEvmWalletNFTs, useEvmRunContractFunction } from '@moralisweb3/next';
+import {
+  useEvmWalletNFTs,
+  // useEvmRunContractFunction 
+} from '@moralisweb3/next';
 
 const Home = () => {
   const { data } = useSession();
@@ -12,25 +15,6 @@ const Home = () => {
     address: data?.user?.address ?? "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
     chain: chain?.id ?? 1,
   });
-  // const { data, error, fetch, isFetching, isLoading } = useWeb3ExecuteFunction({
-  //   abi: usdcEthPoolAbi,
-  //   contractAddress: usdcEthPoolAddress,
-  //   functionName: "observe",
-  //   params: {
-  //     secondsAgos: [0, 10],
-  //   },
-  // });
-
-  // return (<div>
-  //   {error && <ErrorMessage error={error} />}
-  //   <button onClick={() => fetch()} disabled={isFetching}>Fetch data</button>
-  //   {data && <pre>
-  //     {JSON.stringify(data),
-  //       null,
-  //       2,
-  //       )}
-  //   </pre>}
-  // </div>)
 
   return (
     <VStack>

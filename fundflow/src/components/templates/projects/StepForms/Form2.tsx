@@ -1,12 +1,12 @@
-import { Flex, Button, FormControl, FormErrorMessage, FormLabel, NumberInput, NumberInputField, NumberDecrementStepper, NumberIncrementStepper, NumberInputStepper, Input, Box, Text } from "@chakra-ui/react";
+import { Flex, Button, FormControl, FormErrorMessage, FormLabel, NumberInput, NumberInputField, NumberDecrementStepper, NumberIncrementStepper, NumberInputStepper, Input, Text } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 
 function FirstRound(register: any, errors: any) {
   const [fundingGoal, setFundingGoal] = useState<number>(10000);
-  const format = (val) => `$ ` + val;
-  const parse = (val) => val.replace(/^\$/, '');
+  const format = (val: number) => `$ ${val}`;
+  const parse = (val: string) => Number(val.toString().replace(/^\$/, ''));
 
   return (
     <Flex marginY={'30px'} flexDir="column" width="100%" gap={4}>
@@ -51,7 +51,7 @@ function FirstRound(register: any, errors: any) {
   )
 }
 
-function ReportRound(register: any, errors: any, index: number, steps, setSteps) {
+function ReportRound(register: any, errors: any, index: number, steps: any, setSteps: any) {
 
   const addProgressStep = (insertAt: number) => {
     const nextArtists = [
@@ -63,7 +63,7 @@ function ReportRound(register: any, errors: any, index: number, steps, setSteps)
   }
 
   const removeProgressStep = (removeAt: number) => {
-    const newSteps = steps.filter((_, i) => i !== removeAt);
+    const newSteps = steps.filter((_: any, i: number) => i !== removeAt);
     setSteps(newSteps);
   }
 
@@ -104,7 +104,7 @@ function ReportRound(register: any, errors: any, index: number, steps, setSteps)
   )
 }
 
-function LastRound(register: any, errors: any, index) {
+function LastRound(register: any, errors: any, index: any) {
 
   const [lastRoundEndTime, setLastRoundEndTime] = useState<string>();
 
@@ -139,7 +139,7 @@ function LastRound(register: any, errors: any, index) {
 }
 
 function RoundSteps(register: any, errors: any) {
-  const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
+  const { activeStep, setStep } = useSteps({
     initialStep: 0,
   });
 

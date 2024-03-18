@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from "@chakra-ui/layout";
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
@@ -41,8 +42,8 @@ export const Create = ({
   const hasCompletedAllSteps = activeStep === steps.length;
 
   const {
-    handleSubmit,
-    trigger,
+    // handleSubmit,
+    // trigger,
     register,
     formState: { isSubmitting, errors },
   } = useForm<ProjectData>();
@@ -88,7 +89,11 @@ export const Create = ({
               Prev
             </Button>
             {isLastStep ?
-              <Button size="sm" onClick={(event) => { event.target.form.requestSubmit(); }} colorScheme='blue' isLoading={isSubmitting}>
+              <Button size="sm" onClick={
+                (event: React.MouseEvent<HTMLButtonElement>) => {
+                  const form = event.currentTarget.form as HTMLFormElement;
+                  form.requestSubmit();
+                }} colorScheme='blue' isLoading={isSubmitting}>
                 Finish
               </Button> :
               <Button size="sm" onClick={() => { nextStep(); }}>

@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable complexity */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -77,9 +79,8 @@ function positionEditorElement(editor, rect) {
   } else {
     editor.style.opacity = "1";
     editor.style.top = `${rect.top + rect.height + window.pageYOffset + 10}px`;
-    editor.style.left = `${
-      rect.left + window.pageXOffset - editor.offsetWidth / 2 + rect.width / 2
-    }px`;
+    editor.style.left = `${rect.left + window.pageXOffset - editor.offsetWidth / 2 + rect.width / 2
+      }px`;
   }
 }
 
@@ -106,7 +107,7 @@ function FloatingLinkEditor({ editor }) {
     }
     const editorElem = editorRef.current;
     const nativeSelection = window.getSelection();
-    const activeElement = document.activeElement;
+    const { activeElement } = document;
 
     if (editorElem === null) {
       return;
@@ -237,8 +238,8 @@ function Select({ onChange, className, options, value }) {
 }
 
 function getSelectedNode(selection) {
-  const anchor = selection.anchor;
-  const focus = selection.focus;
+  const { anchor } = selection;
+  const { focus } = selection;
   const anchorNode = selection.anchor.getNode();
   const focusNode = selection.focus.getNode();
   if (anchorNode === focusNode) {
@@ -247,9 +248,9 @@ function getSelectedNode(selection) {
   const isBackward = selection.isBackward();
   if (isBackward) {
     return $isAtNodeEnd(focus) ? anchorNode : focusNode;
-  } else {
-    return $isAtNodeEnd(anchor) ? focusNode : anchorNode;
   }
+
+  return $isAtNodeEnd(anchor) ? focusNode : anchorNode;
 }
 
 function BlockOptionsDropdownList({
@@ -277,7 +278,7 @@ function BlockOptionsDropdownList({
 
     if (dropDown !== null && toolbar !== null) {
       const handle = (event) => {
-        const target = event.target;
+        const { target } = event;
 
         if (!dropDown.contains(target) && !toolbar.contains(target)) {
           setShowBlockOptionsDropDown(false);
@@ -426,7 +427,12 @@ export default function ToolbarPlugin() {
     false
   );
   const [codeLanguage, setCodeLanguage] = useState("");
-  const [isRTL, setIsRTL] = useState(false);
+  const
+    [
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      isRTL,
+      setIsRTL
+    ] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
@@ -488,7 +494,10 @@ export default function ToolbarPlugin() {
       }),
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
-        (_payload, newEditor) => {
+        (
+          _payload,
+          // newEditor
+        ) => {
           updateToolbar();
           return false;
         },
@@ -568,7 +577,7 @@ export default function ToolbarPlugin() {
             }
             aria-label="Formatting Options"
           >
-            <span className={"icon block-type " + blockType} />
+            <span className={`icon block-type ${blockType}`} />
             <span className="text">{blockTypeToBlockName[blockType]}</span>
             <i className="chevron-down" />
           </button>
@@ -601,7 +610,7 @@ export default function ToolbarPlugin() {
             onClick={() => {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
             }}
-            className={"toolbar-item spaced " + (isBold ? "active" : "")}
+            className={`toolbar-item spaced ${isBold ? "active" : ""}`}
             aria-label="Format Bold"
           >
             <i className="format bold" />
@@ -610,7 +619,7 @@ export default function ToolbarPlugin() {
             onClick={() => {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
             }}
-            className={"toolbar-item spaced " + (isItalic ? "active" : "")}
+            className={`toolbar-item spaced ${isItalic ? "active" : ""}`}
             aria-label="Format Italics"
           >
             <i className="format italic" />
@@ -619,7 +628,7 @@ export default function ToolbarPlugin() {
             onClick={() => {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
             }}
-            className={"toolbar-item spaced " + (isUnderline ? "active" : "")}
+            className={`toolbar-item spaced ${isUnderline ? "active" : ""}`}
             aria-label="Format Underline"
           >
             <i className="format underline" />
@@ -629,7 +638,7 @@ export default function ToolbarPlugin() {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
             }}
             className={
-              "toolbar-item spaced " + (isStrikethrough ? "active" : "")
+              `toolbar-item spaced ${isStrikethrough ? "active" : ""}`
             }
             aria-label="Format Strikethrough"
           >
@@ -639,14 +648,14 @@ export default function ToolbarPlugin() {
             onClick={() => {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
             }}
-            className={"toolbar-item spaced " + (isCode ? "active" : "")}
+            className={`toolbar-item spaced ${isCode ? "active" : ""}`}
             aria-label="Insert Code"
           >
             <i className="format code" />
           </button>
           <button
             onClick={insertLink}
-            className={"toolbar-item spaced " + (isLink ? "active" : "")}
+            className={`toolbar-item spaced ${isLink ? "active" : ""}`}
             aria-label="Insert Link"
           >
             <i className="format link" />
