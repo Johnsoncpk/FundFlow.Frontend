@@ -2,19 +2,6 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { createClient, WagmiConfig } from 'wagmi';
 import { configureChains } from '@wagmi/core';
 import {
-  arbitrum,
-  arbitrumGoerli,
-  avalanche,
-  avalancheFuji,
-  bsc,
-  bscTestnet,
-  fantom,
-  fantomTestnet,
-  goerli,
-  mainnet,
-  optimism,
-  optimismGoerli,
-  polygon,
   polygonMumbai,
   sepolia,
   hardhat,
@@ -28,19 +15,6 @@ import { StepsTheme as Steps } from "chakra-ui-steps";
 
 const { provider, webSocketProvider } = configureChains(
   [
-    arbitrum,
-    arbitrumGoerli,
-    avalanche,
-    avalancheFuji,
-    bsc,
-    bscTestnet,
-    fantom,
-    fantomTestnet,
-    goerli,
-    mainnet,
-    optimism,
-    optimismGoerli,
-    polygon,
     polygonMumbai,
     sepolia,
     hardhat
@@ -67,6 +41,7 @@ const theme = extendTheme({
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+
   return (
     <ChakraProvider resetCSS theme={theme}>
       <WagmiConfig client={client}>
