@@ -21,6 +21,8 @@ export const Form1: React.FC<FormProps> = (props) => {
         <FormLabel htmlFor='description'>Description</FormLabel>
         <Textarea
           required
+          onChange={(e) => { props.setProjectData({ ...props.projectData, description: e.target.value }) }}
+          value={props.projectData?.name}
           id='description'
           placeholder='Recalibrate with Acupoints designed by Oriental Acupuncture methodology. Apex cushioning, energy return, arch support, sustainable!'
         />
@@ -32,7 +34,9 @@ export const Form1: React.FC<FormProps> = (props) => {
         <Select
           textAlign={'center'}
           width={'auto'}
-          id='category'>
+          id='category'
+          value={props.projectData?.category}
+          onChange={(e) => { props.setProjectData({ ...props.projectData, category: e.target.value }) }}>
           <option defaultChecked value=''>Please choose a category</option>
           <option value='art'>Art</option>
           <option value='comicts'>Comics</option>

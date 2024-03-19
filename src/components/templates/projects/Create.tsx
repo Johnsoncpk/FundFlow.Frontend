@@ -35,7 +35,18 @@ export const Create = ({
   const isLastStep = activeStep === steps.length - 1;
   const hasCompletedAllSteps = activeStep === steps.length;
 
-  const [projectData, setProjectData] = useState<ProjectData>();
+  const [projectData, setProjectData] = useState<ProjectData>({
+    name: "",
+    description: "",
+    category: "",
+    url: "",
+    totalFundingGoal: 0,
+    totalRound: 0,
+    rounds: [{
+      fundingGoal: 0,
+      endAt: 0,
+    }]
+  });
 
   return (
     <Flex flexDir="column" width="100%">
@@ -47,7 +58,7 @@ export const Create = ({
           {steps.map(({ label, form }, index) => (
             <Step label={<Text onClick={() => { setStep(index) }}>{label}</Text>} key={label + index}>
               <Box sx={{ p: 8, my: 8, rounded: "md" }}>
-                {form(projectData, setProjectData)}
+                {form({ projectData, setProjectData })}
               </Box>
             </Step>
           ))}

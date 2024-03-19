@@ -8,5 +8,5 @@ export { Form4 } from './Form4';
 
 export type FormProps = {
     projectData: ProjectData;
-    setProjectData: React.Dispatch<React.SetStateAction<ProjectData | undefined>>;
+    setProjectData: React.Dispatch<React.SetStateAction<ProjectData>>;
 }

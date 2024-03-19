@@ -6,8 +6,9 @@ export type ProjectRound = {
 
 export type ProjectData = {
     name: string
+    description: string,
+    category: string,
     url: string
-    category: string
     totalFundingGoal: number
     totalRound: number
     rounds: ProjectRound[]

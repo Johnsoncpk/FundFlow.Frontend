@@ -2,8 +2,10 @@ import { Flex, Button, FormControl, FormErrorMessage, FormLabel, NumberInput, Nu
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
+import React from 'react';
+import { FormProps } from ".";
 
-function FirstRound(register: any, errors: any) {
+function FirstRound() {
   const [fundingGoal, setFundingGoal] = useState<number>(10000);
   const format = (val: number) => `$ ${val}`;
   const parse = (val: string) => Number(val.toString().replace(/^\$/, ''));
@@ -14,9 +16,6 @@ function FirstRound(register: any, errors: any) {
         <FormLabel htmlFor='fundingGoal'>Funding Goal 💰</FormLabel>
         <NumberInput
           id='fundingGoal'
-          {...register('fundingGoal', {
-            required: 'This is required'
-          })}
           onChange={(value) => setFundingGoal(parse(value))}
           value={format(fundingGoal)}
           allowMouseWheel
@@ -39,19 +38,13 @@ function FirstRound(register: any, errors: any) {
           id="fundRoundEndTime"
           type="datetime-local"
           value={moment().add(1, 'month').endOf('day').format('YYYY-MM-DDTHH:mm')}
-          {...register('fundRoundEndTime', {
-            required: 'This is required',
-          })}
         />
-        <FormErrorMessage>
-          {errors.description && <span>This field is required</span>}
-        </FormErrorMessage>
       </FormControl>
     </Flex>
   )
 }
 
-function ReportRound(register: any, errors: any, index: number, steps: any, setSteps: any) {
+function ReportRound(index: number, steps: any, setSteps: any) {
 
   const addProgressStep = (insertAt: number) => {
     const nextArtists = [
@@ -78,13 +71,7 @@ function ReportRound(register: any, errors: any, index: number, steps: any, setS
             id={`reportRoundEndTime${index}`}
             type="datetime-local"
             value={moment().add(index + 1, 'month').endOf('day').format('YYYY-MM-DDTHH:mm')}
-            {...register(`reportRoundEndTime${index}`, {
-              required: 'This is required',
-            })}
           />
-          <FormErrorMessage>
-            {errors.description && <span>This field is required</span>}
-          </FormErrorMessage>
         </FormControl>
       </Flex>
       <Flex width="100%" justify="flex-end" gap={4}>
@@ -104,7 +91,7 @@ function ReportRound(register: any, errors: any, index: number, steps: any, setS
   )
 }
 
-function LastRound(register: any, errors: any, index: any) {
+function LastRound(index: number) {
 
   const [lastRoundEndTime, setLastRoundEndTime] = useState<string>();
 
@@ -126,26 +113,20 @@ function LastRound(register: any, errors: any, index: any) {
           type="datetime-local"
           onChange={(e) => { setLastRoundEndTime(moment(new Date(e.target.value)).format('YYYY-MM-DDTHH:mm')); }}
           value={lastRoundEndTime}
-          {...register('lastRoundEndTime', {
-            required: 'This is required',
-          })}
         />
-        <FormErrorMessage>
-          {errors.description && <span>This field is required</span>}
-        </FormErrorMessage>
       </FormControl>
     </Flex>
   )
 }
 
-function RoundSteps(register: any, errors: any) {
+function RoundSteps() {
   const { activeStep, setStep } = useSteps({
     initialStep: 0,
   });
 
   const [steps, setSteps] = useState([
-    { title: 'Funding Round', description: 'When the project not accepting backer anymore', content: FirstRound },
-    { title: 'Progress Report', description: 'When you have to progress update to receive more fund', content: ReportRound },
+    { title: 'First Round', description: 'When the project not accepting backer anymore', content: FirstRound },
+    { title: 'Report Round', description: 'When you have to progress update to receive more fund', content: ReportRound },
     { title: 'Last Round', description: 'When you will receive all the remaining fund', content: LastRound },
   ]);
 
@@ -159,17 +140,17 @@ function RoundSteps(register: any, errors: any) {
         }
           description={description}
           key={title + index}>
-          {content(register, errors, index, steps, setSteps)}
+          {content(index, steps, setSteps)}
         </Step>
       ))}
     </Steps>
   )
 }
 
-export const Form2 = (register: any, errors: any) => {
+export const Form2: React.FC<FormProps> = (props) => {
   return (
     <Flex flexDir="column" width="100%" gap={4}>
-      {RoundSteps(register, errors)}
+      {RoundSteps()}
     </Flex>
   );
 };
