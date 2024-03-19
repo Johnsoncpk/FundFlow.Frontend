@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box } from "@chakra-ui/layout";
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "./StepForms";
-import { useForm } from "react-hook-form";
+import { ProjectData } from './types';
 
 const steps = [
   {
@@ -24,12 +24,6 @@ const steps = [
   }
 ];
 
-type ProjectData = {
-  name: string
-  description: string
-  category: string
-}
-
 export const Create = ({
   variant,
 }: {
@@ -41,25 +35,19 @@ export const Create = ({
   const isLastStep = activeStep === steps.length - 1;
   const hasCompletedAllSteps = activeStep === steps.length;
 
-  const {
-    // handleSubmit,
-    // trigger,
-    register,
-    formState: { isSubmitting, errors },
-  } = useForm<ProjectData>();
+  const [projectData, setProjectData] = useState<ProjectData>();
 
   return (
     <Flex flexDir="column" width="100%">
       <Text align={'center'} fontSize='3xl' marginBottom={'30px'}>🎨 Create Your Project 🛠️</Text>
       <form onSubmit={(e) => {
         e.preventDefault();
-        nextStep();
       }}>
         <Steps variant={variant} colorScheme="blue" activeStep={activeStep}>
           {steps.map(({ label, form }, index) => (
             <Step label={<Text onClick={() => { setStep(index) }}>{label}</Text>} key={label + index}>
               <Box sx={{ p: 8, my: 8, rounded: "md" }}>
-                {form(register, errors)}
+                {form(projectData, setProjectData)}
               </Box>
             </Step>
           ))}
@@ -92,8 +80,9 @@ export const Create = ({
               <Button size="sm" onClick={
                 (event: React.MouseEvent<HTMLButtonElement>) => {
                   const form = event.currentTarget.form as HTMLFormElement;
+                  nextStep();
                   form.requestSubmit();
-                }} colorScheme='blue' isLoading={isSubmitting}>
+                }} colorScheme='blue'>
                 Finish
               </Button> :
               <Button size="sm" onClick={() => { nextStep(); }}>

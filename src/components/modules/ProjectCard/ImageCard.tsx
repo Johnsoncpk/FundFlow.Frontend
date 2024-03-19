@@ -14,6 +14,8 @@ const ImageCard: FC<ImageCardParams> = ({ nft: { name, metadata, tokenId } }) =>
     const borderColor = useColorModeValue('gray.200', 'gray.600');
     const { isOpen, onToggle } = useDisclosure()
 
+    console.log(metadata, tokenId, name)
+
     return (
         <Box onMouseEnter={onToggle} onMouseLeave={onToggle} bgColor={bgColor} padding={2} borderRadius="xl" borderWidth="1px" borderColor={borderColor}>
             <Box position={'relative'} maxHeight="350" maxWidth={"350"} overflow={'hidden'} borderRadius="xl">
