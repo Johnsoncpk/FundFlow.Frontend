@@ -34,7 +34,6 @@ export const getServerSideProps:
   GetServerSideProps<HomePageProps> = async (_) => {
 
     if (!Moralis.Core.isStarted) {
-      console.log(27)
       await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
     }
 
@@ -45,7 +44,7 @@ export const getServerSideProps:
     });
 
     const data = JSON.parse(JSON.stringify(projects.result));
-
+    
     return {
       props: { projects: data },
     };

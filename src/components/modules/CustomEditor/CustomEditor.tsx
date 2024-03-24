@@ -15,10 +15,13 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { EditorState } from "lexical";
+import { FormProps } from 'components/types';
 
 function Placeholder() {
     return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -48,7 +51,25 @@ const editorConfig = {
     namespace: "custom-editor"
 };
 
-const CustomEditor: React.FC<{ isToolBarShow?: boolean }> = ({ isToolBarShow = true }) => {
+function MyOnChangePlugin({ onChange }) {
+    const [editor] = useLexicalComposerContext();
+
+    useEffect(() => {
+        const initialEditorState = editor.parseEditorState(value)
+      editor.setEditorState(initialEditorState)
+      return editor.registerUpdateListener(({editorState}) => {
+        onChange(editorState);
+      });
+    }, [editor, onChange]);
+    return null;
+  }
+
+const CustomEditor: React.FC<{ formProps: FormProps, isToolBarShow?: boolean }> = ({ formProps, isToolBarShow = true }) => {
+    function onChange(editorState: EditorState) {
+        const editorStateJSON = editorState.toJSON();
+        formProps.setProjectData({ ...formProps.projectData, editorState: JSON.stringify(editorStateJSON) });
+    }
+  
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className="editor-container">
@@ -67,6 +88,7 @@ const CustomEditor: React.FC<{ isToolBarShow?: boolean }> = ({ isToolBarShow = t
                     <AutoLinkPlugin />
                     <ListMaxIndentLevelPlugin maxDepth={7} />
                     <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+                    <MyOnChangePlugin onChange={onChange}/>
                 </div>
             </div>
         </LexicalComposer>

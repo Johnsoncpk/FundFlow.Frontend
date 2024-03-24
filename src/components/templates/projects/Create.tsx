@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/layout";
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "./StepForms";
-import { ProjectData } from './types';
+import { ProjectData } from 'components/types';
 
 const steps = [
   {

@@ -3,7 +3,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import React from 'react';
-import { FormProps } from ".";
+import { FormProps } from "components/types";
 
 function FirstRound() {
   const [fundingGoal, setFundingGoal] = useState<number>(10000);
@@ -44,7 +44,7 @@ function FirstRound() {
   )
 }
 
-function ReportRound(index: number, steps: any, setSteps: any) {
+function ReportRound(index: number, steps: any, setSteps: any) {  `1`
 
   const addProgressStep = (insertAt: number) => {
     const nextArtists = [

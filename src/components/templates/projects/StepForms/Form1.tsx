@@ -22,7 +22,7 @@ export const Form1: React.FC<FormProps> = (props) => {
         <Textarea
           required
           onChange={(e) => { props.setProjectData({ ...props.projectData, description: e.target.value }) }}
-          value={props.projectData?.name}
+          value={props.projectData?.description}
           id='description'
           placeholder='Recalibrate with Acupoints designed by Oriental Acupuncture methodology. Apex cushioning, energy return, arch support, sustainable!'
         />
