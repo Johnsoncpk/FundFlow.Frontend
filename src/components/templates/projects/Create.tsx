@@ -4,6 +4,7 @@ import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "./StepForms";
 import { ProjectData } from 'components/types';
+import moment from 'moment';
 
 const steps = [
   {
@@ -43,8 +44,16 @@ export const Create = ({
     totalFundingGoal: 0,
     totalRound: 0,
     rounds: [{
-      fundingGoal: 0,
-      endAt: 0,
+      fundingGoal: 10000,
+      endAt: moment().add(1, 'month').endOf('day').unix(),
+    },
+    {
+      fundingGoal: 10000,
+      endAt: moment().add(2, 'month').endOf('day').unix(),
+    },
+    {
+      fundingGoal: 10000,
+      endAt: moment().add(3, 'month').endOf('day').unix(),
     }]
   });
 

@@ -20,6 +20,7 @@
     "@lexical/react": "^0.13.1",
     "@moralisweb3/next": "^2.14.1",
     "@pinata/sdk": "^2.1.0",
+    "@tinymce/tinymce-react": "^4.3.2",
     "@web3uikit/core": "^0.1.5",
     "@web3uikit/icons": "^0.4.1",
     "chakra-ui-steps": "^2.1.0",

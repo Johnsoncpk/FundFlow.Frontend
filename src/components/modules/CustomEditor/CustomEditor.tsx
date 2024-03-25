@@ -15,7 +15,7 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
@@ -55,21 +55,19 @@ function MyOnChangePlugin({ onChange }) {
     const [editor] = useLexicalComposerContext();
 
     useEffect(() => {
-        const initialEditorState = editor.parseEditorState(value)
-      editor.setEditorState(initialEditorState)
-      return editor.registerUpdateListener(({editorState}) => {
-        onChange(editorState);
-      });
+        return editor.registerUpdateListener(({ editorState }) => {
+            onChange(editorState);
+        });
     }, [editor, onChange]);
     return null;
-  }
+}
 
 const CustomEditor: React.FC<{ formProps: FormProps, isToolBarShow?: boolean }> = ({ formProps, isToolBarShow = true }) => {
     function onChange(editorState: EditorState) {
         const editorStateJSON = editorState.toJSON();
         formProps.setProjectData({ ...formProps.projectData, editorState: JSON.stringify(editorStateJSON) });
     }
-  
+
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className="editor-container">
@@ -88,7 +86,7 @@ const CustomEditor: React.FC<{ formProps: FormProps, isToolBarShow?: boolean }> 
                     <AutoLinkPlugin />
                     <ListMaxIndentLevelPlugin maxDepth={7} />
                     <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-                    <MyOnChangePlugin onChange={onChange}/>
+                    <MyOnChangePlugin onChange={onChange} />
                 </div>
             </div>
         </LexicalComposer>
