@@ -1,6 +1,6 @@
 import { Flex, FormControl, FormLabel, Input, Select, Textarea } from "@chakra-ui/react";
 import React from 'react';
-import { FormProps } from ".";
+import { FormProps } from "components/types";
 
 export const Form1: React.FC<FormProps> = (props) => {
 

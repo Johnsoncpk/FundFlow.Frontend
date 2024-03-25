@@ -1,55 +1,105 @@
-import { Flex, Button, FormControl, FormErrorMessage, FormLabel, NumberInput, NumberInputField, NumberDecrementStepper, NumberIncrementStepper, NumberInputStepper, Input, Text } from "@chakra-ui/react";
+import { Flex, Button, FormControl, FormLabel, NumberInput, NumberInputField, NumberDecrementStepper, NumberIncrementStepper, NumberInputStepper, Input, Text } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import React from 'react';
 import { FormProps } from "components/types";
 
-function FirstRound() {
-  const [fundingGoal, setFundingGoal] = useState<number>(10000);
+function FundingRound(
+  index: number,
+  stepLength: number,
+  props: FormProps,
+  addProgressStep: (insertAt: number) => void,
+  removeProgressStep: (removeAt: number) => void) {
+
   const format = (val: number) => `$ ${val}`;
   const parse = (val: string) => Number(val.toString().replace(/^\$/, ''));
 
   return (
-    <Flex marginY={'30px'} flexDir="column" width="100%" gap={4}>
-      <FormControl>
-        <FormLabel htmlFor='fundingGoal'>Funding Goal 💰</FormLabel>
-        <NumberInput
-          id='fundingGoal'
-          onChange={(value) => setFundingGoal(parse(value))}
-          value={format(fundingGoal)}
-          allowMouseWheel
-          step={1000}
-          min={1000}
-          max={10000000}>
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
-
-      <FormControl>
-        <FormLabel htmlFor='fundRoundEndTime'>Funding Round End Time 🕰️</FormLabel>
-        <Input
-          placeholder="Select Date and Time"
-          size="md"
-          id="fundRoundEndTime"
-          type="datetime-local"
-          value={moment().add(1, 'month').endOf('day').format('YYYY-MM-DDTHH:mm')}
-        />
-      </FormControl>
-    </Flex>
+    <>
+      <Flex marginY={'30px'} flexDir="column" width="100%" gap={4}>
+        <FormControl>
+          <FormLabel htmlFor='fundingGoal'>Funding Goal 💰</FormLabel>
+          <NumberInput
+            id='fundingGoal'
+            onChange={(value) => setFundingGoal(parse(value))}
+            value={format(props.projectData.rounds[index].fundingGoal)}
+            allowMouseWheel
+            step={1000}
+            min={1000}
+            max={10000000}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor={`reportRoundEndTime${index}`}>Progress Round {index} End At👨‍💻👩🏻‍💻</FormLabel>
+          <Input
+            placeholder="Select Date and Time"
+            size="md"
+            onChange={(e) => setEndAt(e.target.value)}
+            id={`reportRoundEndTime${index}`}
+            type="datetime-local"
+            value={props.projectData.rounds[index].endAt}
+          />
+        </FormControl>
+      </Flex>
+      {
+        (index !== stepLength - 1) &&
+        (index !== 0) &&
+        <Flex width="100%" justify="flex-end" gap={4}>
+          <Button
+            isDisabled={stepLength === 3}
+            onClick={() => { removeProgressStep(index) }}
+            size="sm"
+            variant="ghost"
+          >
+            Remove this round
+          </Button>
+          <Button size="sm" onClick={() => { addProgressStep(index) }}>
+            Add more round
+          </Button>
+        </Flex>
+      }
+    </>
   )
 }
 
-function ReportRound(index: number, steps: any, setSteps: any) {  `1`
+const RoundSteps: React.FC<FormProps> = (props) => {
+  const { activeStep, setStep, addProgressStep, removeProgressStep, steps } = useRoundSteps(props);
+
+  return (
+    <Steps variant="simple" orientation="vertical" colorScheme="blue" activeStep={activeStep}>
+      {props.projectData.rounds.map(({
+        fundingGoal,
+        endAt
+      }, index) => (
+        <Step label={
+          <Text onClick={() => { setStep(index) }}>
+            {(index === 0 || index === steps.length - 1) ? title : `${title} ${index}`}
+          </Text>
+        }
+          description={description}
+          key={title + index}>
+          {FundingRound(index, steps.length, props, addProgressStep, removeProgressStep)}
+        </Step>
+      ))}
+    </Steps>
+  )
+}
+
+const useRoundSteps = (props: FormProps) => {
+  const { activeStep, setStep } = useSteps({
+    initialStep: 0,
+  });
 
   const addProgressStep = (insertAt: number) => {
     const nextArtists = [
       ...steps.slice(0, insertAt),
-      { title: 'Progress Report Round', description: 'When you have to progress update to receive more fund', content: ReportRound },
+      getReportRound(insertAt),
       ...steps.slice(insertAt)
     ];
     setSteps(nextArtists);
@@ -60,97 +110,37 @@ function ReportRound(index: number, steps: any, setSteps: any) {  `1`
     setSteps(newSteps);
   }
 
-  return (
-    <>
-      <Flex marginY={'30px'} flexDir="column" width="100%" gap={4}>
-        <FormControl>
-          <FormLabel htmlFor={`reportRoundEndTime${index}`}>Progress Round {index} End At👨‍💻👩🏻‍💻</FormLabel>
-          <Input
-            placeholder="Select Date and Time"
-            size="md"
-            id={`reportRoundEndTime${index}`}
-            type="datetime-local"
-            value={moment().add(index + 1, 'month').endOf('day').format('YYYY-MM-DDTHH:mm')}
-          />
-        </FormControl>
-      </Flex>
-      <Flex width="100%" justify="flex-end" gap={4}>
-        <Button
-          isDisabled={steps.length === 3}
-          onClick={() => { removeProgressStep(index) }}
-          size="sm"
-          variant="ghost"
-        >
-          Remove this round
-        </Button>
-        <Button size="sm" onClick={() => { addProgressStep(index) }}>
-          Add more round
-        </Button>
-      </Flex>
-    </>
-  )
-}
-
-function LastRound(index: number) {
-
-  const [lastRoundEndTime, setLastRoundEndTime] = useState<string>();
-
-  useEffect(() => {
-    return () => {
-      setLastRoundEndTime(moment().add(index + 1, 'month').endOf('day').format('YYYY-MM-DDTHH:mm'));
-    };
-  })
-
-
-  return (
-    <Flex marginY={'30px'} flexDir="column" width="100%" gap={4}>
-      <FormControl>
-        <FormLabel htmlFor='lastRoundEndTime'>Whole Project End Time 🕰️</FormLabel>
-        <Input
-          placeholder="Select Date and Time"
-          size="md"
-          id="lastRoundEndTime"
-          type="datetime-local"
-          onChange={(e) => { setLastRoundEndTime(moment(new Date(e.target.value)).format('YYYY-MM-DDTHH:mm')); }}
-          value={lastRoundEndTime}
-        />
-      </FormControl>
-    </Flex>
-  )
-}
-
-function RoundSteps() {
-  const { activeStep, setStep } = useSteps({
-    initialStep: 0,
-  });
-
   const [steps, setSteps] = useState([
-    { title: 'First Round', description: 'When the project not accepting backer anymore', content: FirstRound },
-    { title: 'Report Round', description: 'When you have to progress update to receive more fund', content: ReportRound },
-    { title: 'Last Round', description: 'When you will receive all the remaining fund', content: LastRound },
+    { title: 'First Round', description: 'Show the ideas and prototype!' },
+    getReportRound(),
+    { title: 'Last Round', description: 'Collect all the remaining fund!' },
   ]);
 
-  return (
-    <Steps variant="simple" orientation="vertical" colorScheme="blue" activeStep={activeStep}>
-      {steps.map(({ title, description, content }, index) => (
-        <Step label={
-          <Text onClick={() => { setStep(index) }}>
-            {(index === 0 || index === steps.length - 1) ? title : `${title} ${index}`}
-          </Text>
-        }
-          description={description}
-          key={title + index}>
-          {content(index, steps, setSteps)}
-        </Step>
-      ))}
-    </Steps>
-  )
-}
+  function getReportRound() {
+    addRound(index, 10000, moment().add(1, 'month').endOf('day').format('YYYY-MM-DDTHH:mm'));
+    return { title: 'Report Round', description: 'Disclose more information to the backers!' };
+  }
+
+  const addRound = (
+    insertAt: number,
+    fundingGoal: number,
+    endAt: number) => {
+
+    const newRound = [
+      ...props.projectData.rounds.slice(0, insertAt),
+      { fundingGoal, endAt },
+      ...props.projectData.rounds.slice(insertAt)
+    ];
+    props.setProjectData({ ...props.projectData, rounds: newRound });
+  }
+
+  return { activeStep, setStep, addProgressStep, removeProgressStep, steps };
+};
 
 export const Form2: React.FC<FormProps> = (props) => {
   return (
     <Flex flexDir="column" width="100%" gap={4}>
-      {RoundSteps()}
+      {RoundSteps(props)}
     </Flex>
   );
 };
