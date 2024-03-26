@@ -1,5 +1,8 @@
-const DEFAULT_CONTENT = `<p><img style="display: block; margin-left: auto; margin-right: auto;" title="Tiny Logo" src="../images/logos/android-chrome-256x256.png" alt="TinyMCE Logo" width="128" height="128"></p>
-<h2 style="text-align: center;">Welcome to the TinyMCE Cloud demo!</h2>
+import { ProjectData } from "components/types";
+import moment from "moment";
+
+const DEFAULT_CONTENT = `<p><img style="display: block; margin-left: auto; margin-right: auto;" title="Tiny Logo" src="/Fundflow-LightBG.svg" alt="TinyMCE Logo" width="128" height="128"></p>
+<h2 style="text-align: center;">Welcome to the FundFlow!</h2>
 <h5 style="text-align: center;">This demo includes <em>enterprise</em>, also known as <em>Premium</em> features.</h5>
 <h5 style="text-align: center;">Try out these features as provided in this full featured example.</h5>
 <h5 style="text-align: center;">And visit the <a href="../pricing" aria-invalid="true">pricing page</a> to learn more about our Premium plugins.</h5>
@@ -55,4 +58,26 @@ const DEFAULT_CONTENT = `<p><img style="display: block; margin-left: auto; margi
 <div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.25%;"><iframe style="top: 0px; left: 0px; width: 100%; height: 100%; position: absolute; border: 0px;" src="https://player.vimeo.com/video/253905163?app_id=122963&amp;byline=0&amp;badge=0&amp;portrait=0&amp;title=0" scrolling="no" allow="encrypted-media;" allowfullscreen="allowfullscreen"></iframe></div>
 </div>`;
 
-export default DEFAULT_CONTENT;
+const INIT_VALUE:ProjectData = {
+    name: "",
+    description: "",
+    category: "",
+    url: "",
+    editorState: DEFAULT_CONTENT,
+    totalFundingGoal: 0,
+    totalRound: 0,
+    rounds: [{
+      fundingGoal: 2000,
+      endAt: moment().add(1, 'month').endOf('day').unix(),
+    },
+    {
+      fundingGoal: 2000,
+      endAt: moment().add(2, 'month').endOf('day').unix(),
+    },
+    {
+      fundingGoal: 2000,
+      endAt: moment().add(3, 'month').endOf('day').unix(),
+    }]
+  };
+
+export {DEFAULT_CONTENT, INIT_VALUE};

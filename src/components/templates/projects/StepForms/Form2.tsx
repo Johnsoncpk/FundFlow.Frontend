@@ -71,7 +71,7 @@ function FundingRound(
           >
             Remove this round
           </Button>
-          <Button size="sm" onClick={() => { addProgressStep(index) }}>
+          <Button size="sm" onClick={() => { addProgressStep(index+1) }}>
             Add more round
           </Button>
         </Flex>
@@ -81,18 +81,44 @@ function FundingRound(
 }
 
 const RoundSteps: React.FC<FormProps> = (props) => {
-  const { activeStep, setStep, addProgressStep, removeProgressStep, steps } = useRoundSteps(props);
+  const { addProgressStep, removeProgressStep, steps } = useRoundSteps(props);
+
+  const { activeStep, setStep } = useSteps({
+    initialStep: 0,
+  });
+
+  function getTitle(index: number): string{
+    switch (index) {
+      case 0:
+        return 'First Round';
+      case props.projectData.rounds.length - 1:
+        return 'Last Round';
+      default:
+        return `Report Round ${index}`;
+    }
+  }
+
+  function getDescription(index: number): string{
+    switch (index) {
+      case 0:
+        return 'Show the ideas and prototype!';
+      case props.projectData.rounds.length - 1:
+        return 'Collect all the remaining fund!';
+      default:
+        return `Update the project status to get more Fund!`;
+    }
+  }
 
   return (
     <Steps variant="simple" orientation="vertical" colorScheme="blue" activeStep={activeStep}>
-      {steps.map(({ title, description }, index) => (
+      {props.projectData.rounds.map((_, index) => (
         <Step label={
           <Text onClick={() => { setStep(index) }}>
-            {(index === 0 || index === steps.length - 1) ? title : `${title} ${index}`}
+            {getTitle(index)}
           </Text>
         }
-          description={description}
-          key={title + index}>
+          description={getDescription(index)}
+          key={index}>
           {FundingRound(index, steps.length, props, addProgressStep, removeProgressStep)}
         </Step>
       ))}
@@ -101,19 +127,11 @@ const RoundSteps: React.FC<FormProps> = (props) => {
 }
 
 const useRoundSteps = (props: FormProps) => {
-  const { activeStep, setStep } = useSteps({
-    initialStep: 0,
-  });
+  const [steps, setSteps] = useState([{},{},{}]);
 
   const addProgressStep = (insertAt: number) => {
-    addRound(insertAt, 10000, moment().add(insertAt + 1, 'month').endOf('day').unix());
-
-    const nextArtists = [
-      ...steps.slice(0, insertAt),
-      getReportRound(),
-      ...steps.slice(insertAt)
-    ];
-    setSteps(nextArtists);
+    addRound(insertAt, 2000, moment().add(insertAt + 1, 'month').endOf('day').unix());
+    setSteps([...steps, {}]);
   }
 
   const removeProgressStep = (removeAt: number) => {
@@ -121,16 +139,6 @@ const useRoundSteps = (props: FormProps) => {
     setSteps(newSteps);
     const newRound = props.projectData.rounds.filter((_: any, i: number) => i !== removeAt);
     props.setProjectData({ ...props.projectData, rounds: newRound });
-  }
-
-  const [steps, setSteps] = useState([
-    { title: 'First Round', description: 'Show the ideas and prototype!' },
-    getReportRound(),
-    { title: 'Last Round', description: 'Collect all the remaining fund!' },
-  ]);
-
-  function getReportRound() {
-    return { title: 'Report Round', description: 'Disclose more information to the backers!' };
   }
 
   const addRound = (
@@ -146,7 +154,7 @@ const useRoundSteps = (props: FormProps) => {
     props.setProjectData({ ...props.projectData, rounds: newRound });
   }
 
-  return { activeStep, setStep, addProgressStep, removeProgressStep, steps, addRound };
+  return { addProgressStep, removeProgressStep, steps, addRound };
 };
 
 export const Form2: React.FC<FormProps> = (props) => {
@@ -156,12 +164,8 @@ export const Form2: React.FC<FormProps> = (props) => {
 
   return (
     <Flex flexDir="column" width="100%" gap={4}>
-
-      <Spacer />
-      <Flex>
         <Text fontSize='xl'>Total Rounds: <Text as='u' >{props.projectData.rounds.length}</Text> Total Funding Goal: <Text as='u'>{totalFundingGoal()}</Text></Text>
-      </Flex>
-      {RoundSteps(props)}
+      <RoundSteps {...props} />
     </Flex>
   );
 };

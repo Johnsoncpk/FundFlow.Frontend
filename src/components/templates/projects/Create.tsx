@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Box } from "@chakra-ui/layout";
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "./StepForms";
 import { ProjectData } from 'components/types';
-import moment from 'moment';
+import { INIT_VALUE } from './StepForms/DefaultWYSIWYGValue';
 
 const steps = [
   {
@@ -36,26 +36,9 @@ export const Create = ({
   const isLastStep = activeStep === steps.length - 1;
   const hasCompletedAllSteps = activeStep === steps.length;
 
-  const [projectData, setProjectData] = useState<ProjectData>({
-    name: "",
-    description: "",
-    category: "",
-    url: "",
-    totalFundingGoal: 0,
-    totalRound: 0,
-    rounds: [{
-      fundingGoal: 10000,
-      endAt: moment().add(1, 'month').endOf('day').unix(),
-    },
-    {
-      fundingGoal: 10000,
-      endAt: moment().add(2, 'month').endOf('day').unix(),
-    },
-    {
-      fundingGoal: 10000,
-      endAt: moment().add(3, 'month').endOf('day').unix(),
-    }]
-  });
+  const [projectData, setProjectData] = useState<ProjectData>(INIT_VALUE);
+
+
 
   return (
     <Flex flexDir="column" width="100%">
@@ -75,13 +58,27 @@ export const Create = ({
         {hasCompletedAllSteps && (
           <div>
             <Box sx={{ my: 8, p: 8, rounded: "md" }}>
-              <Heading fontSize="xl" textAlign={"center"}>
-                Woohoo! Project Created!!! 🎉
-              </Heading>
+              <Alert
+                status='success'
+                variant='top-accent'
+                flexDirection='column'
+                alignItems='center'
+                justifyContent='center'
+                textAlign='center'
+                height='200px'
+              >
+                <AlertIcon boxSize='40px' mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize='lg'>
+                  🍾Create Project Request Submmited!🥂
+                </AlertTitle>
+                <AlertDescription maxWidth='sm'>
+                  Project creation may take some times. Please wait for 5-10 mins!
+                </AlertDescription>
+              </Alert>
             </Box>
             <Flex width="100%" justify="center" gap={4}>
               <Button onClick={reset}>
-                Check the project you just created!
+                Back to home page
               </Button>
             </Flex>
           </div>
