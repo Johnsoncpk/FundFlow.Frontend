@@ -5,6 +5,10 @@ const nextConfig = {
   images: {
     domains: ['raw.githubusercontent.com'],
   },
+  env: {
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
+    WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
+  }
 };
 
 module.exports = nextConfig;

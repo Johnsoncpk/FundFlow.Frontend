@@ -17,8 +17,8 @@ export default async function POST(request: NextApiRequest, response: NextApiRes
       body: ipfsData,
     });
     
-    const response = await res.json();
-    response.status(200).json({ ipfsHash: response.IpfsHash })    
+    const rese = await res.json();
+    response.status(200).json({ ipfsHash: rese.IpfsHash })    
   } catch (e) {
     console.log(e);
     response.status(500).json(

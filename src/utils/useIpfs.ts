@@ -2,10 +2,11 @@ import { ProjectData } from "components/types";
 
 import Cryptojs from 'crypto-js';
 
-export async function uploadProjectDataToIpfs(projectData : ProjectData){
+export async function uploadProjectDataToIpfs(data : ProjectData){
 
+  const projectData = structuredClone(data);
   const encryptionKey = process.env.ENCRYPTION_KEY || "default";
-  console.log(encryptionKey);
+  
   projectData.editorState = Cryptojs.AES.encrypt(projectData.editorState, encryptionKey).toString();
   projectData.totalFundingGoal = projectData.rounds.reduce((n, {fundingGoal}) => n + fundingGoal, 0);
   projectData.totalRound = projectData.rounds.length;

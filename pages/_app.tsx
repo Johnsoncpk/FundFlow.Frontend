@@ -1,32 +1,12 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { createClient, WagmiConfig } from 'wagmi';
-import { configureChains } from '@wagmi/core';
-import {
-  polygonMumbai,
-  sepolia,
-  hardhat,
-} from '@wagmi/core/chains';
+import { WagmiProvider } from 'wagmi';
 import { extendTheme } from '@chakra-ui/react';
-import { publicProvider } from 'wagmi/providers/public';
-import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import "./styles.css";
 import { StepsTheme as Steps } from "chakra-ui-steps";
-
-const { provider, webSocketProvider } = configureChains(
-  [
-    polygonMumbai,
-    sepolia,
-    hardhat
-  ],
-  [publicProvider()],
-);
-
-const client = createClient({
-  provider,
-  webSocketProvider,
-  autoConnect: true,
-});
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { wagmiConfig } from "utils/wagmiConfig";
+import { createWeb3Modal } from '@web3modal/wagmi/react'
 
 const config = {
   initialColorMode: 'dark',
@@ -40,16 +20,22 @@ const theme = extendTheme({
   }
 });
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const queryClient = new QueryClient()
 
+createWeb3Modal({
+  wagmiConfig,
+  projectId: process.env.WALLETCONNECT_PROJECT_ID as string,
+})
+
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <WagmiConfig client={client}>
-        <SessionProvider session={pageProps.session} refetchInterval={0}>
-          <Component {...pageProps} />
-        </SessionProvider>
-      </WagmiConfig>
-    </ChakraProvider>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <ChakraProvider resetCSS theme={theme}>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
   );
 };
 

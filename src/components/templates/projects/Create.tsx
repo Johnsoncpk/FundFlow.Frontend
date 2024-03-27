@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from "@chakra-ui/layout";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text, useToast } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "components/templates/projects/StepForms";
 import { ProjectData } from 'components/types';
@@ -9,6 +9,7 @@ import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
 import { useWriteContract } from "wagmi";
 import { BigNumber } from "ethers";
+import Link from 'next/link';
 
 const steps = [
   {
@@ -43,30 +44,54 @@ export const Create = ({
   const [projectData, setProjectData] = useState<ProjectData>(INIT_VALUE);
   const [cid, setCid] = useState<string>("");
 
-  const { writeContract } = useWriteContract()
+  const { writeContractAsync } = useWriteContract()
+
+  const toast = useToast()
 
   async function submitForm() {
-    setCid(await uploadProjectDataToIpfs(projectData));
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: 'createProject',
-      args: [
-        projectData.name,
-        //`ipfs://${cid}`,
-        `ipfs://QmU27sDvnQhNsQXFuAsYU9Q2gm9Gm1ZWwnidxw7Um7GiTB`,
-        projectData.rounds.map((round) => {
-          return {
-            id: BigNumber.from(0),
-            amountSentToCreator: BigNumber.from(0),
-            collectedFund: BigNumber.from(0),
-            fundingGoal: BigNumber.from(round.fundingGoal),
-            endAt: BigNumber.from(round.endAt)
-          }
-        }),
-        BigNumber.from(projectData.totalFundingGoal)
-      ],
-    })
+    try {
+      // setCid(await uploadProjectDataToIpfs(projectData));
+      const result = await writeContractAsync({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: 'createProject',
+        args: [
+          projectData.name,
+          // `ipfs://${cid}`,
+          `ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn`,
+          projectData.rounds.map((round) => {
+            return {
+              id: BigNumber.from(0),
+              amountSentToCreator: BigNumber.from(0),
+              collectedFund: BigNumber.from(0),
+              fundingGoal: BigNumber.from(round.fundingGoal),
+              endAt: BigNumber.from(round.endAt)
+            }
+          }),
+          BigNumber.from(projectData.totalFundingGoal)
+        ],
+      })
+
+      toast({
+        title: `Create Project Transaction Success`,
+        description:
+          (<Text as="u">
+           <Link href={`https://sepolia.etherscan.io/tx/${result}`}> Check the  Transaction status here!</Link>
+          </Text>),
+        status: "info",
+        position: 'top',
+        isClosable: true,
+      })
+      nextStep();
+    } catch (error : any) {
+      toast({
+        title: `Error: ${error.name}`,
+        description: error.shortMessage,
+        position: "top",
+        status: "error",
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -125,7 +150,6 @@ export const Create = ({
             {isLastStep ?
               <Button size="sm" onClick={
                 (event: React.MouseEvent<HTMLButtonElement>) => {
-                  nextStep();
                   submitForm();
                 }} colorScheme='blue'>
                 Finish
