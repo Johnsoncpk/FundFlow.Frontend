@@ -1,7 +1,5 @@
 import { CONTRACT_ADDRESS } from "./getAddress";
 
-
-
-
-export async function submitCreateProjectForm(){
-  }
+export function submitCreateProjectForm(){
+  return CONTRACT_ADDRESS
+}

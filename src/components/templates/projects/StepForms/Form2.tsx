@@ -1,4 +1,4 @@
-import { Flex, Button, FormControl, FormLabel, NumberInput, NumberInputField, NumberDecrementStepper, NumberIncrementStepper, NumberInputStepper, Input, Text, Spacer } from "@chakra-ui/react";
+import { Flex, Button, FormControl, FormLabel, NumberInput, NumberInputField, NumberDecrementStepper, NumberIncrementStepper, NumberInputStepper, Input, Text } from "@chakra-ui/react";
 import moment from "moment";
 import { useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";

@@ -1,7 +1,7 @@
 import { Divider, Flex, Text } from "@chakra-ui/react";
 import { FormProps } from 'components/types';
 import { Form1, Form2, Form3 } from ".";
-// useEvmRunContractFunction 
+import React from "react";
 
 export const Form4: React.FC<FormProps> = (props) => {
     return (

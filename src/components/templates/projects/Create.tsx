@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from "@chakra-ui/layout";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "./StepForms";
 import { ProjectData } from 'components/types';

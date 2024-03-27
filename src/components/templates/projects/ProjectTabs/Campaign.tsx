@@ -4,7 +4,7 @@ import React from 'react';
 const Campaign: React.FC = () => {
     return (
         <div>
-            <CustomEditor isToolBarShow={false} />
+            <CustomEditor isToolBarShow={false}/>
         </div>
     );
 };

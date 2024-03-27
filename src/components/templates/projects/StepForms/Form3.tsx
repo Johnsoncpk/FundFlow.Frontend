@@ -1,5 +1,4 @@
 import { Flex, Text } from "@chakra-ui/react";
-// import { CustomEditor } from "components/modules/CustomEditor";
 import { FormProps } from 'components/types';
 import React from "react";
 import { Editor } from '@tinymce/tinymce-react';
@@ -8,7 +7,6 @@ export const Form3: React.FC<FormProps> = (props) => {
   return (
     <Flex flexDir="column" width="100%" margin={"auto"} gap={4}>
       <Text fontSize='xl'>Edit this page and add any information you want, images, videos are suppoerted!</Text>
-      {/* <CustomEditor formProps={props} /> */}
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TIMYMCE_API_KEY}
         init={{
