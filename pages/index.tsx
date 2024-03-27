@@ -4,7 +4,7 @@ import { Swiper } from 'components/modules/Swiper';
 import RankTable from 'components/templates/home/RankTable';
 import Moralis from 'moralis';
 import { EvmChain, EvmNft } from 'moralis/common-evm-utils';
-import { CONTRACT_ADDRESS } from 'utils/getAddress';
+import { CONTRACT_ADDRESS } from 'utils/getContract';
 import { GetServerSideProps, NextPage } from 'next';
 
 type HomePageProps = {

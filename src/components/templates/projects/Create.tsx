@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { Box } from "@chakra-ui/layout";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
-import { Form1, Form2, Form3, Form4 } from "./StepForms";
+import { Form1, Form2, Form3, Form4 } from "components/templates/projects/StepForms";
 import { ProjectData } from 'components/types';
-import { INIT_VALUE } from './StepForms/DefaultWYSIWYGValue';
+import { INIT_VALUE } from 'components/templates/projects/StepForms/DefaultWYSIWYGValue';
+import { uploadProjectDataToIpfs } from 'utils/useIpfs';
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
+import { useWriteContract } from "wagmi";
+import { BigNumber } from "ethers";
 
 const steps = [
   {
@@ -37,14 +41,39 @@ export const Create = ({
   const hasCompletedAllSteps = activeStep === steps.length;
 
   const [projectData, setProjectData] = useState<ProjectData>(INIT_VALUE);
+  const [cid, setCid] = useState<string>("");
 
+  const { writeContract } = useWriteContract()
 
+  async function submitForm() {
+    setCid(await uploadProjectDataToIpfs(projectData));
+    writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: 'createProject',
+      args: [
+        projectData.name,
+        //`ipfs://${cid}`,
+        `ipfs://QmU27sDvnQhNsQXFuAsYU9Q2gm9Gm1ZWwnidxw7Um7GiTB`,
+        projectData.rounds.map((round) => {
+          return {
+            id: BigNumber.from(0),
+            amountSentToCreator: BigNumber.from(0),
+            collectedFund: BigNumber.from(0),
+            fundingGoal: BigNumber.from(round.fundingGoal),
+            endAt: BigNumber.from(round.endAt)
+          }
+        }),
+        BigNumber.from(projectData.totalFundingGoal)
+      ],
+    })
+  }
 
   return (
     <Flex flexDir="column" width="100%">
       <Text align={'center'} fontSize='3xl' marginBottom={'30px'}>🎨 Create Your Project 🛠️</Text>
-      <form onSubmit={(e) => {
-        e.preventDefault();
+      <form onSubmit={async (e) => {
+
       }}>
         <Steps variant={variant} colorScheme="blue" activeStep={activeStep}>
           {steps.map(({ label, form }, index) => (
@@ -96,9 +125,8 @@ export const Create = ({
             {isLastStep ?
               <Button size="sm" onClick={
                 (event: React.MouseEvent<HTMLButtonElement>) => {
-                  const form = event.currentTarget.form as HTMLFormElement;
                   nextStep();
-                  form.requestSubmit();
+                  submitForm();
                 }} colorScheme='blue'>
                 Finish
               </Button> :
