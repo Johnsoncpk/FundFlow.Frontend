@@ -7,7 +7,7 @@ export default async function POST(request: NextApiRequest, response: NextApiRes
 
     const ipfsData = new FormData();
     const blob = new Blob([JSON.stringify(data)], {type : 'application/json'})
-    ipfsData.append('file', blob, `${data.name}${new Date().toJSON().slice(0,10)}.json`)
+    ipfsData.append('file', blob, `${data.name}${new Date().toJSON()}.json`)
   
     const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
       method: "POST",

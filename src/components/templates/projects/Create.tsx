@@ -41,7 +41,6 @@ export const Create = ({
   const hasCompletedAllSteps = activeStep === steps.length;
 
   const [projectData, setProjectData] = useState<ProjectData>(INIT_VALUE);
-  const [cid, setCid] = useState<string>("");
 
   const { 
     data: hash, 
@@ -51,6 +50,7 @@ export const Create = ({
 
   const toast = useToast()
 
+  // status checkign should do in server side
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
   
   useEffect(() => {
@@ -89,7 +89,7 @@ export const Create = ({
 
   async function submitForm() {
     try {
-      // setCid(await uploadProjectDataToIpfs(projectData));
+      const cid = await uploadProjectDataToIpfs(projectData);
       await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
@@ -110,6 +110,10 @@ export const Create = ({
           BigInt(projectData.totalFundingGoal)
         ],
       })
+
+      setTimeout(function() {
+        console.log('This is a one-time task');
+      }, 6000);
 
       nextStep();
     } catch (error : any) {

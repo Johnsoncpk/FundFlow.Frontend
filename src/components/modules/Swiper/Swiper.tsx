@@ -47,8 +47,8 @@ const FundFlowSwiper = (props: { projects: readonly {
                 {props.projects?.length ? (
                     props.projects.map((project, index) => (
                         <SwiperSlide key={index}>
-                            <div onClick={() => { console.log(index) }}>
-                                <ImageCard nft={project} id={index} />
+                            <div onClick={() => { console.log(project) }}>
+                                <ImageCard project={project} id={index} />
                             </div>
                         </SwiperSlide>
                     ))

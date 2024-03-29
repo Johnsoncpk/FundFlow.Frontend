@@ -59,6 +59,7 @@ const SearchSection: FC<ProjectFilterParamsProps> = ({ filterParams, setFilterPa
                 <option value='design'>Design</option>
                 <option value='fashion'>Fashion</option>
                 <option value='file&design'>Film & Video</option>
+                <option value='music'>Music</option>
             </Select>
             <Text fontSize='2xl'>Categories sorted by </Text>
             <Select

@@ -6,7 +6,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
 import { GetServerSideProps, NextPage } from 'next';
 import { readContract } from '@wagmi/core';
 import { wagmiConfig } from 'utils/wagmiConfig';
-import { hardhat } from 'wagmi/chains'
+import { hardhat, sepolia } from 'wagmi/chains'
 import { normalizeContractObject } from 'utils/format';
 
 type HomePageProps = {
@@ -48,7 +48,7 @@ export const getServerSideProps:
     try {
       result = await readContract(wagmiConfig,
         {
-          chainId: hardhat.id,
+          chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
           abi: CONTRACT_ABI,
           address: CONTRACT_ADDRESS,
           functionName: 'getProjects',

@@ -9,6 +9,8 @@ export type ProjectData = {
     name: string
     description: string,
     category: string,
+    image: string | ArrayBuffer | null,
+    external_url: string,
     totalFundingGoal: number
     totalRound: number
     rounds: ProjectRound[]
@@ -18,4 +20,19 @@ export type ProjectData = {
 export type FormProps = {
     projectData: ProjectData;
     setProjectData: React.Dispatch<React.SetStateAction<ProjectData>>;
+}
+
+export type ProjectMetaData = {
+    name: string;
+    description: string;
+    category: 'all' | 'art' | 'comicts' | 'crafts' | 'dance' | 'design' | 'fashion' | 'file&design' | 'music';
+    editorState: string;
+    totalFundingGoal: BigInt;
+    totalRound: BigInt;
+    rounds: {
+        fundingGoal: BigInt;
+        endAt: BigInt;
+    }[];
+    image: string;
+    external_url: string;
 }

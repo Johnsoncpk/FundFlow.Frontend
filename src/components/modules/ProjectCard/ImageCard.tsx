@@ -1,12 +1,11 @@
 import { Box, Text, Image, useColorModeValue, useDisclosure, Fade, VStack, Link } from '@chakra-ui/react';
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { FC } from 'react';
 import { resolveIPFS } from 'utils/resolveIPFS';
 import NextLink from 'next/link'
 
 export interface ImageCardParams {
     id: number;
-    nft: {
+    project: {
         name: string;
         url: string;
         totalFundingGoal: bigint;
@@ -27,8 +26,8 @@ const ImageCard: FC<ImageCardParams> = (props) => {
             <Box position={'relative'} maxHeight="350" maxWidth={"350"} overflow={'hidden'} borderRadius="xl">
                 <VStack>
                     <Image
-                        src={resolveIPFS((props.nft.url as { image?: string })?.image)}
-                        alt={'nft'}
+                        src={resolveIPFS((props.project.url as { image?: string })?.image)}
+                        alt={'project'}
                         minH="350"
                         minW="350"
                         objectPosition={'center'}
@@ -36,12 +35,12 @@ const ImageCard: FC<ImageCardParams> = (props) => {
                         filter={isOpen ? 'brightness(0.3)' : 'brightness(1)'}
                     />
                     <Fade in={isOpen}>
-                        <Link as={NextLink} href={`/projects/${props.id}`}>
+                        <Link as={NextLink} href={`/project/${props.id}`}>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} top={'60%'} left={'2%'} fontWeight="semibold" as="h4" noOfLines={[1]} marginTop={2}>
-                                <Text color={'white'} align={'left'} as='b'>{props.nft.name}</Text>
+                                <Text color={'white'} align={'left'} as='b'>{props.project.name}</Text>
                             </Box>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} textAlign={'center'} top={'70%'} left={'3%'}>
-                                <Text color={'white'} fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{resolveIPFS((props.nft.url as { description?: string })?.description)}</Text>
+                                <Text color={'white'} fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{resolveIPFS((props.project.url as { description?: string })?.description)}</Text>
                             </Box>
                         </Link>
                         <Box mt="1" position={'absolute'} textAlign={'center'} top={'90%'} right={'3%'}>

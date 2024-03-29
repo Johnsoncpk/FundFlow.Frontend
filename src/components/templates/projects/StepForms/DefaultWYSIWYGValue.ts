@@ -59,25 +59,26 @@ const DEFAULT_CONTENT = `<p><img style="display: block; margin-left: auto; margi
 </div>`;
 
 const INIT_VALUE:ProjectData = {
-    name: "",
-    description: "",
-    category: "",
-    url: "",
-    editorState: DEFAULT_CONTENT,
-    totalFundingGoal: 0,
-    totalRound: 0,
-    rounds: [{
-      fundingGoal: 2000,
-      endAt: moment().add(1, 'month').endOf('day').unix(),
-    },
-    {
-      fundingGoal: 2000,
-      endAt: moment().add(2, 'month').endOf('day').unix(),
-    },
-    {
-      fundingGoal: 2000,
-      endAt: moment().add(3, 'month').endOf('day').unix(),
-    }]
-  };
+  name: "",
+  description: "",
+  category: "",
+  editorState: DEFAULT_CONTENT,
+  totalFundingGoal: 0,
+  totalRound: 0,
+  rounds: [{
+    fundingGoal: 2000,
+    endAt: moment().add(1, 'month').endOf('day').unix(),
+  },
+  {
+    fundingGoal: 2000,
+    endAt: moment().add(2, 'month').endOf('day').unix(),
+  },
+  {
+    fundingGoal: 2000,
+    endAt: moment().add(3, 'month').endOf('day').unix(),
+  }],
+  image: null,
+  external_url: ""
+};
 
 export {DEFAULT_CONTENT, INIT_VALUE};

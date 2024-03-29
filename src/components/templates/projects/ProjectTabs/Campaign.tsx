@@ -1,11 +1,11 @@
 import { CustomEditor } from 'components/modules/CustomEditor';
 import React from 'react';
+// import './tinymce.css'
 
-const Campaign: React.FC = () => {
+const Campaign: React.FC<{editorState: string | undefined}> = ({editorState}) => {
     return (
-        <div>
-            <CustomEditor isToolBarShow={false}/>
-        </div>
+        <>
+        </>
     );
 };
 
