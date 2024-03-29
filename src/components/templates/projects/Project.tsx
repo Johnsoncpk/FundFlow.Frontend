@@ -21,10 +21,6 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { EvmNft } from 'moralis/common-evm-utils';
-import { useEvmWalletNFTs } from '@moralisweb3/next';
-import { useSession } from 'next-auth/react';
-import { useNetwork } from 'wagmi';
-import { useRouter } from 'next/router'
 import { resolveIPFS } from 'utils/resolveIPFS';
 import { StarIcon } from '@chakra-ui/icons';
 import { Campaign } from './ProjectTabs';
@@ -37,18 +33,10 @@ type ProjectMetaData = {
 }
 
 const Project = () => {
-    const { data } = useSession();
-    const { chain } = useNetwork();
-    const { fetch } = useEvmWalletNFTs();
-    const router = useRouter();
     const [project, setProject] = useState<EvmNft | undefined>();
 
     const fetchProject = async () => {
-        const response = await fetch({ address: data?.user?.address ?? "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", chain: chain?.id ?? 1 });
-        if (response) {
-            console.log(router)
-            setProject(response.data[4]);
-        }
+        setProject(undefined);
     };
 
     useEffect(() => { fetchProject().catch(console.error); }, []);

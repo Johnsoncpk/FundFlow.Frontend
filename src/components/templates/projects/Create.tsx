@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from "@chakra-ui/layout";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text, useToast } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
@@ -7,8 +7,7 @@ import { ProjectData } from 'components/types';
 import { INIT_VALUE } from 'components/templates/projects/StepForms/DefaultWYSIWYGValue';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
-import { useWriteContract } from "wagmi";
-import { BigNumber } from "ethers";
+import { useWaitForTransactionReceipt, useWatchContractEvent, useWriteContract } from "wagmi";
 import Link from 'next/link';
 
 const steps = [
@@ -44,14 +43,54 @@ export const Create = ({
   const [projectData, setProjectData] = useState<ProjectData>(INIT_VALUE);
   const [cid, setCid] = useState<string>("");
 
-  const { writeContractAsync } = useWriteContract()
+  const { 
+    data: hash, 
+    isPending, 
+    writeContractAsync 
+  } = useWriteContract()
 
   const toast = useToast()
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
+  
+  useEffect(() => {
+    if (isConfirmed) {
+      toast({
+        title: `Create Project Transaction Confirmed!`,
+        description:
+          (<Text>
+            Project Created!
+            <Text as={'u'}>
+              <br />
+              <Link href={`https://sepolia.etherscan.io/tx/${hash}`}> Check the  Transaction status here!</Link>
+            </Text>
+          </Text>),
+        status: "success",
+        position: 'top',
+        isClosable: true,
+      })
+    }
+  }, [isConfirmed])
+
+  useEffect(() => {
+    if (isConfirming) {
+      toast({
+        title: `Transaction Created!`,
+        description:
+          (<Text as="u">
+           <Link href={`https://sepolia.etherscan.io/tx/${hash}`}> Check the  Transaction status here!</Link>
+          </Text>),
+        status: "info",
+        position: 'top',
+        isClosable: true,
+      })
+    }
+  }, [isConfirming])
 
   async function submitForm() {
     try {
       // setCid(await uploadProjectDataToIpfs(projectData));
-      const result = await writeContractAsync({
+      await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: 'createProject',
@@ -61,27 +100,17 @@ export const Create = ({
           `ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn`,
           projectData.rounds.map((round) => {
             return {
-              id: BigNumber.from(0),
-              amountSentToCreator: BigNumber.from(0),
-              collectedFund: BigNumber.from(0),
-              fundingGoal: BigNumber.from(round.fundingGoal),
-              endAt: BigNumber.from(round.endAt)
+              id: BigInt(0),
+              amountSentToCreator: BigInt(0),
+              collectedFund: BigInt(0),
+              fundingGoal: BigInt(round.fundingGoal),
+              endAt: BigInt(round.endAt)
             }
           }),
-          BigNumber.from(projectData.totalFundingGoal)
+          BigInt(projectData.totalFundingGoal)
         ],
       })
 
-      toast({
-        title: `Create Project Transaction Success`,
-        description:
-          (<Text as="u">
-           <Link href={`https://sepolia.etherscan.io/tx/${result}`}> Check the  Transaction status here!</Link>
-          </Text>),
-        status: "info",
-        position: 'top',
-        isClosable: true,
-      })
       nextStep();
     } catch (error : any) {
       toast({
@@ -148,7 +177,7 @@ export const Create = ({
               Prev
             </Button>
             {isLastStep ?
-              <Button size="sm" onClick={
+              <Button disabled={isPending}  size="sm" onClick={
                 (event: React.MouseEvent<HTMLButtonElement>) => {
                   submitForm();
                 }} colorScheme='blue'>

@@ -10,10 +10,6 @@ const NAV_LINKS: ISubNav[] = [
     label: 'Create',
     href: '/project/create',
   },
-  {
-    label: 'Transactions',
-    href: '/transactions',
-  },
 ];
 
 export default NAV_LINKS;

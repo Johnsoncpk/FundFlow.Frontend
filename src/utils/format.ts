@@ -10,3 +10,11 @@ export const getEllipsisTxt = (str?: string, n = 6) => {
   }
   return '';
 };
+
+export function normalizeContractObject<Type>(arg: Type): Type {
+  return JSON.parse(JSON.stringify(arg, (_, value) =>
+    typeof value === 'bigint'
+      ? value.toString()
+      : value
+  ));
+}

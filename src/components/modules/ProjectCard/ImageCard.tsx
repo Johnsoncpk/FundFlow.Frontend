@@ -5,23 +5,29 @@ import { resolveIPFS } from 'utils/resolveIPFS';
 import NextLink from 'next/link'
 
 export interface ImageCardParams {
-    key: number;
-    nft: EvmNft;
+    id: number;
+    nft: {
+        name: string;
+        url: string;
+        totalFundingGoal: bigint;
+        totalRound: bigint;
+        currentRound: bigint;
+        creator: `0x${string}`;
+        status: number;
+    };
 }
 
-const ImageCard: FC<ImageCardParams> = ({ nft: { name, metadata, tokenId } }) => {
+const ImageCard: FC<ImageCardParams> = (props) => {
     const bgColor = useColorModeValue('none', 'gray.700');
     const borderColor = useColorModeValue('gray.200', 'gray.600');
     const { isOpen, onToggle } = useDisclosure()
-
-    console.log(metadata, tokenId, name)
 
     return (
         <Box onMouseEnter={onToggle} onMouseLeave={onToggle} bgColor={bgColor} padding={2} borderRadius="xl" borderWidth="1px" borderColor={borderColor}>
             <Box position={'relative'} maxHeight="350" maxWidth={"350"} overflow={'hidden'} borderRadius="xl">
                 <VStack>
                     <Image
-                        src={resolveIPFS((metadata as { image?: string })?.image)}
+                        src={resolveIPFS((props.nft.url as { image?: string })?.image)}
                         alt={'nft'}
                         minH="350"
                         minW="350"
@@ -30,19 +36,19 @@ const ImageCard: FC<ImageCardParams> = ({ nft: { name, metadata, tokenId } }) =>
                         filter={isOpen ? 'brightness(0.3)' : 'brightness(1)'}
                     />
                     <Fade in={isOpen}>
-                        <Link as={NextLink} href={`/projects/${tokenId}`}>
+                        <Link as={NextLink} href={`/projects/${props.id}`}>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} top={'60%'} left={'2%'} fontWeight="semibold" as="h4" noOfLines={[1]} marginTop={2}>
-                                <Text color={'white'} align={'left'} as='b'>{name}</Text>
+                                <Text color={'white'} align={'left'} as='b'>{props.nft.name}</Text>
                             </Box>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} textAlign={'center'} top={'70%'} left={'3%'}>
-                                <Text color={'white'} fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{resolveIPFS((metadata as { description?: string })?.description)}</Text>
+                                <Text color={'white'} fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{resolveIPFS((props.nft.url as { description?: string })?.description)}</Text>
                             </Box>
                         </Link>
                         <Box mt="1" position={'absolute'} textAlign={'center'} top={'90%'} right={'3%'}>
                             <Text as='i' color={'white'} fontSize='md' noOfLines={1}>By Jay Oliva</Text>
                         </Box>
                     </Fade>
-                    {tokenId}
+                    {props.id}
                 </VStack>
             </Box>
         </Box>

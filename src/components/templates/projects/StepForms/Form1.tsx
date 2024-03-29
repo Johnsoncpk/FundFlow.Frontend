@@ -53,7 +53,7 @@ export const Form1: React.FC<FormProps> = (props) => {
           <option value='dance'>Dance</option>
           <option value='design'>Design</option>
           <option value='fashion'>Fashion</option>
-          <option value='file&design'>Film & Video</option>
+          <option value='film&video'>Film & Video</option>
         </Select>
         <FormHelperText>
             Categorized the project for searching

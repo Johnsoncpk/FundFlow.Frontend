@@ -1,7 +1,4 @@
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { headers } from 'next/headers'
-
-import { cookieStorage, createStorage } from 'wagmi'
 import { polygonMumbai, hardhat, sepolia } from 'wagmi/chains'
 
 // Get projectId at https://cloud.walletconnect.com
