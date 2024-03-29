@@ -27,11 +27,11 @@ export type ProjectMetaData = {
     description: string;
     category: 'all' | 'art' | 'comicts' | 'crafts' | 'dance' | 'design' | 'fashion' | 'file&design' | 'music';
     editorState: string;
-    totalFundingGoal: BigInt;
-    totalRound: BigInt;
+    totalFundingGoal: bigint;
+    totalRound: bigint;
     rounds: {
-        fundingGoal: BigInt;
-        endAt: BigInt;
+        fundingGoal: bigint;
+        endAt: bigint;
     }[];
     image: string;
     external_url: string;

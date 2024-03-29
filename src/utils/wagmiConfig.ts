@@ -4,12 +4,13 @@ import { polygonMumbai, hardhat, sepolia } from 'wagmi/chains'
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
 
-if (!projectId) throw new Error('Project ID is not defined')
+if (!projectId) { throw new Error('Project ID is not defined') }
 
 const metadata = {
   name: 'Fundflow',
   description: 'Decentralized Crowdfunding Platform',
-  url: "https://www.fund-flow.vercel.com", // origin must match your domain & subdomain
+  // origin must match your domain & subdomain
+  url: "https://www.fund-flow.vercel.com", 
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
 

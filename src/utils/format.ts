@@ -12,11 +12,13 @@ export const getEllipsisTxt = (str?: string, n = 6) => {
 };
 
 export function normalizeContractObject<Type>(arg: Type): Type {
-  return JSON.parse(JSON.stringify(arg, (_, value) =>
-    typeof value === 'bigint'
-      ? value.toString()
-      : value
-  ));
+  return JSON.parse(JSON.stringify(
+    arg,
+    (_, value) => {
+      return typeof value === 'bigint'
+        ? value.toString()
+        : value
+    }));
 }
 
 export const toBase64 = (file: File) => new Promise((resolve, reject) => {

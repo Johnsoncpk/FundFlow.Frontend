@@ -7,7 +7,7 @@ import { ProjectData } from 'components/types';
 import { INIT_VALUE } from 'components/templates/projects/StepForms/DefaultWYSIWYGValue';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
-import { useWaitForTransactionReceipt, useWatchContractEvent, useWriteContract } from "wagmi";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import Link from 'next/link';
 
 const steps = [
@@ -96,8 +96,8 @@ export const Create = ({
         functionName: 'createProject',
         args: [
           projectData.name,
-          // `ipfs://${cid}`,
-          `ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn`,
+          `ipfs://${cid}`,
+          // ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn,
           projectData.rounds.map((round) => {
             return {
               id: BigInt(0),
@@ -111,7 +111,7 @@ export const Create = ({
         ],
       })
 
-      setTimeout(function() {
+      setTimeout(() => {
         console.log('This is a one-time task');
       }, 6000);
 
@@ -130,9 +130,7 @@ export const Create = ({
   return (
     <Flex flexDir="column" width="100%">
       <Text align={'center'} fontSize='3xl' marginBottom={'30px'}>🎨 Create Your Project 🛠️</Text>
-      <form onSubmit={async (e) => {
-
-      }}>
+      <form>
         <Steps variant={variant} colorScheme="blue" activeStep={activeStep}>
           {steps.map(({ label, form }, index) => (
             <Step label={<Text onClick={() => { setStep(index) }}>{label}</Text>} key={label + index}>
@@ -182,7 +180,7 @@ export const Create = ({
             </Button>
             {isLastStep ?
               <Button disabled={isPending}  size="sm" onClick={
-                (event: React.MouseEvent<HTMLButtonElement>) => {
+                (_: React.MouseEvent<HTMLButtonElement>) => {
                   submitForm();
                 }} colorScheme='blue'>
                 Finish

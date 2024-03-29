@@ -55,7 +55,7 @@ type ProjectProps = {
 }
 
 const Project: React.FC<ProjectProps> = ({ project, rounds }) => {
-    const { colorMode, toggleColorMode } = useColorMode();
+    const { colorMode } = useColorMode();
 
     return (
         <Default pageName="Projects">
@@ -233,7 +233,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
     try {
         const project = await readContract(wagmiConfig,
             {
-                chainId: hardhat.id,
+                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getProject',
@@ -253,16 +253,16 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
 
         roundsResult = await readContract(wagmiConfig,
             {
-                chainId: hardhat.id,
+                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getRounds',
                 args: [BigInt(context.query.id as string)]
             })
 
-        let result = await readContract(wagmiConfig,
+        const result = await readContract(wagmiConfig,
             {
-                chainId: hardhat.id,
+                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getBackers',
