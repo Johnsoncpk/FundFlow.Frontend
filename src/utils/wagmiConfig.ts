@@ -1,4 +1,5 @@
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { createStorage, cookieStorage } from 'wagmi'
 import { polygonMumbai, hardhat, sepolia } from 'wagmi/chains'
 
 // Get projectId at https://cloud.walletconnect.com
@@ -10,7 +11,7 @@ const metadata = {
   name: 'Fundflow',
   description: 'Decentralized Crowdfunding Platform',
   // origin must match your domain & subdomain
-  url: "https://www.fund-flow.vercel.com", 
+  url: "https://www.fund-flow.vercel.com",
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
 
@@ -21,4 +22,7 @@ export const wagmiConfig = defaultWagmiConfig({
   projectId,
   metadata,
   ssr: true,
+  storage: createStorage({
+    storage: cookieStorage
+  }),
 })

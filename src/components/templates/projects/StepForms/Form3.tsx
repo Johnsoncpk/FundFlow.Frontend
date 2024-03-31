@@ -19,7 +19,7 @@ export const Form3: React.FC<FormProps> = (props) => {
             { value: 'First.Name', title: 'First Name' },
             { value: 'Email', title: 'Email' },
           ],
-          ai_request: (_: any, respondWith: { string: (arg0: () => string) => string; }) => respondWith.string(() => "See docs to implement AI Assistant"),
+          ai_request: (_: unknown, respondWith: { string: (arg0: () => string) => string; }) => respondWith.string(() => "See docs to implement AI Assistant"),
         }}
         value={props.projectData.editorState}
         onEditorChange={(newValue, _) => {

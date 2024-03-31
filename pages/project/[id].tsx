@@ -10,11 +10,11 @@ import { normalizeContractObject } from 'utils/format';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { ProjectMetaData, ProjectProps } from 'components/types';
 import { resolveIPFS } from 'utils/resolveIPFS';
-import {Basic} from 'components/templates/projects/Information/Basic';
+import { Basic } from 'components/templates/projects/Information/Basic';
 import { Detail } from 'components/templates/projects/Information/Detail';
 
 const Project: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
-    
+
     return (
         <Default pageName="Projects">
             <Basic project={project} rounds={rounds} backers={backers} />

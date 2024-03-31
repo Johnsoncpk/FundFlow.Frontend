@@ -25,16 +25,14 @@ import {
     ModalOverlay,
     Radio,
     RadioGroup,
-    VStack,
-    Input,
     FormControl,
     FormHelperText,
-    FormLabel,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
-    NumberInputStepper
+    NumberInputStepper,
+    Tooltip
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { StarIcon } from '@chakra-ui/icons';
@@ -48,8 +46,8 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     const toast = useToast()
     const router = useRouter()
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [option, setOption] = useState<string>();
-    const [amount, setAmount] = useState<number>(0);
+    const [option, setOption] = useState<string>('package1');
+    const [amount, setAmount] = useState<string>(getAmount(100));
 
     const {
         data: hash,
@@ -60,18 +58,13 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     // status checkign should do in server side
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
-
     function getDayBefore(date: Date): React.ReactNode {
         const today = new Date();
-        let Difference_In_Time = date.getTime() - today.getTime();
-
-        let Difference_In_Days =
-            Math.round
-                (Difference_In_Time / (1000 * 3600 * 24));
+        const Difference_In_Time = date.getTime() - today.getTime();
+        const Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
 
         return Difference_In_Days;
     }
-
 
     useEffect(() => {
         if (isConfirmed) {
@@ -79,7 +72,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 title: `Create Project Transaction Confirmed!`,
                 description:
                     (<Text>
-                        Project Created!
+                        Transaction Completed! Thank you!
                         <Text as={'u'}>
                             <br />
                             <Link href={`https://sepolia.etherscan.io/tx/${hash}`}> Check the  Transaction status here!</Link>
@@ -95,7 +88,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     useEffect(() => {
         if (isConfirming) {
             toast({
-                title: `Transaction Created!`,
+                title: `Transaction Created! Please Wait...`,
                 description:
                     (<Text as="u">
                         <Link href={`https://sepolia.etherscan.io/tx/${hash}`}> Check the  Transaction status here!</Link>
@@ -114,7 +107,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 abi: CONTRACT_ABI,
                 functionName: 'fundProject',
                 args: [BigInt(router.query.id as string)],
-                value: BigInt(project.totalFundingGoal) / BigInt(100)
+                value: utils.parseEther(amount).toBigInt()
             })
         } catch (error: any) {
             toast({
@@ -178,17 +171,18 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                         />
                     </Heading>
                 </GridItem>
-                <GridItem pl='2' area={'description'}>
-                    <Text noOfLines={[1, 2, 3]}>{(project?.metadata as ProjectMetaData)?.description}</Text>
-                </GridItem>
-
+                <Tooltip hasArrow label={project?.metadata?.description} padding={'10px'}>
+                    <GridItem pl='2' area={'description'}>
+                        <Text noOfLines={[1, 2, 3]}>{(project?.metadata as ProjectMetaData)?.description}</Text>
+                    </GridItem>
+                </Tooltip>
                 <GridItem pl='2' area={'progressBar'}>
-                    <Progress colorScheme={'teal'} value={Number(rounds[Number(project.currentRound)].collectedFund / rounds[Number(project.currentRound)].fundingGoal)} />
+                    <Progress colorScheme={'teal'} value={Number(rounds[Number(project.currentRound)].collectedFund / rounds[Number(project.currentRound)].fundingGoal) * 100} />
                 </GridItem>
                 <GridItem pl='2' area={'amountFunded'}>
                     <StatGroup>
                         <Stat>
-                            <StatNumber textColor={'teal.400'} >{ethers.utils.formatEther(rounds[Number(project.currentRound)].collectedFund)} ETH</StatNumber>
+                            <StatNumber textColor={'teal.400'} >{Number(ethers.utils.formatEther(rounds[Number(project.currentRound)].collectedFund)).toFixed(4)} ETH</StatNumber>
                             <StatLabel>Round {Number(project.currentRound) + 1}: pledged of {ethers.utils.formatEther(rounds[Number(project.currentRound)].fundingGoal)} ETH goal</StatLabel>
                         </Stat>
                     </StatGroup>
@@ -230,10 +224,25 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                     <ModalCloseButton />
                     <ModalBody>
                         <FormControl as='fieldset'>
-                            <FormLabel as='legend'>
-                                Favorite Naruto Character
-                            </FormLabel>
-                            <RadioGroup defaultValue={getAmount(100)} m={'2'} alignItems={'left'} onChange={setOption}>
+                            <RadioGroup
+                                defaultValue={'package1'}
+                                m={'2'}
+                                alignItems={'left'}
+                                value={option}
+                                onChange={(value: string) => {
+                                    setOption(value)
+                                    switch (value) {
+                                        case 'package1':
+                                            setAmount(getAmount(100))
+                                            break;
+                                        case 'package2':
+                                            setAmount(getAmount(50))
+                                            break;
+                                        case 'custom':
+                                            setAmount(amount)
+                                            break;
+                                    }
+                                }}>
                                 <Radio value='package1' my={'2'}>
                                     Package 1 (<Text as={'u'}>{getAmount(100)} ETH</Text>) : <Text as={'b'}>Product x 1 + Souvenir</Text>
                                 </Radio>
@@ -243,8 +252,11 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                                 <Radio value='custom' my={'2'}>
                                     Package 3 (<Text as={'u'}>Custom</Text>) : <Text as={'b'}>Product x 2 + Souvenir</Text>
                                 </Radio>
-                                <NumberInput size={'sm'} maxW={32} defaultValue={Number(getAmount(50))} min={Number(getAmount(50))}>
-                                    <NumberInputField disabled={option!=='custom'} />
+                                <NumberInput size={'sm'} maxW={32}
+                                    onChange={(value: string) => {
+                                        setAmount(value)
+                                    }} value={amount} min={Number(getAmount(50))}>
+                                    <NumberInputField disabled={option !== 'custom'} />
                                     <NumberInputStepper>
                                         <NumberIncrementStepper />
                                         <NumberDecrementStepper />

@@ -29,13 +29,13 @@ createWeb3Modal({
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
-          <ChakraProvider resetCSS theme={theme}>
-            <Component {...pageProps} />
-          </ChakraProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider resetCSS theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 };
 

@@ -1,5 +1,4 @@
 import {
-    useToast,
     Tab,
     TabList,
     TabPanel,
@@ -12,7 +11,6 @@ import { ProjectProps } from 'components/types';
 import { Editor } from '@tinymce/tinymce-react';
 
 const Detail: React.FC<ProjectProps> = ({ project }) => {
-    const toast = useToast()
     const { colorMode } = useColorMode();
 
     return (
@@ -28,6 +26,7 @@ const Detail: React.FC<ProjectProps> = ({ project }) => {
                     {
                         colorMode === 'light' &&
                         <Editor
+                            id='editor-light'
                             apiKey={process.env.NEXT_PUBLIC_TIMYMCE_API_KEY}
                             initialValue={project.metadata?.editorState}
                             init={{
@@ -45,6 +44,7 @@ const Detail: React.FC<ProjectProps> = ({ project }) => {
                     {
                         colorMode !== 'light' &&
                         <Editor
+                            id='editor-dark'
                             apiKey={process.env.NEXT_PUBLIC_TIMYMCE_API_KEY}
                             initialValue={project.metadata?.editorState}
                             init={{
