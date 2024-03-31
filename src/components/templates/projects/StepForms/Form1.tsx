@@ -1,7 +1,6 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select, Textarea, chakra } from "@chakra-ui/react";
 import React, { ChangeEvent } from 'react';
 import { FormProps } from "components/types";
-import Image from "next/image";
 
 export const Form1: React.FC<FormProps> = (props) => {
 
@@ -111,7 +110,7 @@ export const Form1: React.FC<FormProps> = (props) => {
         </FormHelperText>
         {
           props.projectData.image && 
-          <Image src={props.projectData.image as string} alt="Preview" />
+          <img src={props.projectData.image as string} alt="Preview" />
         } 
       </FormControl>
 

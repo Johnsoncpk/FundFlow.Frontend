@@ -1,7 +1,7 @@
 import React from 'react';
 
 export type ProjectRound = {
-    fundingGoal: number;
+    fundingGoal: bigint;
     endAt: number;
 }
 
@@ -11,7 +11,7 @@ export type ProjectData = {
     category: string,
     image: string | ArrayBuffer | null,
     external_url: string,
-    totalFundingGoal: number
+    totalFundingGoal: bigint
     totalRound: number
     rounds: ProjectRound[]
     editorState: string
@@ -35,4 +35,24 @@ export type ProjectMetaData = {
     }[];
     image: string;
     external_url: string;
+}
+
+export type ProjectProps = {
+    project: {
+        name: string;
+        metadata: ProjectMetaData | null
+        totalFundingGoal: bigint;
+        totalRound: bigint;
+        currentRound: bigint;
+        creator: `0x${string}`;
+        status: number;
+    },
+    rounds: readonly {
+        id: bigint;
+        amountSentToCreator: bigint;
+        collectedFund: bigint;
+        fundingGoal: bigint;
+        endAt: bigint;
+    }[],
+    backers: readonly `0x${string}`[]
 }

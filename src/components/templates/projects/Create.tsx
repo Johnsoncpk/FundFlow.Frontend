@@ -97,7 +97,7 @@ export const Create = ({
         args: [
           projectData.name,
           `ipfs://${cid}`,
-          // ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn,
+          // `ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn`,
           projectData.rounds.map((round) => {
             return {
               id: BigInt(0),

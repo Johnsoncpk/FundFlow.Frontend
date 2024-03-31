@@ -1,4 +1,5 @@
 import { ProjectData } from "components/types";
+import { ethers } from "ethers";
 import moment from "moment";
 
 const DEFAULT_CONTENT = `<p><img style="display: block; margin-left: auto; margin-right: auto;" title="Tiny Logo" src="/Fundflow-LightBG.svg" alt="TinyMCE Logo" width="128" height="128"></p>
@@ -63,18 +64,18 @@ const INIT_VALUE:ProjectData = {
   description: "",
   category: "",
   editorState: DEFAULT_CONTENT,
-  totalFundingGoal: 0,
+  totalFundingGoal: ethers.utils.parseEther('3').toBigInt(),
   totalRound: 0,
   rounds: [{
-    fundingGoal: 2000,
+    fundingGoal: ethers.utils.parseEther('1').toBigInt(),
     endAt: moment().add(1, 'month').endOf('day').unix(),
   },
   {
-    fundingGoal: 2000,
+    fundingGoal: ethers.utils.parseEther('1').toBigInt(),
     endAt: moment().add(2, 'month').endOf('day').unix(),
   },
   {
-    fundingGoal: 2000,
+    fundingGoal: ethers.utils.parseEther('1').toBigInt(),
     endAt: moment().add(3, 'month').endOf('day').unix(),
   }],
   image: null,

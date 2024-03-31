@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import React from 'react';
 import { FormProps } from "components/types";
+import { ethers, utils } from "ethers";
 
 function FundingRound(
   index: number,
@@ -12,13 +13,13 @@ function FundingRound(
   addProgressStep: (insertAt: number) => void,
   removeProgressStep: (removeAt: number) => void) {
 
-  const format = (val: number) => `$ ${val}`;
-  const parse = (val: string) => Number(val.toString().replace(/^\$/, ''));
-
-  const setFundingGoal = (value: number) => {
+  const setFundingGoal = (value: string) => {
     const newRound = [...props.projectData.rounds];
-    newRound[index].fundingGoal = value;
-    props.setProjectData({ ...props.projectData, rounds: newRound });
+    newRound[index].fundingGoal = utils.parseEther(value).toBigInt();
+    props.setProjectData({ 
+      ...props.projectData, 
+      totalFundingGoal: newRound.reduce<bigint>((n, { fundingGoal }) => n + fundingGoal, BigInt(0)), 
+      rounds: newRound });
   }
 
   const setEndAt = (value: string) => {
@@ -31,14 +32,13 @@ function FundingRound(
     <>
       <Flex marginY={'30px'} flexDir="column" width="100%" gap={4}>
         <FormControl>
-          <FormLabel htmlFor={`fundingGoal${index}`}>Funding Goal 💰</FormLabel>
+          <FormLabel htmlFor={`fundingGoal${index}`}>Funding Goal (ETH)💰</FormLabel>
           <NumberInput
             id={`fundingGoal${index}`}
-            onChange={(value) => setFundingGoal(parse(value))}
-            value={format(props.projectData.rounds[index].fundingGoal)}
+            onChange={(value) => setFundingGoal(value)}
+            value={utils.formatEther(props.projectData.rounds[index].fundingGoal)}
             allowMouseWheel
-            step={1000}
-            min={1000}
+            step={0.1}
             max={10000000}>
             <NumberInputField />
             <NumberInputStepper>
@@ -130,7 +130,7 @@ const useRoundSteps = (props: FormProps) => {
   const [steps, setSteps] = useState([{},{},{}]);
 
   const addProgressStep = (insertAt: number) => {
-    addRound(insertAt, 2000, moment().add(insertAt + 1, 'month').endOf('day').unix());
+    addRound(insertAt, utils.parseEther('1').toBigInt(), moment().add(insertAt + 1, 'month').endOf('day').unix());
     setSteps([...steps, {}]);
   }
 
@@ -143,7 +143,7 @@ const useRoundSteps = (props: FormProps) => {
 
   const addRound = (
     insertAt: number,
-    fundingGoal: number,
+    fundingGoal: bigint,
     endAt: number) => {
 
     const newRound = [
@@ -158,13 +158,9 @@ const useRoundSteps = (props: FormProps) => {
 };
 
 export const Form2: React.FC<FormProps> = (props) => {
-  function totalFundingGoal() {
-    return props.projectData.rounds.reduce((n, { fundingGoal }) => n + fundingGoal, 0)
-  }
-
   return (
     <Flex flexDir="column" width="100%" gap={4}>
-        <Text fontSize='xl'>Total Rounds: <Text as='u' >{props.projectData.rounds.length}</Text> Total Funding Goal: <Text as='u'>{totalFundingGoal()}</Text></Text>
+        <Text fontSize='xl'>Total Rounds: <Text as='u' >{props.projectData.rounds.length}</Text> Total Funding Goal: <Text as='u'>{utils.formatEther(props.projectData.totalFundingGoal)} ETH</Text></Text>
       <RoundSteps {...props} />
     </Flex>
   );
