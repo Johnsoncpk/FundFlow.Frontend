@@ -7,14 +7,14 @@ import {
     Center,
     Skeleton,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { SearchSection, ProjectFilterParams } from './SearchSection';
 import { Project } from 'components/types';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { useReadContract } from 'wagmi';
 import { ProjectCard } from 'components/modules';
 
-const Projects: React.FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
+const Projects: FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
     const [filterParams, setFilterParams] = useState({} as ProjectFilterParams);
     const [projects, setProjects] = useState<Project[] | undefined>();
 

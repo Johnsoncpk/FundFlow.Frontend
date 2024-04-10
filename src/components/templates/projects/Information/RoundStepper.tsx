@@ -1,9 +1,10 @@
-import { Box, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Text, HStack, VStack } from '@chakra-ui/react'
+import { Box, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Text, HStack } from '@chakra-ui/react'
 import { Step, Steps } from 'chakra-ui-steps'
 import { ProjectProps } from "components/types"
+import { FC } from 'react';
 import { formatDateToString, formatEtherToNumber, getTotalCollectedFund } from 'utils/format';
 
-const RoundStepper: React.FC<ProjectProps & {
+const RoundStepper: FC<ProjectProps & {
     variant: "circles" | "circles-alt" | "simple" | undefined,
     orientation?: "vertical" | "horizontal" | undefined
 }> = ({ project, rounds, variant, orientation = 'horizontal' }) => {
@@ -17,7 +18,7 @@ const RoundStepper: React.FC<ProjectProps & {
                         <StatLabel>Progress</StatLabel>
                         <StatNumber>{(getTotalCollectedFund(rounds) / formatEtherToNumber(project.totalFundingGoal) * 100).toFixed(2)}%</StatNumber>
                         <StatHelpText>
-                            {getTotalCollectedFund(rounds) + '/' + formatEtherToNumber(project.totalFundingGoal)} ETH
+                            {`${getTotalCollectedFund(rounds)}/${formatEtherToNumber(project.totalFundingGoal)}`} ETH
                         </StatHelpText>
                     </Stat>
                 </StatGroup>
@@ -25,14 +26,12 @@ const RoundStepper: React.FC<ProjectProps & {
                     {rounds?.map(({ collectedFund, fundingGoal, endAt }, index) => (
                         <Step
                             description={`${formatDateToString(endAt)}`}
-                            label={<Text>{formatEtherToNumber(collectedFund) + '/' + formatEtherToNumber(fundingGoal)} ETH ({formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100}%)</Text>}
+                            label={<Text>{`${formatEtherToNumber(collectedFund)}/${formatEtherToNumber(fundingGoal)}`} ETH ({formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100}%)</Text>}
                             key={index}
                         />
                     ))}
                 </Steps>
             </HStack>
-
-
         </Box>)
 }
 

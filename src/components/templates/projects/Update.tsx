@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from "@chakra-ui/layout";
-import { Flex, Text, HStack, useToast, Grid, GridItem, Button } from "@chakra-ui/react";
+import { Flex, Text, useToast, Grid, GridItem, Button } from "@chakra-ui/react";
 import { Form4 } from "components/templates/projects/StepForms";
 import { ProjectData, ProjectMetaData, ProjectProps, ProjectRound } from 'components/types';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';

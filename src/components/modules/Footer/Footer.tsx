@@ -2,9 +2,9 @@ import { Box, Link, Text } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 const links = {
-  linkedin_johnson: 'https://github.com/ethereum-boilerplate/ethereum-boilerplate/',
-  linkedin_gigi: 'https://forum.moralis.io/',
-  github: 'https://moralis.io/?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplate',
+  linkedin_johnson: 'https://www.linkedin.com/in/johnsonccc/',
+  linkedin_gigi: 'https://www.linkedin.com/in/chiangi28',
+  github: 'https://github.com/Johnsoncpk/FundFlow.Frontend',
 };
 
 const Footer = () => {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import React from 'react';
 import { FormProps, ProjectData } from "components/types";
-import { ethers, utils } from "ethers";
+import { utils } from "ethers";
 
 function FundingRound(
   index: number,
@@ -84,7 +84,7 @@ function FundingRound(
 }
 
 const RoundSteps: React.FC<FormProps & { isDisabled?: boolean }> = ({ projectData, setProjectData, isDisabled = false }) => {
-  const { addProgressStep, removeProgressStep, steps } = useRoundSteps(projectData, setProjectData, isDisabled);
+  const { addProgressStep, removeProgressStep, steps } = useRoundSteps(projectData, setProjectData);
 
   const { activeStep, setStep } = useSteps({
     initialStep: 0,
@@ -129,9 +129,7 @@ const RoundSteps: React.FC<FormProps & { isDisabled?: boolean }> = ({ projectDat
   )
 }
 
-const useRoundSteps = (projectData: ProjectData, 
-  setProjectData: React.Dispatch<React.SetStateAction<ProjectData>>, 
-  isDisabled?: boolean) => {
+const useRoundSteps = (projectData: ProjectData, setProjectData: React.Dispatch<React.SetStateAction<ProjectData>>) => {
   const [steps, setSteps] = useState([{}, {}, {}]);
 
   const addProgressStep = (insertAt: number) => {

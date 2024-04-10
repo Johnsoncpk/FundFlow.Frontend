@@ -6,7 +6,6 @@ import { resolveIPFS } from 'utils/resolveIPFS';
 import { Project } from 'components/types';
 import { getEllipsisTxt } from 'utils/format';
 import Link from 'next/link';
-import { projectId } from 'utils/wagmiConfig';
 
 export interface ProjectCardParams {
   id: number;
@@ -31,7 +30,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
       <Box maxHeight="280px" overflow={'hidden'} borderRadius="xl">
         <Image
           src={metadata?.image}
-          alt={'nft'}
+          alt={id}
           minH="280"
           minW="280"
           boxSize="100%"
@@ -40,7 +39,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
       </Box>
       <Progress margin={3} value={64} />
       <Box my="1" fontWeight="semibold" as="h4" noOfLines={1} marginTop={2}>
-        <Link target="_blank" href={`/project/${projectId}`}>
+        <Link target="_blank" href={`/project/${id}`}>
           <Text align={'left'} as='u'>{project.name}</Text>
         </Link>
       </Box>
