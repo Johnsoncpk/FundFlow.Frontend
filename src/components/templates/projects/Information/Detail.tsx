@@ -17,8 +17,6 @@ const Detail: React.FC<ProjectProps> = ({ project }) => {
         <Tabs marginTop={"2vw"}>
             <TabList>
                 <Tab>Campaign</Tab>
-                <Tab>Rewards</Tab>
-                <Tab>Updates</Tab>
             </TabList>
 
             <TabPanels>
@@ -60,14 +58,9 @@ const Detail: React.FC<ProjectProps> = ({ project }) => {
                         />
                     }
                 </TabPanel>
-                <TabPanel>
-                    <p>two!</p>
-                </TabPanel>
-                <TabPanel>
-                    <p>three!</p>
-                </TabPanel>
             </TabPanels>
-        </Tabs>)
+        </Tabs>
+    )
 }
 
 export { Detail }

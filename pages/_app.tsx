@@ -9,7 +9,7 @@ import { wagmiConfig } from "utils/wagmiConfig";
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 
 const config = {
-  initialColorMode: 'dark',
+  initialColorMode: 'system',
   useSystemColorMode: true,
 };
 

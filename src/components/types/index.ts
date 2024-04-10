@@ -40,7 +40,8 @@ export type ProjectMetaData = {
 export type ProjectProps = {
     project: {
         name: string;
-        metadata: ProjectMetaData | null
+        metadata?: ProjectMetaData | null
+        url?: string;
         totalFundingGoal: bigint;
         totalRound: bigint;
         currentRound: bigint;
@@ -55,4 +56,14 @@ export type ProjectProps = {
         endAt: bigint;
     }[],
     backers: readonly `0x${string}`[]
+}
+
+export type Project = {
+    name: string;
+    url: string;
+    totalFundingGoal: bigint;
+    totalRound: bigint;
+    currentRound: bigint;
+    creator: `0x${string}`;
+    status: number;
 }

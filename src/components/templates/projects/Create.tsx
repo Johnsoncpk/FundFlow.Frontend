@@ -7,8 +7,9 @@ import { ProjectData } from 'components/types';
 import { INIT_VALUE } from 'components/templates/projects/StepForms/DefaultWYSIWYGValue';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useWaitForTransactionReceipt, useWriteContract, useAccount } from "wagmi";
 import Link from 'next/link';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 
 const steps = [
   {
@@ -42,17 +43,21 @@ export const Create = ({
 
   const [projectData, setProjectData] = useState<ProjectData>(INIT_VALUE);
 
-  const { 
-    data: hash, 
-    isPending, 
-    writeContractAsync 
+  const { open } = useWeb3Modal()
+
+  const {
+    data: hash,
+    isPending,
+    writeContractAsync
   } = useWriteContract()
 
   const toast = useToast()
 
+  const account = useAccount()
+
   // status checkign should do in server side
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
-  
+
   useEffect(() => {
     if (isConfirmed) {
       toast({
@@ -78,7 +83,7 @@ export const Create = ({
         title: `Transaction Created!`,
         description:
           (<Text as="u">
-           <Link href={`https://sepolia.etherscan.io/tx/${hash}`}> Check the  Transaction status here!</Link>
+            <Link href={`https://sepolia.etherscan.io/tx/${hash}`}> Check the  Transaction status here!</Link>
           </Text>),
         status: "info",
         position: 'top',
@@ -89,34 +94,34 @@ export const Create = ({
 
   async function submitForm() {
     try {
+      if(!account.isConnected){
+        open({ view: 'Connect' })
+        return;
+      }
       const cid = await uploadProjectDataToIpfs(projectData);
-      await writeContractAsync({
-        address: CONTRACT_ADDRESS,
-        abi: CONTRACT_ABI,
-        functionName: 'createProject',
-        args: [
-          projectData.name,
-          `ipfs://${cid}`,
-          // `ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn`,
-          projectData.rounds.map((round) => {
-            return {
-              id: BigInt(0),
-              amountSentToCreator: BigInt(0),
-              collectedFund: BigInt(0),
-              fundingGoal: BigInt(round.fundingGoal),
-              endAt: BigInt(round.endAt)
-            }
-          }),
-          BigInt(projectData.totalFundingGoal)
-        ],
-      })
-
-      setTimeout(() => {
-        console.log('This is a one-time task');
-      }, 6000);
+        await writeContractAsync({
+          address: CONTRACT_ADDRESS,
+          abi: CONTRACT_ABI,
+          functionName: 'createProject',
+          args: [
+            projectData.name,
+            `ipfs://${cid}`,
+            // `ipfs://QmRA8vcWLyciJpZdziNgvYNiDo3P4agCnrKoJomvM5uXjn`,
+            projectData.rounds.map((round) => {
+              return {
+                id: BigInt(0),
+                amountSentToCreator: BigInt(0),
+                collectedFund: BigInt(0),
+                fundingGoal: BigInt(round.fundingGoal),
+                endAt: BigInt(round.endAt)
+              }
+            }),
+            BigInt(projectData.totalFundingGoal)
+          ],
+        })
 
       nextStep();
-    } catch (error : any) {
+    } catch (error: any) {
       toast({
         title: `Error: ${error.name}`,
         description: error.shortMessage,
@@ -124,6 +129,10 @@ export const Create = ({
         status: "error",
         isClosable: true,
       })
+
+      if (error.name === "ConnectorNotConnectedError") {
+        open({ view: 'Connect' })
+      }
     }
   }
 
@@ -179,7 +188,7 @@ export const Create = ({
               Prev
             </Button>
             {isLastStep ?
-              <Button disabled={isPending}  size="sm" onClick={
+              <Button disabled={isPending} size="sm" onClick={
                 (_: React.MouseEvent<HTMLButtonElement>) => {
                   submitForm();
                 }} colorScheme='blue'>

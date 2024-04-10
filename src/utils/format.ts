@@ -1,9 +1,5 @@
-/**
- * Returns a string of form "abc...xyz"
- * @param {string} str string to string
- * @param {number} n number of chars to keep at front/end
- * @returns {string}
- */
+import { utils } from 'ethers';
+
 export const getEllipsisTxt = (str?: string, n = 6) => {
   if (str) {
     return `${str.slice(0, n)}...${str.slice(str.length - n)}`;
@@ -27,3 +23,21 @@ export const toBase64 = (file: File) => new Promise((resolve, reject) => {
   reader.onload = () => resolve(reader.result);
   reader.onerror = reject;
 });
+
+export function formatEtherToNumber(value : bigint): number{
+  return Number(utils.formatEther(value))
+}
+
+export function formatDateToString(value : bigint): string{
+  return new Date(Number(value) * 1000).toLocaleString()
+}
+
+export function getTotalCollectedFund(rounds: readonly {
+  id: bigint;
+  amountSentToCreator: bigint;
+  collectedFund: bigint;
+  fundingGoal: bigint;
+  endAt: bigint;
+}[]) {
+  return rounds.reduce<number>((n, { collectedFund }) => n + formatEtherToNumber(collectedFund), 0);
+}

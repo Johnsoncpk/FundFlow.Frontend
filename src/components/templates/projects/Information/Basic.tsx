@@ -35,12 +35,14 @@ import {
     Tooltip
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { StarIcon } from '@chakra-ui/icons';
+import { InfoOutlineIcon, StarIcon } from '@chakra-ui/icons';
 import { ProjectMetaData, ProjectProps } from 'components/types';
 import { ethers, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { formatDateToString } from 'utils/format';
 
 const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     const toast = useToast()
@@ -54,6 +56,9 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
         isPending,
         writeContractAsync
     } = useWriteContract()
+
+    const { open } = useWeb3Modal()
+    const { address } = useAccount()
 
     // status checkign should do in server side
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
@@ -117,11 +122,35 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 status: "error",
                 isClosable: true,
             })
+
+            if (error.name === "ConnectorNotConnectedError") {
+                onClose();
+                open({ view: 'Connect' })
+            }
         }
     }
 
     function getAmount(div: number): string {
         return utils.formatEther(BigInt(project.totalFundingGoal) / BigInt(div))
+    }
+
+    function getActionButton(): React.ReactNode {
+        console.log(address, project.creator)
+        if (project.creator === address) {
+            return (
+                <Button colorScheme='teal' disabled={isPending}>
+                    <Link colorScheme='teal' href={`/project/update/${router.query.id as string}`}>
+                        Manage the project
+                    </Link>
+                </Button>
+            )
+        }
+
+        return (
+            <Button colorScheme='teal' disabled={isPending} onClick={onOpen} >
+                Back this project
+            </Button>
+        )
     }
 
     return (
@@ -139,6 +168,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 gridTemplateRows={'0.1fr 0.15fr 0.25fr 0.1fr 0.1fr 0.1fr 0.1fr 0.1fr'}
                 gridTemplateColumns={'0.6fr 0.4fr'}
                 gap='1'
+                pb={4} marginBottom={'10px'}
             >
                 <GridItem pl='2' area={'image'}>
                     <Box
@@ -182,8 +212,10 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 <GridItem pl='2' area={'amountFunded'}>
                     <StatGroup>
                         <Stat>
-                            <StatNumber textColor={'teal.400'} >{Number(ethers.utils.formatEther(rounds[Number(project.currentRound)].collectedFund)).toFixed(4)} ETH</StatNumber>
-                            <StatLabel>Round {Number(project.currentRound) + 1}: pledged of {ethers.utils.formatEther(rounds[Number(project.currentRound)].fundingGoal)} ETH goal</StatLabel>
+                            <StatNumber textColor={'teal.400'} >{Number(ethers.utils.formatEther(rounds[Number(project.currentRound)].collectedFund)).toFixed(3)} ETH</StatNumber>
+                            <Tooltip label={<Text>It will should the funding information of the current round of the project only.<br /> if you want to see more rounds, please check the <Text as={'u'}>Round Status</Text> section below.</Text>} >
+                                <StatLabel>pledged of {ethers.utils.formatEther(rounds[Number(project.currentRound)].fundingGoal)} ETH goal ( Round <Text as={'u'}> {Number(project.currentRound) + 1}</Text> ) <InfoOutlineIcon /> </StatLabel>
+                            </Tooltip>
                         </Stat>
                     </StatGroup>
                 </GridItem>
@@ -205,14 +237,12 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 </GridItem>
                 <GridItem pl='2' area={'control'}>
                     <Flex justify="flex-end" flexDir="column" width="100%">
-                        <Button colorScheme='teal' disabled={isPending} onClick={onOpen} >
-                            Back this project
-                        </Button>
+                        {getActionButton()}
                     </Flex>
                 </GridItem>
                 <GridItem pl='2' area={'reminder'}>
                     <Flex justify="flex-end" flexDir="column" width="100%">
-                        <Text variant={'ghost'} noOfLines={[1, 2]}>All or nothing. This project will only be funded if it reaches its goal by {new Date(Number(rounds[Number(project.currentRound)].endAt) * 1000).toLocaleString()}</Text>
+                        <Text variant={'ghost'} noOfLines={[1, 2]}>All or nothing. This project will only be funded if it reaches its goal by {formatDateToString(rounds[Number(project.currentRound)].endAt)}</Text>
                     </Flex>
                 </GridItem>
             </Grid>

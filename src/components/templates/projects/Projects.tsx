@@ -5,34 +5,46 @@ import {
     Wrap,
     WrapItem,
     Center,
+    Skeleton,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { SearchSection, ProjectFilterParams } from './SearchSection';
+import { Project } from 'components/types';
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
+import { useReadContract } from 'wagmi';
 import { ProjectCard } from 'components/modules';
-import { EvmNft } from 'moralis/common-evm-utils';
 
-const Projects = () => {
+const Projects: React.FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
     const [filterParams, setFilterParams] = useState({} as ProjectFilterParams);
-    const [nftBalance, setNftBalance] = useState<EvmNft[] | undefined>();
+    const [projects, setProjects] = useState<Project[] | undefined>();
 
-    const fetchNftBalance = async () => {
+    const {data, isFetching} = useReadContract({
+        abi: CONTRACT_ABI,
+        address: CONTRACT_ADDRESS,
+        functionName: 'getProjects'
+    })
 
-        setNftBalance([]);
+    const fetchProjects = async () => {
+        setProjects(data as Project[]);
     };
 
-    useEffect(() => { fetchNftBalance().catch(console.error); }, [filterParams]);
+    useEffect(() => { fetchProjects().catch(console.error); }, [filterParams]);
 
     return (
         <div>
+            <Skeleton isLoaded={!isFetching}>
             <VStack spacing={8}>
-                <SearchSection filterParams={filterParams} setFilterParams={setFilterParams} />
+                {
+                    !isOwnerOnly &&
+                    <SearchSection filterParams={filterParams} setFilterParams={setFilterParams} />
+                }
                 <Divider />
                 <HStack>
                     <Wrap spacing='20px'>
-                        {nftBalance?.map((nft, key) => (
+                        {projects?.map((project, id) => (
                             <WrapItem>
                                 <Center>
-                                    <ProjectCard nft={nft} key={key} />
+                                    <ProjectCard project={project} id={id} />
                                 </Center>
                             </WrapItem>
                         ))}
@@ -40,7 +52,7 @@ const Projects = () => {
 
                 </HStack>
             </VStack>
-
+            </Skeleton>
         </div>
     );
 };

@@ -2,7 +2,7 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, 
 import React, { ChangeEvent } from 'react';
 import { FormProps } from "components/types";
 
-export const Form1: React.FC<FormProps> = (props) => {
+export const Form1: React.FC<FormProps & {isDisabled?: boolean}> = ({ projectData, setProjectData, isDisabled=false}) => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -10,8 +10,8 @@ export const Form1: React.FC<FormProps> = (props) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          props.setProjectData({ 
-            ...props.projectData, 
+          setProjectData({ 
+            ...projectData, 
             image: reader.result
           })
         };
@@ -23,16 +23,17 @@ export const Form1: React.FC<FormProps> = (props) => {
       <FormControl isRequired>
         <FormLabel htmlFor='name'>Project name</FormLabel>
         <Input
+          isDisabled={isDisabled}
           id='name'
-          onChange={(e) => { props.setProjectData({ ...props.projectData, name: e.target.value }) }}
-          value={props.projectData?.name}
+          onChange={(e) => { setProjectData({ ...projectData, name: e.target.value }) }}
+          value={projectData?.name}
           placeholder='Stepping Stones'
         />
         <FormHelperText>
           Display name of the project
         </FormHelperText>
         {
-          (props.projectData.name === "") &&
+          (projectData.name === "") &&
           <FormErrorMessage>Name is required</FormErrorMessage>
         }
       </FormControl>
@@ -40,8 +41,9 @@ export const Form1: React.FC<FormProps> = (props) => {
       <FormControl isRequired>
         <FormLabel htmlFor='description'>Description</FormLabel>
         <Textarea
-          onChange={(e) => { props.setProjectData({ ...props.projectData, description: e.target.value }) }}
-          value={props.projectData?.description}
+          isDisabled={isDisabled}
+          onChange={(e) => { setProjectData({ ...projectData, description: e.target.value }) }}
+          value={projectData?.description}
           id='description'
           placeholder='Recalibrate with Acupoints designed by Oriental Acupuncture methodology. Apex cushioning, energy return, arch support, sustainable!'
         />
@@ -54,12 +56,13 @@ export const Form1: React.FC<FormProps> = (props) => {
         <FormLabel htmlFor='name'>Category</FormLabel>
         {/* duplcaited in SearchSection */}
         <Select
+          isDisabled={isDisabled}
           isRequired
           textAlign={'center'}
           width={'auto'}
           id='category'
-          value={props.projectData?.category}
-          onChange={(e) => { props.setProjectData({ ...props.projectData, category: e.target.value }) }}>
+          value={projectData?.category}
+          onChange={(e) => { setProjectData({ ...projectData, category: e.target.value }) }}>
           <option defaultChecked value=''>Please choose a category</option>
           <option value='art'>Art</option>
           <option value='comicts'>Comics</option>
@@ -78,6 +81,7 @@ export const Form1: React.FC<FormProps> = (props) => {
       <FormControl isRequired>
         <FormLabel>Cover Photo</FormLabel>
         <chakra.input
+          disabled={isDisabled}
           type="file"
           w="100%"
           p="2"
@@ -109,17 +113,18 @@ export const Form1: React.FC<FormProps> = (props) => {
           The cover for your project
         </FormHelperText>
         {
-          props.projectData.image && 
-          <img src={props.projectData.image as string} alt="Preview" />
+          projectData.image && 
+          <img src={projectData.image as string} alt="Preview" />
         } 
       </FormControl>
 
       <FormControl>
         <FormLabel htmlFor='name'>External Site (Optional)</FormLabel>
         <Input
+          isDisabled={isDisabled}
           id='external_url'
-          onChange={(e) => { props.setProjectData({ ...props.projectData, external_url: e.target.value }) }}
-          value={props.projectData?.external_url}
+          onChange={(e) => { setProjectData({ ...projectData, external_url: e.target.value }) }}
+          value={projectData?.external_url}
           placeholder='https://fund-flow.vercel.app/'
         />
         <FormHelperText>
