@@ -30,7 +30,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
       <Box maxHeight="280px" overflow={'hidden'} borderRadius="xl">
         <Image
           src={metadata?.image}
-          alt={id}
+          alt={id.toString()}
           minH="280"
           minW="280"
           boxSize="100%"
