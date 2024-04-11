@@ -6,7 +6,7 @@ const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const CONTRACT_ABI = [
   {
     "inputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "constructor"
   },
   {
@@ -26,7 +26,17 @@ export const CONTRACT_ABI = [
   },
   {
     "inputs": [],
+    "name": "IsNotOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ProjectCompleted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ProjectStarted",
     "type": "error"
   },
   {
@@ -263,6 +273,19 @@ export const CONTRACT_ABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_projectId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelProject",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
