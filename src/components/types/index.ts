@@ -59,6 +59,7 @@ export type ProjectProps = {
 }
 
 export type Project = {
+    id: number;
     name: string;
     url: string;
     totalFundingGoal: bigint;

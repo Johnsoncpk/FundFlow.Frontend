@@ -1,11 +1,14 @@
-import { Box, Text, Image, useColorModeValue, Progress, Tooltip } from '@chakra-ui/react';
+import { Box, Text, Image, useColorModeValue, Progress, Tooltip, Flex, Spacer } from '@chakra-ui/react';
 import { ProjectMetaData } from 'components/types';
 import React, { useEffect } from 'react';
 import { FC } from 'react';
 import { resolveIPFS } from 'utils/resolveIPFS';
 import { Project } from 'components/types';
+import { ProjectStatus } from 'components/templates/projects/Information/ProjectStatus';
 import { getEllipsisTxt } from 'utils/format';
 import Link from 'next/link';
+import { useReadContract } from 'wagmi';
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 
 export interface ProjectCardParams {
   id: number;
@@ -16,6 +19,13 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
   const bgColor = useColorModeValue('none', 'gray.700');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
   const [metadata, setMetadata] = React.useState<ProjectMetaData | null>(null);
+
+  const { data } = useReadContract({
+    abi: CONTRACT_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: 'getRounds',
+    args: [BigInt(id)],
+  })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +47,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
           objectFit="cover"
         />
       </Box>
-      <Progress margin={3} value={64} />
+      <Progress margin={3} value={Number(data?.[Number(project.currentRound)]?.collectedFund) / Number(data?.[Number(project.currentRound)]?.fundingGoal) * 100} />
       <Box my="1" fontWeight="semibold" as="h4" noOfLines={1} marginTop={2}>
         <Link target="_blank" href={`/project/${id}`}>
           <Text align={'left'} as='u'>{project.name}</Text>
@@ -46,9 +56,23 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
       <Tooltip label={metadata?.description} openDelay={100} aria-label="A tooltip">
         <Text my="1" fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{metadata?.description}</Text>
       </Tooltip>
-      <Tooltip label={project.creator} openDelay={100} aria-label="A tooltip">
-        <Text my="1" align={'right'} as='i' fontSize='md' noOfLines={1}>{getEllipsisTxt(project.creator)}</Text>
-      </Tooltip>
+      <Flex marginBottom={3}>
+        <ProjectStatus status={project.status} />
+        <Spacer />
+        <Tooltip
+          alignSelf={'right'}
+          label={project.creator}
+          openDelay={100}
+          aria-label="A tooltip">
+          <Text
+            my="1"
+            align={'right'}
+            as='i'
+            fontSize='md'
+            noOfLines={1}>{getEllipsisTxt(project.creator)}
+          </Text>
+        </Tooltip>
+      </Flex>
     </Box>
   );
 };

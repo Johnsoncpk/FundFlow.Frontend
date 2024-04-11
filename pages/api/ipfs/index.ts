@@ -20,7 +20,6 @@ export default async function POST(request: NextApiRequest, response: NextApiRes
     const rese = await res.json();
     response.status(200).json({ ipfsHash: rese.IpfsHash })    
   } catch (e) {
-    console.log(e);
     response.status(500).json(
       { error: "Internal Server Error" },
     );

@@ -3,7 +3,7 @@ import { Projects } from 'components/templates/projects';
 
 const Browse = () => {
     return (
-        <Default pageName="Projects">
+        <Default pageName="Browse Projects">
             <Projects />
         </Default>
     );

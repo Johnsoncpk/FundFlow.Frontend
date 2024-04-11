@@ -15,9 +15,8 @@ import { Detail } from 'components/templates/projects/Information/Detail';
 import { RoundStepper } from 'components/templates/projects/Information/RoundStepper';
 
 const Project: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
-
     return (
-        <Default pageName="Projects">
+        <Default pageName="Project Details">
             <Basic project={project} rounds={rounds} backers={backers} />
             <RoundStepper project={project} rounds={rounds} backers={backers} variant='circles' />
             <Detail project={project} rounds={rounds} backers={backers} />

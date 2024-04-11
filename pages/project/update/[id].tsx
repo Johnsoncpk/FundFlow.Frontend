@@ -17,7 +17,7 @@ const ProjectUpdate: React.FC<ProjectProps> = ({ project, rounds, backers })  =>
     const router = useRouter();
 
     return (
-        <Default pageName="Create">
+        <Default pageName="Update Project">
             {
                 address === project.creator ?
                 <Update project={project} rounds={rounds} backers={backers} projectId={router.query.id as string}/> :

@@ -3,7 +3,7 @@ import { Create } from 'components/templates/projects';
 
 const ProjectCreate = () => {
     return (
-        <Default pageName="Create">
+        <Default pageName="Create Project">
             <Create variant='circles' />
         </Default>
     );

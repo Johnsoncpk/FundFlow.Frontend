@@ -31,8 +31,9 @@ const SearchSection: FC<ProjectFilterParamsProps> = ({ filterParams, setFilterPa
                 width={'auto'}>
 
                 <option defaultChecked value='all'>All</option>
-                <option value='live'>Live</option>
-                <option value='upComing'>Up Coming</option>
+                <option value='0'>Live</option>
+                <option value='1'>Failed</option>
+                <option value='2'>Canceled</option>
             </Select>
             <Input
                 value={filterParams.keyword}

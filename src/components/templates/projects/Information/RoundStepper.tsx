@@ -1,4 +1,5 @@
-import { Box, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Text, HStack } from '@chakra-ui/react'
+import { WarningTwoIcon } from '@chakra-ui/icons';
+import { Box, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Text, HStack, Tooltip } from '@chakra-ui/react'
 import { Step, Steps } from 'chakra-ui-steps'
 import { ProjectProps } from "components/types"
 import { FC } from 'react';
@@ -11,22 +12,30 @@ const RoundStepper: FC<ProjectProps & {
 
     return (
         <Box w='100%' marginX={"10px"} >
-             <Text marginY={'4px'} as={'u'} fontSize='2xl'>Round Status</Text>
+            <Text marginY={'4px'} fontSize='2xl'><Text as={'u'}>Round Status</Text>
+                {
+                    rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 ?
+                        <Tooltip label='The funding was ended, wait the creator to update the state.'>
+                            <WarningTwoIcon color='red.500' />
+                        </Tooltip> :
+                        <></>
+                }
+            </Text>
             <HStack >
                 <StatGroup marginRight={"10px"}>
                     <Stat>
                         <StatLabel>Progress</StatLabel>
-                        <StatNumber>{(getTotalCollectedFund(rounds) / formatEtherToNumber(project.totalFundingGoal) * 100).toFixed(2)}%</StatNumber>
+                        <StatNumber>{(getTotalCollectedFund(rounds) / formatEtherToNumber(project.totalFundingGoal) * 100).toFixed(1)}%</StatNumber>
                         <StatHelpText>
                             {`${getTotalCollectedFund(rounds)}/${formatEtherToNumber(project.totalFundingGoal)}`} ETH
                         </StatHelpText>
                     </Stat>
                 </StatGroup>
-                <Steps size={'lg'} variant={variant} activeStep={Number(project.currentRound)} orientation={orientation}>
+                <Steps colorScheme='teal' size={'lg'} variant={variant} activeStep={Number(project.currentRound)} orientation={orientation}>
                     {rounds?.map(({ collectedFund, fundingGoal, endAt }, index) => (
                         <Step
                             description={`${formatDateToString(endAt)}`}
-                            label={<Text>{`${formatEtherToNumber(collectedFund)}/${formatEtherToNumber(fundingGoal)}`} ETH ({formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100}%)</Text>}
+                            label={<Text>{`${formatEtherToNumber(collectedFund)}/${formatEtherToNumber(fundingGoal)}`} ETH ({(formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100).toFixed(1)}%)</Text>}
                             key={index}
                         />
                     ))}

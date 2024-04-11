@@ -32,22 +32,33 @@ import {
     NumberInput,
     NumberInputField,
     NumberInputStepper,
-    Tooltip
+    Tooltip,
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
+    HStack,
+    StatHelpText
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { InfoOutlineIcon, StarIcon } from '@chakra-ui/icons';
-import { ProjectMetaData, ProjectProps } from 'components/types';
+import { InfoOutlineIcon, StarIcon, WarningTwoIcon } from '@chakra-ui/icons';
+import { Project, ProjectMetaData, ProjectProps } from 'components/types';
 import { ethers, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
-import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useAccount, useReadContract } from 'wagmi';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
-import { formatDateToString } from 'utils/format';
+import { formatDateToString, getTotalCollectedFund } from 'utils/format';
+import { Steps, Step } from 'chakra-ui-steps';
+import { ProjectStatus } from './ProjectStatus';
 
 const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     const toast = useToast()
     const router = useRouter()
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure()
     const [option, setOption] = useState<string>('package1');
     const [amount, setAmount] = useState<string>(getAmount(100));
 
@@ -114,6 +125,38 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 args: [BigInt(router.query.id as string)],
                 value: utils.parseEther(amount).toBigInt()
             })
+
+            await new Promise((resolve) => {setTimeout(resolve, 1000)});
+
+            router.reload();
+        } catch (error: any) {
+            toast({
+                title: `Error: ${error.name}`,
+                description: error.shortMessage,
+                position: "top",
+                status: "error",
+                isClosable: true,
+            })
+
+            if (error.name === "ConnectorNotConnectedError") {
+                onClose();
+                open({ view: 'Connect' })
+            }
+        }
+    }
+
+    async function onQuitProjectClick() {
+        try {
+            await writeContractAsync({
+                address: CONTRACT_ADDRESS,
+                abi: CONTRACT_ABI,
+                functionName: 'quitProject',
+                args: [BigInt(router.query.id as string)]
+            })
+
+            await new Promise((resolve) => {setTimeout(resolve, 1000)});
+
+            router.reload();
         } catch (error: any) {
             toast({
                 title: `Error: ${error.name}`,
@@ -135,22 +178,121 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     }
 
     function getActionButton(): React.ReactNode {
-        console.log(address, project.creator)
         if (project.creator === address) {
             return (
-                <Button colorScheme='teal' disabled={isPending}>
-                    <Link colorScheme='teal' href={`/project/update/${router.query.id as string}`}>
-                        Manage the project
-                    </Link>
+                <Flex gap={2}>
+                    <Button colorScheme='teal' isDisabled={isPending}>
+                        <Link colorScheme='teal' href={`/project/update/${router.query.id as string}`}>
+                            Update Campaign
+                        </Link>
+                    </Button>
+                    <Button colorScheme='red' isDisabled={Number(project.currentRound) !== 0}>
+                        Disable Campaign
+                    </Button>
+                </Flex>
+            )
+        }
+
+        if (backers.includes(address?.toString() as `0x${string}`)) {
+            return (
+                <Button colorScheme='green' isDisabled={isPending} onClick={onOpen2}>
+                    Check the contribution status
                 </Button>
             )
         }
 
         return (
-            <Button colorScheme='teal' disabled={isPending} onClick={onOpen} >
-                Back this project
+            <Button colorScheme='teal' isDisabled={(rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 || isPending)} onClick={onOpen} >
+                {
+                    rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 ?
+                        "Funding round is over." :
+                        "Support this project!"
+                }
             </Button>
         )
+    }
+
+    function UpdateProjectStatusDialog() {
+        const { onClose: onCloseStatus } = useDisclosure()
+        const cancelRef = React.useRef<HTMLInputElement | null>(null)
+        const [p, setP] = useState<Project | undefined>();
+
+        const { data } = useReadContract({
+            abi: CONTRACT_ABI,
+            address: CONTRACT_ADDRESS,
+            functionName: 'getProject',
+            args: [BigInt(router.query.id as string)],
+        })
+
+        const fetchProject = async () => {
+            setP(data as Project);
+        };
+
+        useEffect(() => { fetchProject().catch(console.error); });
+
+        function isProjectCheckNeeded() {
+            return rounds[Number(p?.currentRound)]?.endAt < Date.now() / 1000
+        }
+
+        async function checkProjectStatus() {
+            try {
+                await writeContractAsync(
+                    {
+                        abi: CONTRACT_ABI,
+                        address: CONTRACT_ADDRESS,
+                        functionName: 'updateProjectStatus',
+                        args: [BigInt(router.query.id as string)],
+                    }
+                )
+                router.reload()
+            } catch (error: any) {
+                toast({
+                    title: `Error: ${error.name}`,
+                    description: error.shortMessage,
+                    position: "top",
+                    status: "error",
+                    isClosable: true,
+                })
+            }
+        }
+
+        return (
+            <AlertDialog
+                motionPreset='slideInBottom'
+                leastDestructiveRef={cancelRef}
+                onClose={onCloseStatus}
+                isOpen={isProjectCheckNeeded() && p?.creator === address}
+                isCentered
+            >
+                <AlertDialogOverlay />
+                <AlertDialogContent>
+                    <AlertDialogHeader>Check Project Status</AlertDialogHeader>
+                    <AlertDialogBody>
+                        The deadline of the project has passed. Please click the button below to update the project status
+                    </AlertDialogBody>
+                    <AlertDialogFooter>
+                        <Button variant={'outline'} onClick={checkProjectStatus} ml={3}>
+                            Check the Project Status
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        )
+    }
+
+    function getContributionByRound(id: bigint): string {
+        const { data } = useReadContract({
+            abi: CONTRACT_ABI,
+            address: CONTRACT_ADDRESS,
+            functionName: 'roundBackerContributions',
+            args: [BigInt(id), address as `0x${string}`],
+        })
+
+        return utils.formatEther(data ?? 0)
+    }
+
+    function getTotalContributedFund(r: readonly { id: bigint; amountSentToCreator: bigint; collectedFund: bigint; fundingGoal: bigint; endAt: bigint; }[]): number {
+        return r.reduce<number>((n, { id }) => n + Number(getContributionByRound(id)), 0);
     }
 
     return (
@@ -200,6 +342,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                             icon={<StarIcon />}
                         />
                     </Heading>
+                    <ProjectStatus status={project?.status} />
                 </GridItem>
                 <Tooltip hasArrow label={project?.metadata?.description} padding={'10px'}>
                     <GridItem pl='2' area={'description'}>
@@ -306,6 +449,60 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+
+            <Modal size={'lg'} isOpen={isOpen2} onClose={onClose2}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>The summary of your support</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Box w='100%' marginX={"10px"} >
+                            <Text marginBottom={'4px'} fontSize='2xl'><Text as={'u'}>Summary Status</Text>
+                                {
+                                    rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 ?
+                                        <Tooltip label='The funding was ended, wait the creator to update the state.'>
+                                            <WarningTwoIcon color='red.500' />
+                                        </Tooltip> :
+                                        <></>
+                                }
+                            </Text>
+                            <HStack >
+                                <StatGroup marginRight={"10px"}>
+                                    <Stat>
+                                        <StatLabel>Total</StatLabel>
+                                        <StatNumber>{(getTotalContributedFund(rounds) / getTotalCollectedFund(rounds)).toFixed(3)}%</StatNumber>
+                                        <StatHelpText>
+                                            {getTotalContributedFund(rounds)} ETH
+                                        </StatHelpText>
+                                    </Stat>
+                                </StatGroup>
+                                <Steps mt={"10px"} colorScheme={'teal'} color={'teal.500'} size={'md'} variant={'circles-alt'} activeStep={Number(project.currentRound)} orientation={'vertical'}>
+                                    {rounds?.map(({ id, endAt }, index) => (
+                                        <Step
+                                            description={`${formatDateToString(endAt)}`}
+                                            label={<Text>{getContributionByRound(id)} ETH</Text>}
+                                            key={index}
+                                        />
+                                    ))}
+                                </Steps>
+                            </HStack>
+                        </Box>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Tooltip label='Quit project mean your fund in all rounds will be withdraw.'>
+                            <Button colorScheme='red' disabled={isPending} onClick={onQuitProjectClick} >
+                                Quit the project
+                            </Button>
+                        </Tooltip>
+                        <Button ml={'2'} onClick={onClose2}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <UpdateProjectStatusDialog />
         </div >
     )
 }
