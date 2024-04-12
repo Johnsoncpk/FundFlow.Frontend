@@ -35,7 +35,7 @@ export const Create = ({
 }: {
   variant: "circles" | "circles-alt" | "simple" | undefined;
 }) => {
-  const { nextStep, prevStep, reset, setStep, activeStep } = useSteps({
+  const { nextStep, prevStep, setStep, activeStep } = useSteps({
     initialStep: 0,
   });
   const isLastStep = activeStep === steps.length - 1;
@@ -94,30 +94,30 @@ export const Create = ({
 
   async function submitForm() {
     try {
-      if(!account.isConnected){
+      if (!account.isConnected) {
         open({ view: 'Connect' })
         return;
       }
       const cid = await uploadProjectDataToIpfs(projectData);
-        await writeContractAsync({
-          address: CONTRACT_ADDRESS,
-          abi: CONTRACT_ABI,
-          functionName: 'createProject',
-          args: [
-            projectData.name,
-            `ipfs://${cid}`,
-            projectData.rounds.map((round) => {
-              return {
-                id: BigInt(0),
-                amountSentToCreator: BigInt(0),
-                collectedFund: BigInt(0),
-                fundingGoal: BigInt(round.fundingGoal),
-                endAt: BigInt(round.endAt)
-              }
-            }),
-            BigInt(projectData.totalFundingGoal)
-          ],
-        })
+      await writeContractAsync({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: 'createProject',
+        args: [
+          projectData.name,
+          `ipfs://${cid}`,
+          projectData.rounds.map((round) => {
+            return {
+              id: BigInt(0),
+              amountSentToCreator: BigInt(0),
+              collectedFund: BigInt(0),
+              fundingGoal: BigInt(round.fundingGoal),
+              endAt: BigInt(round.endAt)
+            }
+          }),
+          BigInt(projectData.totalFundingGoal)
+        ],
+      })
 
       nextStep();
     } catch (error: any) {
@@ -170,8 +170,10 @@ export const Create = ({
               </Alert>
             </Box>
             <Flex width="100%" justify="center" gap={4}>
-              <Button onClick={reset}>
-                Back to home page
+              <Button>
+                <Link href={'/'}>
+                  Back to home page
+                </Link>
               </Button>
             </Flex>
           </div>

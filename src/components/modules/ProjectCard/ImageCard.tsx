@@ -4,6 +4,7 @@ import { resolveIPFS } from 'utils/resolveIPFS';
 import NextLink from 'next/link'
 import React from 'react';
 import { ProjectMetaData } from 'components/types';
+import { getEllipsisTxt } from 'utils/format';
 
 export interface ImageCardParams {
     id: number;
@@ -55,7 +56,7 @@ const ImageCard: FC<ImageCardParams> = (props) => {
                             </Box>
                         </Link>
                         <Box mt="1" position={'absolute'} textAlign={'center'} top={'90%'} right={'3%'}>
-                            <Text as='i' color={'white'} fontSize='md' noOfLines={1}>By Jay Oliva</Text>
+                            <Text as='i' color={'white'} fontSize='md' noOfLines={1}>{`By ${getEllipsisTxt(props.project.creator)}`}</Text>
                         </Box>
                     </Fade>
                     {props.id}

@@ -15,8 +15,8 @@ const RoundStepper: FC<ProjectProps & {
             <Text marginY={'4px'} fontSize='2xl'><Text as={'u'}>Round Status</Text>
                 {
                     rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 ?
-                        <Tooltip label='The funding was ended, wait the creator to update the state.'>
-                            <WarningTwoIcon color='red.500' />
+                        <Tooltip label='The funding round was ended.'>
+                            <WarningTwoIcon />
                         </Tooltip> :
                         <></>
                 }
@@ -27,15 +27,15 @@ const RoundStepper: FC<ProjectProps & {
                         <StatLabel>Progress</StatLabel>
                         <StatNumber>{(getTotalCollectedFund(rounds) / formatEtherToNumber(project.totalFundingGoal) * 100).toFixed(1)}%</StatNumber>
                         <StatHelpText>
-                            {`${getTotalCollectedFund(rounds)}/${formatEtherToNumber(project.totalFundingGoal)}`} ETH
+                            {`${getTotalCollectedFund(rounds).toFixed(2)}/${formatEtherToNumber(project.totalFundingGoal).toFixed(2)}`} ETH
                         </StatHelpText>
                     </Stat>
                 </StatGroup>
-                <Steps colorScheme='teal' size={'lg'} variant={variant} activeStep={Number(project.currentRound)} orientation={orientation}>
+                <Steps colorScheme='teal' size={'lg'} variant={variant} activeStep={Number(project.currentRound) + (project.status!==0? 1 : 0)} orientation={orientation}>
                     {rounds?.map(({ collectedFund, fundingGoal, endAt }, index) => (
                         <Step
                             description={`${formatDateToString(endAt)}`}
-                            label={<Text>{`${formatEtherToNumber(collectedFund)}/${formatEtherToNumber(fundingGoal)}`} ETH ({(formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100).toFixed(1)}%)</Text>}
+                            label={<Text>{`${formatEtherToNumber(collectedFund).toFixed(2)}/${formatEtherToNumber(fundingGoal).toFixed(2)}`} ETH ({(formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100).toFixed(1)}%)</Text>}
                             key={index}
                         />
                     ))}

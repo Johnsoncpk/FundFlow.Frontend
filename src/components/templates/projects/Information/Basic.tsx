@@ -44,7 +44,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { InfoOutlineIcon, StarIcon, WarningTwoIcon } from '@chakra-ui/icons';
-import { Project, ProjectMetaData, ProjectProps } from 'components/types';
+import { ProjectMetaData, ProjectProps } from 'components/types';
 import { ethers, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
@@ -173,20 +173,52 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
         }
     }
 
+    async function onDisableProjectClick() {
+        try {
+            await writeContractAsync({
+                address: CONTRACT_ADDRESS,
+                abi: CONTRACT_ABI,
+                functionName: 'cancelProject',
+                args: [BigInt(router.query.id as string)]
+            })
+
+            await new Promise((resolve) => {setTimeout(resolve, 1000)});
+
+            router.reload();
+        } catch (error: any) {
+            toast({
+                title: `Error: ${error.name}`,
+                description: error.shortMessage,
+                position: "top",
+                status: "error",
+                isClosable: true,
+            })
+
+            if (error.name === "ConnectorNotConnectedError") {
+                onClose();
+                open({ view: 'Connect' })
+            }
+        }
+    }
+
     function getAmount(div: number): string {
         return utils.formatEther(BigInt(project.totalFundingGoal) / BigInt(div))
+    }
+
+    function isFundingRoundEnded(){
+        return rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000;
     }
 
     function getActionButton(): React.ReactNode {
         if (project.creator === address) {
             return (
                 <Flex gap={2}>
-                    <Button colorScheme='teal' isDisabled={isPending}>
+                    <Button colorScheme='teal' isDisabled={isPending || project.status!==0}>
                         <Link colorScheme='teal' href={`/project/update/${router.query.id as string}`}>
                             Update Campaign
                         </Link>
                     </Button>
-                    <Button colorScheme='red' isDisabled={Number(project.currentRound) !== 0}>
+                    <Button colorScheme='red' onClick={onDisableProjectClick}  isDisabled={Number(project.currentRound) !== 0 || project.status!==0}>
                         Disable Campaign
                     </Button>
                 </Flex>
@@ -202,9 +234,9 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
         }
 
         return (
-            <Button colorScheme='teal' isDisabled={(rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 || isPending)} onClick={onOpen} >
+            <Button colorScheme='teal' isDisabled={(isFundingRoundEnded() || isPending)} onClick={onOpen} >
                 {
-                    rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 ?
+                    isFundingRoundEnded() ?
                         "Funding round is over." :
                         "Support this project!"
                 }
@@ -215,24 +247,6 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     function UpdateProjectStatusDialog() {
         const { onClose: onCloseStatus } = useDisclosure()
         const cancelRef = React.useRef<HTMLInputElement | null>(null)
-        const [p, setP] = useState<Project | undefined>();
-
-        const { data } = useReadContract({
-            abi: CONTRACT_ABI,
-            address: CONTRACT_ADDRESS,
-            functionName: 'getProject',
-            args: [BigInt(router.query.id as string)],
-        })
-
-        const fetchProject = async () => {
-            setP(data as Project);
-        };
-
-        useEffect(() => { fetchProject().catch(console.error); });
-
-        function isProjectCheckNeeded() {
-            return rounds[Number(p?.currentRound)]?.endAt < Date.now() / 1000
-        }
 
         async function checkProjectStatus() {
             try {
@@ -261,7 +275,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 motionPreset='slideInBottom'
                 leastDestructiveRef={cancelRef}
                 onClose={onCloseStatus}
-                isOpen={isProjectCheckNeeded() && p?.creator === address}
+                isOpen={isRoundUpdatekNeeded(Number(project?.currentRound)) && project?.status === 0 && project?.creator === address}
                 isCentered
             >
                 <AlertDialogOverlay />
@@ -280,7 +294,11 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
         )
     }
 
-    function getContributionByRound(id: bigint): string {
+    function isRoundUpdatekNeeded(currentRound: number) {
+        return rounds[currentRound]?.endAt < Date.now() / 1000
+    }
+
+    function getContributionByRound(id: bigint): number {
         const { data } = useReadContract({
             abi: CONTRACT_ABI,
             address: CONTRACT_ADDRESS,
@@ -288,11 +306,11 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
             args: [BigInt(id), address as `0x${string}`],
         })
 
-        return utils.formatEther(data ?? 0)
+        return Number(utils.formatEther(data ?? 0))
     }
 
     function getTotalContributedFund(r: readonly { id: bigint; amountSentToCreator: bigint; collectedFund: bigint; fundingGoal: bigint; endAt: bigint; }[]): number {
-        return r.reduce<number>((n, { id }) => n + Number(getContributionByRound(id)), 0);
+        return r.reduce<number>((n, { id }) => n + getContributionByRound(id), 0);
     }
 
     return (
@@ -459,7 +477,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                         <Box w='100%' marginX={"10px"} >
                             <Text marginBottom={'4px'} fontSize='2xl'><Text as={'u'}>Summary Status</Text>
                                 {
-                                    rounds[Number(project?.currentRound)]?.endAt < Date.now() / 1000 ?
+                                    isFundingRoundEnded() ?
                                         <Tooltip label='The funding was ended, wait the creator to update the state.'>
                                             <WarningTwoIcon color='red.500' />
                                         </Tooltip> :
@@ -480,7 +498,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                                     {rounds?.map(({ id, endAt }, index) => (
                                         <Step
                                             description={`${formatDateToString(endAt)}`}
-                                            label={<Text>{getContributionByRound(id)} ETH</Text>}
+                                            label={<Text>{getContributionByRound(id).toFixed(2)} ETH</Text>}
                                             key={index}
                                         />
                                     ))}
@@ -491,7 +509,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                     </ModalBody>
                     <ModalFooter>
                         <Tooltip label='Quit project mean your fund in all rounds will be withdraw.'>
-                            <Button colorScheme='red' disabled={isPending} onClick={onQuitProjectClick} >
+                            <Button colorScheme='red' isDisabled={isPending || isFundingRoundEnded()} onClick={onQuitProjectClick} >
                                 Quit the project
                             </Button>
                         </Tooltip>

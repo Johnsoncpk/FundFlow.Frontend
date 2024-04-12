@@ -33,10 +33,10 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
       setMetadata(await response.json());
     };
     fetchData().catch(console.error);
-  }, []);
+  }, [id, project]);
 
   return (
-    <Box minHeight={"445"} maxHeight={"445px"} maxWidth="295px" bgColor={bgColor} padding={2} borderRadius="xl" borderWidth="1px" borderColor={borderColor}>
+    <Box minHeight={"445"} maxHeight={"455px"} maxWidth="295px" bgColor={bgColor} padding={2} borderRadius="xl" borderWidth="1px" borderColor={borderColor}>
       <Box maxHeight="280px" overflow={'hidden'} borderRadius="xl">
         <Image
           src={metadata?.image}
@@ -47,7 +47,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
           objectFit="cover"
         />
       </Box>
-      <Progress margin={3} value={Number(data?.[Number(project.currentRound)]?.collectedFund) / Number(data?.[Number(project.currentRound)]?.fundingGoal) * 100} />
+      <Progress colorScheme='teal' margin={3} value={Number(data?.[Number(project.currentRound)]?.collectedFund) / Number(data?.[Number(project.currentRound)]?.fundingGoal) * 100} />
       <Box my="1" fontWeight="semibold" as="h4" noOfLines={1} marginTop={2}>
         <Link target="_blank" href={`/project/${id}`}>
           <Text align={'left'} as='u'>{project.name}</Text>
@@ -56,7 +56,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
       <Tooltip label={metadata?.description} openDelay={100} aria-label="A tooltip">
         <Text my="1" fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{metadata?.description}</Text>
       </Tooltip>
-      <Flex marginBottom={3}>
+      <Flex>
         <ProjectStatus status={project.status} />
         <Spacer />
         <Tooltip
@@ -69,7 +69,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
             align={'right'}
             as='i'
             fontSize='md'
-            noOfLines={1}>{getEllipsisTxt(project.creator)}
+            noOfLines={1}>{`By ${getEllipsisTxt(project.creator)}`}
           </Text>
         </Tooltip>
       </Flex>

@@ -9,6 +9,7 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { useReadContract } from 'wagmi';
 import { sepolia, hardhat } from 'wagmi/chains';
 import { ethers } from 'ethers';
+import { ProjectStatus } from '../projects/Information/ProjectStatus';
 
 const ProjectRow = (props: {
   project: {
@@ -92,8 +93,10 @@ const ProjectRow = (props: {
       <Td>
         <StatGroup>
           <Stat>
-            <StatLabel>Total Fund </StatLabel><StatArrow type='increase' />
+          <ProjectStatus status={props.project.status} />
+            <StatLabel marginTop={'4'}> Funded </StatLabel>
             <StatNumber>
+            <StatArrow type='increase' />
               {
                 ((
                   Number(ethers.utils.formatEther(rounds?.[Number(props.project.currentRound)]?.collectedFund ?? 0)) /
