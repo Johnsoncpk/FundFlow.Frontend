@@ -27,15 +27,16 @@ const RoundStepper: FC<ProjectProps & {
                         <StatLabel>Progress</StatLabel>
                         <StatNumber>{(getTotalCollectedFund(rounds) / formatEtherToNumber(project.totalFundingGoal) * 100).toFixed(1)}%</StatNumber>
                         <StatHelpText>
-                            {`${getTotalCollectedFund(rounds).toFixed(2)}/${formatEtherToNumber(project.totalFundingGoal).toFixed(2)}`} ETH
+                            {`${getTotalCollectedFund(rounds).toFixed(1)}/${formatEtherToNumber(project.totalFundingGoal).toFixed(1)}`} ETH
                         </StatHelpText>
                     </Stat>
                 </StatGroup>
-                <Steps colorScheme='teal' size={'lg'} variant={variant} activeStep={Number(project.currentRound) + (project.status!==0? 1 : 0)} orientation={orientation}>
+                <Steps colorScheme='teal' size={'lg'} variant={variant} activeStep={Number(project.currentRound) + (project.status===1? 1 : 0)} orientation={orientation}>
                     {rounds?.map(({ collectedFund, fundingGoal, endAt }, index) => (
                         <Step
+                            state={(project.status===2? 'error' : undefined)}
                             description={`${formatDateToString(endAt)}`}
-                            label={<Text>{`${formatEtherToNumber(collectedFund).toFixed(2)}/${formatEtherToNumber(fundingGoal).toFixed(2)}`} ETH ({(formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100).toFixed(1)}%)</Text>}
+                            label={<Text>{`${formatEtherToNumber(collectedFund).toFixed(1)}/${formatEtherToNumber(fundingGoal).toFixed(1)}`} ETH ({(formatEtherToNumber(collectedFund) / formatEtherToNumber(fundingGoal) * 100).toFixed(1)}%)</Text>}
                             key={index}
                         />
                     ))}
