@@ -29,7 +29,7 @@ const HomePage: NextPage<HomePageProps> = (props) => {
         <Swiper projects={props.projects} />
         <Divider />
         <HStack spacing={4}>
-          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={props.projects} />
+          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={props.projects?.slice(Math.max(props.projects.length - 5, 0))} />
           <Divider orientation='vertical' />
           <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={props.projects?.slice(0, 5)} />
         </HStack >
