@@ -9,7 +9,7 @@ import { Project } from 'types';
 import { useReadContract } from 'wagmi';
 
 const HomePage: NextPage = () => {
-  const [projects, setProjects] = useState<Project[] | undefined>();
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const response = useReadContract({
     abi: CONTRACT_ABI,
@@ -40,9 +40,9 @@ const HomePage: NextPage = () => {
         <Swiper projects={projects} />
         <Divider />
         <HStack spacing={4}>
-          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={projects?.slice(Math.max(projects.length - 5, 0))} />
+          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={[...projects].reverse().slice(0, 5)} />
           <Divider orientation='vertical' />
-          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={projects?.slice(0, 5)} />
+          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={[...projects].slice(0, 5)} />
         </HStack >
       </VStack >
     </Default>
