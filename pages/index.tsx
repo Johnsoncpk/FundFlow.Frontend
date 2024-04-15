@@ -1,7 +1,7 @@
 import { Default } from 'components/layouts/Default';
 import { Divider, HStack, VStack } from '@chakra-ui/react';
 import { Swiper } from 'components/modules/Swiper';
-import RankTable from 'components/templates/home/RankTable';
+import RankTable from 'components/home/RankTable';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
 import { GetServerSideProps, NextPage } from 'next';
 import { readContract } from '@wagmi/core';

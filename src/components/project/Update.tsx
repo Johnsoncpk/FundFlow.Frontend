@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from "@chakra-ui/layout";
 import { Flex, Text, useToast, Grid, GridItem, Button } from "@chakra-ui/react";
-import { Form4 } from "components/templates/projects/StepForms";
+import { Form4 } from "components/project/StepForms";
 import { ProjectData, ProjectMetaData, ProjectProps, ProjectRound } from 'components/types';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { resolveIPFS } from 'utils/resolveIPFS';
 import Cryptojs from 'crypto-js';
-import { INIT_VALUE } from 'components/templates/projects/StepForms/DefaultWYSIWYGValue';
+import { INIT_VALUE } from 'components/project/StepForms/DefaultWYSIWYGValue';
 import { ArrowBackIcon, EditIcon } from '@chakra-ui/icons';
 
 export const Update: React.FC<ProjectProps & { projectId: string }> = ({ project, rounds, projectId }) => {

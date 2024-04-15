@@ -9,7 +9,7 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { useReadContract } from 'wagmi';
 import { sepolia, hardhat } from 'wagmi/chains';
 import { ethers } from 'ethers';
-import { ProjectStatus } from '../projects/Information/ProjectStatus';
+import { ProjectStatus } from '../project/Information/ProjectStatus';
 
 const ProjectRow = (props: {
   project: {

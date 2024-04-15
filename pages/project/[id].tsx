@@ -10,9 +10,9 @@ import { normalizeContractObject } from 'utils/format';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { ProjectMetaData, ProjectProps } from 'components/types';
 import { resolveIPFS } from 'utils/resolveIPFS';
-import { Basic } from 'components/templates/projects/Information/Basic';
-import { Detail } from 'components/templates/projects/Information/Detail';
-import { RoundStepper } from 'components/templates/projects/Information/RoundStepper';
+import { Basic } from 'components/project/Information/Basic';
+import { Detail } from 'components/project/Information/Detail';
+import { RoundStepper } from 'components/project/Information/RoundStepper';
 
 const Project: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     const [projectMetadata, setWithMetadata] = React.useState<ProjectMetaData>();

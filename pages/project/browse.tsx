@@ -1,5 +1,5 @@
 import { Default } from 'components/layouts/Default';
-import { Projects } from 'components/templates/projects';
+import { Projects } from 'components/project';
 
 const Browse = () => {
     return (

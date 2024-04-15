@@ -1,5 +1,5 @@
 import { Default } from 'components/layouts/Default';
-import { Update } from 'components/templates/projects';
+import { Update } from 'components/project';
 import { useAccount } from 'wagmi';
 import { Container, Text } from "@chakra-ui/react";
 import React from 'react';
@@ -48,8 +48,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
         totalRound: BigInt(0),
         currentRound: BigInt(0),
         creator: '0x',
-        status: 0,
-        metadata: null
+        status: 0
     };
 
     let roundsResult: readonly {
