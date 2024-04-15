@@ -9,7 +9,7 @@ import { wagmiConfig } from 'utils/wagmiConfig';
 import { hardhat, sepolia } from 'wagmi/chains'
 import { normalizeContractObject } from 'utils/format';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
-import { ProjectMetaData, ProjectProps } from 'components/types';
+import { ProjectMetaData, ProjectProps } from 'types';
 import { useRouter } from 'next/router';
 
 const ProjectUpdate: React.FC<ProjectProps> = ({ project, rounds, backers })  => {

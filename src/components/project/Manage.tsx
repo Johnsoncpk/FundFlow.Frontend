@@ -6,11 +6,10 @@ import {
     WrapItem,
     Center,
     Skeleton,
-    Heading,
     Text
 } from '@chakra-ui/react';
 import { useEffect, useState, FC } from 'react';
-import { Project } from 'components/types';
+import { Project } from 'types';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { useReadContract } from 'wagmi';
 import { ProjectCard } from 'components/modules';
@@ -19,7 +18,7 @@ import Link from 'next/link';
 import { readContract } from '@wagmi/core'
 import { wagmiConfig } from 'utils/wagmiConfig';
 
-const Manage: FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
+const Manage: FC = () => {
     const [projects, setProjects] = useState<Project[] | undefined>();
     const [backedProjects, setBackedProjects] = useState<Project[] | undefined>([]);
     const { address } = useAccount();
@@ -63,7 +62,7 @@ const Manage: FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
     };
 
     const fetchProjects = async () => {
-        let result = response.data?.map((project, index) => {
+        const result = response.data?.map((project, index) => {
             return {
                 id: index,
                 ...project
@@ -76,9 +75,9 @@ const Manage: FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
 
         const results = await Promise.all(result?.map(getBackers))
 
-        let backedProjects = result?.filter((_v, index) => results[index])
+        const backedProjectsResult = result?.filter((_v, index) => results[index])
 
-        setBackedProjects(backedProjects);
+        setBackedProjects(backedProjectsResult);
         setProjects(result?.filter((project) => project.creator === address));
     };
 

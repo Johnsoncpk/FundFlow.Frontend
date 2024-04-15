@@ -3,23 +3,14 @@ import { FC, useEffect } from 'react';
 import { resolveIPFS } from 'utils/resolveIPFS';
 import NextLink from 'next/link'
 import React from 'react';
-import { ProjectMetaData } from 'components/types';
+import { Project, ProjectMetaData } from 'types';
 import { getEllipsisTxt } from 'utils/format';
 
 export interface ImageCardParams {
-    id: number;
-    project: {
-        name: string;
-        url: string;
-        totalFundingGoal: bigint;
-        totalRound: bigint;
-        currentRound: bigint;
-        creator: `0x${string}`;
-        status: number;
-    };
+    project: Project;
 }
 
-const ImageCard: FC<ImageCardParams> = (props) => {
+const ImageCard: FC<ImageCardParams> = ({project}) => {
     const bgColor = useColorModeValue('none', 'gray.700');
     const borderColor = useColorModeValue('gray.200', 'gray.600');
     const { isOpen, onToggle } = useDisclosure()
@@ -27,7 +18,7 @@ const ImageCard: FC<ImageCardParams> = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(resolveIPFS(props.project.url), { cache: 'force-cache' });
+            const response = await fetch(resolveIPFS(project.url), { cache: 'force-cache' });
             setMetadata(await response.json());
         }
         fetchData().catch(console.error);
@@ -47,19 +38,19 @@ const ImageCard: FC<ImageCardParams> = (props) => {
                         filter={isOpen ? 'brightness(0.3)' : 'brightness(1)'}
                     />
                     <Fade in={isOpen}>
-                        <Link target="_blank" as={NextLink} href={`/project/${props.id}`}>
+                        <Link target="_blank" as={NextLink} href={`/project/${project.id}`}>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} top={'60%'} left={'2%'} fontWeight="semibold" as="h4" noOfLines={[1]} marginTop={2}>
-                                <Text color={'white'} align={'left'} as='u'>{props.project.name}</Text>
+                                <Text color={'white'} align={'left'} as='u'>{project.name}</Text>
                             </Box>
                             <Box mt="1" paddingRight={'3%'} position={'absolute'} textAlign={'center'} top={'70%'} left={'3%'}>
                                 <Text color={'white'} fontSize='sm' as='samp' noOfLines={[1, 2, 3]}>{metadata?.description}</Text>
                             </Box>
                         </Link>
                         <Box mt="1" position={'absolute'} textAlign={'center'} top={'90%'} right={'3%'}>
-                            <Text as='i' color={'white'} fontSize='md' noOfLines={1}>{`By ${getEllipsisTxt(props.project.creator)}`}</Text>
+                            <Text as='i' color={'white'} fontSize='md' noOfLines={1}>{`By ${getEllipsisTxt(project.creator)}`}</Text>
                         </Box>
                     </Fade>
-                    {props.id}
+                    {project.id}
                 </VStack>
             </Box>
         </Box>

@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/layout";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text, useToast } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "components/project/StepForms";
-import { ProjectData } from 'components/types';
+import { ProjectData } from 'types';
 import { INIT_VALUE } from 'components/project/StepForms/DefaultWYSIWYGValue';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";

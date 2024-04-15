@@ -8,7 +8,7 @@ import { wagmiConfig } from 'utils/wagmiConfig';
 import { hardhat, sepolia } from 'wagmi/chains'
 import { normalizeContractObject } from 'utils/format';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
-import { ProjectMetaData, ProjectProps } from 'components/types';
+import { ProjectMetaData, ProjectProps } from 'types';
 import { resolveIPFS } from 'utils/resolveIPFS';
 import { Basic } from 'components/project/Information/Basic';
 import { Detail } from 'components/project/Information/Detail';

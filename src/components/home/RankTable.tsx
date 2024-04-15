@@ -1,6 +1,6 @@
 
 import { Text, Image, StatArrow, useColorModeValue, HStack, Stat, StatGroup, StatLabel, StatNumber, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, VStack, Box, Tooltip, Link } from '@chakra-ui/react';
-import { ProjectMetaData } from 'components/types';
+import { Project, ProjectMetaData } from 'types';
 import { useEffect, useState } from 'react';
 import { getEllipsisTxt } from 'utils/format';
 import { resolveIPFS } from 'utils/resolveIPFS';
@@ -12,16 +12,7 @@ import { ethers } from 'ethers';
 import { ProjectStatus } from '../project/Information/ProjectStatus';
 
 const ProjectRow = (props: {
-  project: {
-    name: string;
-    url: string;
-    totalFundingGoal: bigint;
-    totalRound: bigint;
-    currentRound: bigint;
-    creator: `0x${string}`;
-    status: number;
-  },
-  index: number
+  project: Project
 }) => {
   const hoverTrColor = useColorModeValue('gray.100', 'gray.700');
 
@@ -32,7 +23,7 @@ const ProjectRow = (props: {
     abi: CONTRACT_ABI,
     address: CONTRACT_ADDRESS,
     functionName: 'getRounds',
-    args: [BigInt(props.index)]
+    args: [BigInt(props.project.id)]
   })
 
   useEffect(() => {
@@ -43,20 +34,20 @@ const ProjectRow = (props: {
 
   return (
     <Tr
-      key={`${props.project?.name}-${props.index}-tr`}
+      key={`${props.project?.name}-${props.project.id}-tr`}
       _hover={{ bgColor: hoverTrColor }}
       cursor="pointer">
       <Td>
-        {props.index + 1}
+        {props.project.id + 1}
       </Td>
       <Td>
-        <Link target="_blank" as={NextLink} href={`/project/${props.index}`}>
+        <Link target="_blank" as={NextLink} href={`/project/${props.project.id}`}>
           <Tooltip label={props.project?.name}>
             <HStack>
               <Box maxW={"100px"} maxHeight="100px" overflow={'hidden'} borderRadius="xl">
                 <Image
                   src={data?.image}
-                  alt={'nft'}
+                  alt={'project_cover'}
                   minH="100px"
                   minW="100px"
                   objectFit="cover"
@@ -93,10 +84,10 @@ const ProjectRow = (props: {
       <Td>
         <StatGroup>
           <Stat>
-          <ProjectStatus status={props.project.status} />
+            <ProjectStatus status={props.project.status} />
             <StatLabel marginTop={'4'}> Funded </StatLabel>
             <StatNumber>
-            <StatArrow type='increase' />
+              <StatArrow type='increase' />
               {
                 ((
                   Number(ethers.utils.formatEther(rounds?.[Number(props.project.currentRound)]?.collectedFund ?? 0)) /
@@ -114,15 +105,7 @@ const ProjectRow = (props: {
 
 
 const RankTable = (props: {
-  title: string, caption?: string, projects: readonly {
-    name: string;
-    url: string;
-    totalFundingGoal: bigint;
-    totalRound: bigint;
-    currentRound: bigint;
-    creator: `0x${string}`;
-    status: number;
-  }[] | undefined
+  title: string, caption?: string, projects: readonly Project[] | undefined
 }) => {
 
   return (
@@ -141,11 +124,10 @@ const RankTable = (props: {
             </Tr>
           </Thead>
           <Tbody>
-            {props.projects?.map((project, index) => (
+            {props.projects?.map((project) => (
               <ProjectRow
-                key={`${project?.name}-${index}-row`}
-                project={project}
-                index={index} />
+                key={`${project?.name}-${project.id}-row`}
+                project={project} />
             ))}
           </Tbody>
         </Table>

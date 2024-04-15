@@ -44,7 +44,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { InfoOutlineIcon, StarIcon, WarningTwoIcon } from '@chakra-ui/icons';
-import { ProjectMetaData, ProjectProps } from 'components/types';
+import { ProjectMetaData, ProjectProps } from 'types';
 import { ethers, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
