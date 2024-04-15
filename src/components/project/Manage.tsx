@@ -82,7 +82,7 @@ const Manage: FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
         setProjects(result?.filter((project) => project.creator === address));
     };
 
-    useEffect(() => { fetchProjects().catch(console.error); }, [response.isFetched]);
+    useEffect(() => { fetchProjects().catch(console.error); }, [response.isFetched, address]);
 
     return (
         <div>

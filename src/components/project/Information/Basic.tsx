@@ -234,7 +234,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
         }
 
         return (
-            <Button colorScheme='teal' isDisabled={(isFundingRoundEnded() || isPending)} onClick={onOpen} >
+            <Button colorScheme='teal' isDisabled={(isFundingRoundEnded() || isPending || project.status!==0)} onClick={onOpen} >
                 {
                     isFundingRoundEnded() ?
                         "Funding round is over." :
