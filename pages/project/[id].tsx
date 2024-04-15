@@ -1,7 +1,7 @@
 
 import { Default } from 'components/layouts/Default';
 import Cryptojs from 'crypto-js';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { readContract } from '@wagmi/core';
 import { wagmiConfig } from 'utils/wagmiConfig';
@@ -15,11 +15,32 @@ import { Detail } from 'components/templates/projects/Information/Detail';
 import { RoundStepper } from 'components/templates/projects/Information/RoundStepper';
 
 const Project: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
+    const [projectMetadata, setWithMetadata] = React.useState<ProjectMetaData>();
+
+    const getProjectMetadata = async () => {
+        if (!project.url) {
+            return;
+        }
+
+        const response = await fetch(resolveIPFS(project.url));
+        const data: ProjectMetaData = await response.json();
+
+        setWithMetadata({
+            ...data,
+            editorState: Cryptojs.AES.decrypt(data.editorState, process.env.ENCRYPTION_KEY || "default").toString(Cryptojs.enc.Utf8),
+        })
+    }
+
+    useEffect(() => {
+        getProjectMetadata().catch(console.error);
+    }, []);
+
+
     return (
         <Default pageName="Project Details">
-            <Basic project={project} rounds={rounds} backers={backers} />
-            <RoundStepper project={project} rounds={rounds} backers={backers} variant='circles' />
-            <Detail project={project} rounds={rounds} backers={backers} />
+            <Basic project={{ ...project, metadata: projectMetadata }} rounds={rounds} backers={backers} />
+            <RoundStepper project={{ ...project, metadata: projectMetadata }} rounds={rounds} backers={backers} variant='circles' />
+            <Detail project={{ ...project, metadata: projectMetadata }} rounds={rounds} backers={backers} />
         </Default>
     );
 };
@@ -29,7 +50,7 @@ export default Project;
 export const getServerSideProps: GetServerSideProps<ProjectProps> = async (context) => {
     let projectResult: {
         name: string;
-        metadata: ProjectMetaData | null;
+        metadata?: ProjectMetaData | undefined;
         totalFundingGoal: bigint;
         totalRound: bigint;
         currentRound: bigint;
@@ -42,8 +63,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
         totalRound: BigInt(0),
         currentRound: BigInt(0),
         creator: '0x',
-        status: 0,
-        metadata: null
+        status: 0
     };
 
     let roundsResult: readonly {
@@ -56,7 +76,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
 
     let backersResult: readonly `0x${string}`[] = [];
     try {
-        const project = await readContract(wagmiConfig,
+        projectResult = await readContract(wagmiConfig,
             {
                 chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
@@ -65,17 +85,6 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
                 args: [BigInt(context.query.id as string)]
             })
 
-        const response = await fetch(resolveIPFS(project.url));
-        const data: ProjectMetaData = await response.json();
-
-        projectResult = {
-            ...project,
-            // may allocate to client side render
-            metadata: {
-                ...data,
-                editorState: Cryptojs.AES.decrypt(data.editorState, process.env.ENCRYPTION_KEY || "default").toString(Cryptojs.enc.Utf8),
-            }
-        }
 
         roundsResult = await readContract(wagmiConfig,
             {
@@ -92,7 +101,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getBackers',
-                args: [roundsResult[Number(project.currentRound)].id]
+                args: [roundsResult[Number(projectResult.currentRound)].id]
             })
     } catch (err) {
         console.log(err)

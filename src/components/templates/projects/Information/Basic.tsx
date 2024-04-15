@@ -202,7 +202,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     }
 
     function getAmount(div: number): string {
-        return utils.formatEther(BigInt(project.totalFundingGoal) / BigInt(div))
+        return utils.formatEther(BigInt(project?.totalFundingGoal) / BigInt(div))
     }
 
     function isFundingRoundEnded(){
@@ -374,7 +374,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                     <StatGroup>
                         <Stat>
                             <StatNumber textColor={'teal.400'} >{Number(ethers.utils.formatEther(rounds[Number(project.currentRound)].collectedFund)).toFixed(3)} ETH</StatNumber>
-                            <Tooltip label={<Text>It will should the funding information of the current round of the project only.<br /> if you want to see more rounds, please check the <Text as={'u'}>Round Status</Text> section below.</Text>} >
+                            <Tooltip label={<Text>It will show the funding information of the current round of the project only.<br /> if you want to see more rounds, please check the <Text as={'u'}>Round Status</Text> section below.</Text>} >
                                 <StatLabel>pledged of {ethers.utils.formatEther(rounds[Number(project.currentRound)].fundingGoal)} ETH goal ( Round <Text as={'u'}> {Number(project.currentRound) + 1}</Text> ) <InfoOutlineIcon /> </StatLabel>
                             </Tooltip>
                         </Stat>
