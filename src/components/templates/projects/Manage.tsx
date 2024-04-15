@@ -57,8 +57,6 @@ const Manage: FC<{ isOwnerOnly?: boolean }> = ({ isOwnerOnly = false }) => {
             }
         )
 
-        console.log(backers)
-
         return backers.includes(address?.toString() as `0x${string}`);
     };
 
