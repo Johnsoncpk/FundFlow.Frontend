@@ -1,10 +1,10 @@
 import { Box, Text, Image, useColorModeValue, Progress, Tooltip, Flex, Spacer } from '@chakra-ui/react';
-import { ProjectMetaData } from 'components/types';
+import { ProjectMetaData } from 'types';
 import React, { useEffect } from 'react';
 import { FC } from 'react';
 import { resolveIPFS } from 'utils/resolveIPFS';
-import { Project } from 'components/types';
-import { ProjectStatus } from 'components/templates/projects/Information/ProjectStatus';
+import { Project } from 'types';
+import { ProjectStatus } from 'components/project/Information/ProjectStatus';
 import { getEllipsisTxt } from 'utils/format';
 import Link from 'next/link';
 import { useReadContract } from 'wagmi';

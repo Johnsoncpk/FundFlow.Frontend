@@ -1,5 +1,5 @@
 import { Default } from 'components/layouts/Default';
-import { Create } from 'components/templates/projects';
+import { Create } from 'components/project';
 
 const ProjectCreate = () => {
     return (

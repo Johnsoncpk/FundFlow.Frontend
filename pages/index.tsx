@@ -1,37 +1,48 @@
 import { Default } from 'components/layouts/Default';
 import { Divider, HStack, VStack } from '@chakra-ui/react';
 import { Swiper } from 'components/modules/Swiper';
-import RankTable from 'components/templates/home/RankTable';
+import RankTable from 'components/home/RankTable';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
-import { GetServerSideProps, NextPage } from 'next';
-import { readContract } from '@wagmi/core';
-import { wagmiConfig } from 'utils/wagmiConfig';
-import { hardhat, sepolia } from 'wagmi/chains'
-import { normalizeContractObject } from 'utils/format';
+import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import { Project } from 'types';
+import { useReadContract } from 'wagmi';
 
-type HomePageProps = {
-  projects: readonly {
-    name: string;
-    url: string;
-    totalFundingGoal: bigint;
-    totalRound: bigint;
-    currentRound: bigint;
-    creator: `0x${string}`;
-    status: number;
-  }[]
-}
+const HomePage: NextPage = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
 
-const HomePage: NextPage<HomePageProps> = (props) => {
+  const response = useReadContract({
+    abi: CONTRACT_ABI,
+    address: CONTRACT_ADDRESS,
+    functionName: 'getProjects'
+  })
+
+  const fetchProjects = async () => {
+    const result = response.data?.map((project, index) => {
+      return {
+        id: index,
+        ...project
+      }
+    })
+
+    if (!result) {
+      return
+    }
+
+    setProjects(result);
+  };
+
+  useEffect(() => { fetchProjects().catch(console.error); }, [response.isFetched]);
 
   return (
     <Default pageName="Home">
       <VStack>
-        <Swiper projects={props.projects} />
+        <Swiper projects={projects} />
         <Divider />
         <HStack spacing={4}>
-          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={props.projects?.slice(Math.max(props.projects.length - 5, 0))} />
+          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={[...projects].reverse().slice(0, 5)} />
           <Divider orientation='vertical' />
-          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={props.projects?.slice(0, 5)} />
+          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={[...projects].slice(0, 5)} />
         </HStack >
       </VStack >
     </Default>
@@ -39,27 +50,3 @@ const HomePage: NextPage<HomePageProps> = (props) => {
 };
 
 export default HomePage;
-
-export const getServerSideProps:
-  GetServerSideProps<HomePageProps> = async (_) => {
-
-    let result: readonly { name: string; url: string; totalFundingGoal: bigint; totalRound: bigint; currentRound: bigint; creator: `0x${string}`; status: number; }[] = [];
-
-    try {
-      result = await readContract(wagmiConfig,
-        {
-          chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
-          abi: CONTRACT_ABI,
-          address: CONTRACT_ADDRESS,
-          functionName: 'getProjects',
-        })
-    } catch (err) {
-      console.log(err)
-    }
-
-    return {
-      props: {
-        projects: normalizeContractObject(result)
-      }
-    }
-  }

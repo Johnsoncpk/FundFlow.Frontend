@@ -7,7 +7,7 @@ import {
     useColorMode
 } from '@chakra-ui/react';
 import React from 'react';
-import { ProjectProps } from 'components/types';
+import { ProjectProps } from 'types';
 import { Editor } from '@tinymce/tinymce-react';
 
 const Detail: React.FC<ProjectProps> = ({ project }) => {

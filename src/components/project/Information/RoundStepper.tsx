@@ -1,7 +1,7 @@
 import { WarningTwoIcon } from '@chakra-ui/icons';
 import { Box, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Text, HStack, Tooltip } from '@chakra-ui/react'
 import { Step, Steps } from 'chakra-ui-steps'
-import { ProjectProps } from "components/types"
+import { ProjectProps } from "types"
 import { FC } from 'react';
 import { formatDateToString, formatEtherToNumber, getTotalCollectedFund } from 'utils/format';
 

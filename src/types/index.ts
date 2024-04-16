@@ -40,7 +40,7 @@ export type ProjectMetaData = {
 export type ProjectProps = {
     project: {
         name: string;
-        metadata?: ProjectMetaData | undefined
+        metadata?: ProjectMetaData | null
         url?: string;
         totalFundingGoal: bigint;
         totalRound: bigint;

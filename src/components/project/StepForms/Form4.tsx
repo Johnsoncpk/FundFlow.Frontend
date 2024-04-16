@@ -1,5 +1,5 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Text } from "@chakra-ui/react";
-import { FormProps } from 'components/types';
+import { FormProps } from 'types';
 import { Form1, Form2, Form3 } from ".";
 import React from "react";
 

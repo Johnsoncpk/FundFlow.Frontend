@@ -1,6 +1,6 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select, Textarea, chakra } from "@chakra-ui/react";
 import React, { ChangeEvent } from 'react';
-import { FormProps } from "components/types";
+import { FormProps } from "types";
 
 export const Form1: React.FC<FormProps & {isDisabled?: boolean}> = ({ projectData, setProjectData, isDisabled=false}) => {
 

@@ -44,7 +44,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { InfoOutlineIcon, StarIcon, WarningTwoIcon } from '@chakra-ui/icons';
-import { ProjectMetaData, ProjectProps } from 'components/types';
+import { ProjectMetaData, ProjectProps } from 'types';
 import { ethers, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
@@ -234,7 +234,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
         }
 
         return (
-            <Button colorScheme='teal' isDisabled={(isFundingRoundEnded() || isPending)} onClick={onOpen} >
+            <Button colorScheme='teal' isDisabled={(isFundingRoundEnded() || isPending || project.status!==0)} onClick={onOpen} >
                 {
                     isFundingRoundEnded() ?
                         "Funding round is over." :

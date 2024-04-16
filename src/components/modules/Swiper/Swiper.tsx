@@ -5,17 +5,10 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { ImageCard } from '../ProjectCard';
+import { Project } from 'types';
 
 const FundFlowSwiper = (props: {
-    projects: readonly {
-        name: string;
-        url: string;
-        totalFundingGoal: bigint;
-        totalRound: bigint;
-        currentRound: bigint;
-        creator: `0x${string}`;
-        status: number;
-    }[] | undefined
+    projects: Project[] | undefined
 }) => {
 
     return (
@@ -49,7 +42,7 @@ const FundFlowSwiper = (props: {
                 {props.projects?.length ? (
                     props.projects.map((project, index) => (
                         <SwiperSlide key={index}>
-                            <ImageCard project={project} id={index} />
+                            <ImageCard project={project} />
                         </SwiperSlide>
                     ))
                 ) : (

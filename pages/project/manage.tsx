@@ -1,5 +1,5 @@
 import { Default } from 'components/layouts/Default';
-import { Manage } from 'components/templates/projects';
+import { Manage } from 'components/project';
 
 const BrowseProject = () => {
     return (
