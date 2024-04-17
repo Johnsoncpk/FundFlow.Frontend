@@ -5,7 +5,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { ImageCard } from '../ProjectCard';
-import { Project } from 'types';
+import { Project } from 'utils/types';
 
 const FundFlowSwiper = (props: {
     projects: Project[] | undefined

@@ -5,8 +5,9 @@ import RankTable from 'components/home/RankTable';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { Project } from 'types';
+import { Project } from 'utils/types';
 import { useReadContract } from 'wagmi';
+import { sepolia, hardhat } from 'wagmi/chains';
 
 const HomePage: NextPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -14,7 +15,8 @@ const HomePage: NextPage = () => {
   const response = useReadContract({
     abi: CONTRACT_ABI,
     address: CONTRACT_ADDRESS,
-    functionName: 'getProjects'
+    functionName: 'getProjects',
+    chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
   })
 
   const fetchProjects = async () => {
@@ -40,9 +42,9 @@ const HomePage: NextPage = () => {
         <Swiper projects={projects} />
         <Divider />
         <HStack spacing={4}>
-          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={[...projects].reverse().slice(0, 5)} />
+          <RankTable title='Trending in Design & Tech' caption='Projects with weekly highest like❤️' projects={projects.slice(0, 5)} />
           <Divider orientation='vertical' />
-          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={[...projects].slice(0, 5)} />
+          <RankTable title='Trending in Video Games' caption='Projects with weekly highest like❤️' projects={projects.slice(0, 5)} />
         </HStack >
       </VStack >
     </Default>

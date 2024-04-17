@@ -1,4 +1,4 @@
-import { ProjectData } from "types";
+import { ProjectData } from "utils/types";
 
 import Cryptojs from 'crypto-js';
 import { normalizeContractObject } from "./format";

@@ -1,4 +1,4 @@
-import { ProjectData } from "types";
+import { ProjectData } from "utils/types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(request: NextApiRequest, response: NextApiResponse) {

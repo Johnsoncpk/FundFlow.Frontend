@@ -1,5 +1,5 @@
 import { Flex, Text, useColorMode } from "@chakra-ui/react";
-import { FormProps } from 'types';
+import { FormProps } from 'utils/types';
 import React from "react";
 import { Editor } from '@tinymce/tinymce-react';
 

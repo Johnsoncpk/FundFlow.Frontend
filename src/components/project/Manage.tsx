@@ -9,7 +9,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import { useEffect, useState, FC } from 'react';
-import { Project } from 'types';
+import { Project } from 'utils/types';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { useReadContract } from 'wagmi';
 import { ProjectCard } from 'components/modules';
@@ -17,6 +17,7 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { readContract } from '@wagmi/core'
 import { wagmiConfig } from 'utils/wagmiConfig';
+import { hardhat, sepolia } from 'wagmi/chains';
 
 const Manage: FC = () => {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -24,6 +25,7 @@ const Manage: FC = () => {
     const { address } = useAccount();
 
     const response = useReadContract({
+        chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
         abi: CONTRACT_ABI,
         address: CONTRACT_ADDRESS,
         functionName: 'getProjects'
@@ -34,6 +36,7 @@ const Manage: FC = () => {
         const rounds = await readContract(
             wagmiConfig,
             {
+                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getRounds',
@@ -49,6 +52,7 @@ const Manage: FC = () => {
         const backers = await readContract(
             wagmiConfig,
             {
+                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getBackers',

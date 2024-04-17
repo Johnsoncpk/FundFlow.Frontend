@@ -3,7 +3,7 @@ import moment from "moment";
 import { useState } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import React from 'react';
-import { FormProps, ProjectData } from "types";
+import { FormProps, ProjectData } from "utils/types";
 import { utils } from "ethers";
 
 function FundingRound(

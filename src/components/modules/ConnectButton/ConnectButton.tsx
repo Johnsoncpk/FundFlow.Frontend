@@ -1,37 +1,63 @@
 import { useAccountEffect } from "wagmi"
-import { getAuth, signInWithCustomToken, signOut } from "firebase/auth";
-// import { auth, db } from 'config/firebaseConfig';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { auth, db } from 'config/firebaseConfig';
+import { getEmail, getPassword } from "utils/firebaseHelper";
+import { doc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore'
 
 export default function ConnectButton() {
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const userRef = doc(db, "users", user.uid);
+      getDoc(userRef).then(
+        (userSnap) => {
+          if (!userSnap.exists()) {
+            setDoc(doc(db, "users", user.uid),
+              {
+                displayName: user.email,
+                email: user.email,
+                lastActive: serverTimestamp(),
+                photoURL: user.photoURL,
+              },
+              { merge: true }
+            )
+          }else{
+            setDoc(doc(db, "users", user.uid),
+              {
+                lastActive: serverTimestamp(),
+              },
+              { merge: true }
+            )
+          }
+        }
+      )
+    }
+  })
+
   useAccountEffect({
     onConnect(data) {
-      fetch(`${window.location.origin}/api/firebase/getCustomToken`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data.address),
-      }).then((res) => {
-        res.json().then((data: { customToken: string }) => {
-          signInWithCustomToken(getAuth(), data.customToken)
-            .then((userCredential) => {
-              const user = userCredential.user;
-              console.log(user)
+      const email = getEmail(data.address)
+      const password = getPassword(data.address)
+
+      signInWithEmailAndPassword(auth, email, password)
+        .catch((error) => {
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((_) => {
+              signInWithEmailAndPassword(auth, email, password)
+                .catch((e) => {
+                  console.log('sign in again failed')
+                })
             })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorCode, errorMessage)
+            .catch((e) => {
+              console.log(error)
             });
         });
-      })
+
     },
     onDisconnect() {
-      signOut(getAuth())
+      signOut(auth)
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage)
+          console.log(error.code, error.message)
         });
     },
   })

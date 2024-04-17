@@ -1,22 +1,22 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select, Textarea, chakra } from "@chakra-ui/react";
 import React, { ChangeEvent } from 'react';
-import { FormProps } from "types";
+import { FormProps } from "utils/types";
 
-export const Form1: React.FC<FormProps & {isDisabled?: boolean}> = ({ projectData, setProjectData, isDisabled=false}) => {
+export const Form1: React.FC<FormProps & { isDisabled?: boolean }> = ({ projectData, setProjectData, isDisabled = false }) => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          setProjectData({ 
-            ...projectData, 
-            image: reader.result
-          })
-        };
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setProjectData({
+          ...projectData,
+          image: reader.result
+        })
+      };
     }
-};
+  };
 
   return (
     <Flex flexDir="column" width="100%" gap={4}>
@@ -113,9 +113,9 @@ export const Form1: React.FC<FormProps & {isDisabled?: boolean}> = ({ projectDat
           The cover for your project
         </FormHelperText>
         {
-          projectData.image && 
+          projectData.image &&
           <img src={projectData.image as string} alt="Preview" />
-        } 
+        }
       </FormControl>
 
       <FormControl>

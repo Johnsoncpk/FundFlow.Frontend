@@ -1,14 +1,15 @@
 import { Box, Text, Image, useColorModeValue, Progress, Tooltip, Flex, Spacer } from '@chakra-ui/react';
-import { ProjectMetaData } from 'types';
+import { ProjectMetaData } from 'utils/types';
 import React, { useEffect } from 'react';
 import { FC } from 'react';
 import { resolveIPFS } from 'utils/resolveIPFS';
-import { Project } from 'types';
+import { Project } from 'utils/types';
 import { ProjectStatus } from 'components/project/Information/ProjectStatus';
 import { getEllipsisTxt } from 'utils/format';
 import Link from 'next/link';
 import { useReadContract } from 'wagmi';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
+import { hardhat, sepolia } from 'wagmi/chains';
 
 export interface ProjectCardParams {
   id: number;
@@ -21,6 +22,7 @@ const ProjectCard: FC<ProjectCardParams> = ({ id, project }) => {
   const [metadata, setMetadata] = React.useState<ProjectMetaData | null>(null);
 
   const { data } = useReadContract({
+    chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
     abi: CONTRACT_ABI,
     address: CONTRACT_ADDRESS,
     functionName: 'getRounds',

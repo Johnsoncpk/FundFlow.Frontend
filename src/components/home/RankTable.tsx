@@ -1,6 +1,6 @@
 
 import { Text, Image, StatArrow, useColorModeValue, HStack, Stat, StatGroup, StatLabel, StatNumber, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, VStack, Box, Tooltip, Link } from '@chakra-ui/react';
-import { Project, ProjectMetaData } from 'types';
+import { Project, ProjectMetaData } from 'utils/types';
 import { useEffect, useState } from 'react';
 import { getEllipsisTxt } from 'utils/format';
 import { resolveIPFS } from 'utils/resolveIPFS';

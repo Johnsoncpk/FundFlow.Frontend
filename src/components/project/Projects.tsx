@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState, FC } from 'react';
 import { SearchSection, ProjectFilterParams } from './SearchSection';
-import { Project } from 'types';
+import { Project } from 'utils/types';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from 'utils/getContract';
 import { useReadContract } from 'wagmi';
 import { ProjectCard } from 'components/modules';

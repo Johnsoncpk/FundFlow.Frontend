@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { resolveIPFS } from 'utils/resolveIPFS';
 import NextLink from 'next/link'
 import React from 'react';
-import { Project, ProjectMetaData } from 'types';
+import { Project, ProjectMetaData } from 'utils/types';
 import { getEllipsisTxt } from 'utils/format';
 
 export interface ImageCardParams {

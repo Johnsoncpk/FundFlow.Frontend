@@ -1,4 +1,4 @@
-import { ProjectData } from "types";
+import { ProjectData } from "utils/types";
 import { ethers } from "ethers";
 import moment from "moment";
 

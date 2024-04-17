@@ -3,13 +3,16 @@ import { Box } from "@chakra-ui/layout";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, Flex, Text, useToast } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { Form1, Form2, Form3, Form4 } from "components/project/StepForms";
-import { ProjectData } from 'types';
+import { ProjectData } from 'utils/types';
 import { INIT_VALUE } from 'components/project/StepForms/DefaultWYSIWYGValue';
 import { uploadProjectDataToIpfs } from 'utils/useIpfs';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "utils/getContract";
 import { useWaitForTransactionReceipt, useWriteContract, useAccount } from "wagmi";
 import Link from 'next/link';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { db } from "config/firebaseConfig"
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { getEmail } from 'utils/firebaseHelper';
 
 const steps = [
   {
@@ -98,6 +101,15 @@ export const Create = ({
         open({ view: 'Connect' })
         return;
       }
+      
+      const roomRef = await addDoc(collection(db, "rooms"), {
+        roomName: projectData.name,
+        users: [getEmail(account.address as string)],
+        lastSent: serverTimestamp(),
+        coverImage: projectData.image
+      })
+
+      projectData.chatId = roomRef.id
       const cid = await uploadProjectDataToIpfs(projectData);
       await writeContractAsync({
         address: CONTRACT_ADDRESS,

@@ -2,7 +2,11 @@ import { utils } from 'ethers';
 
 export const getEllipsisTxt = (str?: string, n = 6) => {
   if (str) {
-    return `${str.slice(0, n)}...${str.slice(str.length - n)}`;
+    return (
+      n*2+3 >= str.length
+        ? str
+        : `${str.slice(0, n)}...${str.slice(str.length - n)}`
+    );
   }
   return '';
 };
@@ -24,11 +28,11 @@ export const toBase64 = (file: File) => new Promise((resolve, reject) => {
   reader.onerror = reject;
 });
 
-export function formatEtherToNumber(value : bigint): number{
+export function formatEtherToNumber(value: bigint): number {
   return Number(utils.formatEther(value))
 }
 
-export function formatDateToString(value : bigint): string{
+export function formatDateToString(value: bigint): string {
   return new Date(Number(value) * 1000).toLocaleString()
 }
 

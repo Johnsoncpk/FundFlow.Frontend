@@ -42,9 +42,10 @@ import {
     HStack,
     StatHelpText
 } from '@chakra-ui/react';
+import { db } from "config/firebaseConfig"
 import React, { useEffect, useState } from 'react';
 import { InfoOutlineIcon, StarIcon, WarningTwoIcon } from '@chakra-ui/icons';
-import { ProjectMetaData, ProjectProps } from 'types';
+import { ProjectMetaData, ProjectProps } from 'utils/types';
 import { ethers, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from 'utils/getContract';
@@ -53,6 +54,9 @@ import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { formatDateToString, getTotalCollectedFund } from 'utils/format';
 import { Steps, Step } from 'chakra-ui-steps';
 import { ProjectStatus } from './ProjectStatus';
+import { hardhat, sepolia } from 'wagmi/chains';
+import { arrayUnion, arrayRemove, doc, updateDoc } from 'firebase/firestore'
+import { getEmail } from 'utils/firebaseHelper';
 
 const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
     const toast = useToast()
@@ -126,6 +130,12 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 value: utils.parseEther(amount).toBigInt()
             })
 
+            if(project.metadata?.chatId && address){
+                await updateDoc(doc(db, 'rooms', project.metadata.chatId.toString()), {
+                    users: arrayUnion(getEmail(address))
+                })
+            }
+            
             await new Promise((resolve) => {setTimeout(resolve, 1000)});
 
             router.reload();
@@ -153,6 +163,12 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
                 functionName: 'quitProject',
                 args: [BigInt(router.query.id as string)]
             })
+
+            if(project.metadata?.chatId && address){
+                await updateDoc(doc(db, 'rooms', project.metadata.chatId.toString()), {
+                    users: arrayRemove(getEmail(address))
+                })
+            }
 
             await new Promise((resolve) => {setTimeout(resolve, 1000)});
 
@@ -300,6 +316,7 @@ const Basic: React.FC<ProjectProps> = ({ project, rounds, backers }) => {
 
     function getContributionByRound(id: bigint): number {
         const { data } = useReadContract({
+            chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
             abi: CONTRACT_ABI,
             address: CONTRACT_ADDRESS,
             functionName: 'roundBackerContributions',
