@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
     try {
         projectResult = await readContract(wagmiConfig,
             {
-                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+                chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getProject',
@@ -71,7 +71,7 @@ export const getServerSideProps: GetServerSideProps<ProjectProps> = async (conte
 
         roundsResult = await readContract(wagmiConfig,
             {
-                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+                chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getRounds',

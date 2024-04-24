@@ -14,7 +14,6 @@ import ChatRooms from 'components/chat/rooms/ChatRooms'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
-import { chatRoomProps } from 'utils/types'
 
 const Sidebar = ({ fullWidth }: { fullWidth?: boolean }) => {
   const { colorMode } = useColorMode()

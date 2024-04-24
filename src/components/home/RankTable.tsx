@@ -19,7 +19,7 @@ const ProjectRow = (props: {
   const [data, setData] = useState<ProjectMetaData>();
 
   const { data: rounds } = useReadContract({
-    chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+    chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
     abi: CONTRACT_ABI,
     address: CONTRACT_ADDRESS,
     functionName: 'getRounds',

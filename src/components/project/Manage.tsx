@@ -25,7 +25,7 @@ const Manage: FC = () => {
     const { address } = useAccount();
 
     const response = useReadContract({
-        chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+        chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
         abi: CONTRACT_ABI,
         address: CONTRACT_ADDRESS,
         functionName: 'getProjects'
@@ -36,7 +36,7 @@ const Manage: FC = () => {
         const rounds = await readContract(
             wagmiConfig,
             {
-                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+                chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getRounds',
@@ -52,7 +52,7 @@ const Manage: FC = () => {
         const backers = await readContract(
             wagmiConfig,
             {
-                chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+                chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
                 abi: CONTRACT_ABI,
                 address: CONTRACT_ADDRESS,
                 functionName: 'getBackers',

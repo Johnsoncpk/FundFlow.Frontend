@@ -16,7 +16,7 @@ const HomePage: NextPage = () => {
     abi: CONTRACT_ABI,
     address: CONTRACT_ADDRESS,
     functionName: 'getProjects',
-    chainId: process.env.chain === "sepolia" ? sepolia.id : hardhat.id,
+    chainId: process.env.CHAIN === "sepolia" ? sepolia.id : hardhat.id,
   })
 
   const fetchProjects = async () => {
