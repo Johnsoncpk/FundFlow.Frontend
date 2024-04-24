@@ -29,7 +29,7 @@ const Sidebar = ({ fullWidth }: { fullWidth?: boolean }) => {
     db, `users`, user!.uid
   ))
 
-  const rooms = roomValues?.docs.map((room: chatRoomProps) =>
+  const rooms = roomValues?.docs.map((room: any) =>
     <ChatRooms key={room.id} id={room.id} data={room.data()} />
   )
 
