@@ -1,4 +1,4 @@
-import { Avatar, Flex, useColorMode, Text, AvatarGroup, Tooltip } from "@chakra-ui/react"
+import { Avatar, Flex, useColorMode, Text, Tooltip } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { getEllipsisTxt } from "utils/format"
 import { chatRoomProps } from "utils/types"

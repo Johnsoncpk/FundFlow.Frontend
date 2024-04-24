@@ -1,4 +1,3 @@
-import { AddIcon } from '@chakra-ui/icons'
 import {
   Modal,
   ModalOverlay,
@@ -14,7 +13,6 @@ import {
   FormControl,
   useMediaQuery,
 } from '@chakra-ui/react'
-import { validate } from "email-validator"
 import { addDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import { SyntheticEvent, useState } from "react"

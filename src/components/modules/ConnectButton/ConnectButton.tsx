@@ -40,23 +40,23 @@ export default function ConnectButton() {
       const password = getPassword(data.address)
 
       signInWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
+        .catch((_: any) => {
           createUserWithEmailAndPassword(auth, email, password)
-            .then((_) => {
+            .then(() => {
               signInWithEmailAndPassword(auth, email, password)
-                .catch((e) => {
+                .catch(() => {
                   console.log('sign in again failed')
                 })
             })
-            .catch((e) => {
-              console.log(error)
+            .catch((e: any) => {
+              console.log(e)
             });
         });
 
     },
     onDisconnect() {
       signOut(auth)
-        .catch((error) => {
+        .catch((error: any) => {
           console.log(error.code, error.message)
         });
     },

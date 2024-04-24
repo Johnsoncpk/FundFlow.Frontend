@@ -1,4 +1,4 @@
-import { AddIcon, SettingsIcon } from '@chakra-ui/icons'
+import { SettingsIcon } from '@chakra-ui/icons'
 import {
   Modal,
   ModalOverlay,
@@ -10,21 +10,19 @@ import {
   Button,
   useDisclosure,
   Input,
-  FormErrorMessage,
   FormControl,
   useMediaQuery,
   FormLabel,
   chakra,
 } from '@chakra-ui/react'
-import { setDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
+import { setDoc, doc } from 'firebase/firestore'
 import { ChangeEvent, useState } from "react"
-import { auth, db } from 'config/firebaseConfig'
+import {  db } from 'config/firebaseConfig'
 import { chatUserModalProps } from "utils/types"
 
 export default function UserModal({ displayName, photoURL, userId }: chatUserModalProps & { userId?: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isMobile] = useMediaQuery('(max-width: 768px)')
-  const [isValid, setIsValid] = useState(true)
   const [user, setUser] = useState<chatUserModalProps>({
     displayName,
     photoURL
@@ -67,7 +65,7 @@ export default function UserModal({ displayName, photoURL, userId }: chatUserMod
           <ModalHeader>Update User Profile</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FormControl isRequired isInvalid={!isValid}>
+            <FormControl isRequired>
               <FormLabel htmlFor='displayName'>Display Name</FormLabel>
               <Input required placeholder={'display name'} value={user.displayName} onChange={(e) => {
                 setUser({ ...user, displayName: e.target.value })

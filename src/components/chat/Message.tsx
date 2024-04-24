@@ -6,7 +6,7 @@ import { doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { db } from "config/firebaseConfig";
 
-export default function Message({ message, photoURL, id }: messageProps) {
+export default function Message({ message, id }: messageProps) {
   const { colorMode } = useColorMode()
   const [user] = useAuthState(auth)
   // @ts-ignore
@@ -20,17 +20,17 @@ export default function Message({ message, photoURL, id }: messageProps) {
 
   return (
     <Box
-      bg={uid == id ? "blue.500" : bgColor[colorMode]}
+      bg={uid === id ? "blue.500" : bgColor[colorMode]}
       w="fit-content"
       py={1}
       px={3}
       rounded="xl"
       margin={2}
-      ml={uid == id ? "auto" : "0"}
+      ml={uid === id ? "auto" : "0"}
       position="relative"
-      textAlign={uid == id ? "right" : "left"}
+      textAlign={uid === id ? "right" : "left"}
       wordBreak="break-word"
-      color={uid == id ? "white" : textColor[colorMode]}
+      color={uid === id ? "white" : textColor[colorMode]}
     >
       {
         uid === id ?

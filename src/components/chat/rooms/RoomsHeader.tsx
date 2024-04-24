@@ -1,13 +1,11 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Avatar, AvatarGroup, Box, Flex, Heading, IconButton, Text, useColorMode, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, Heading, IconButton, Text, useColorMode, useMediaQuery } from "@chakra-ui/react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useRouter } from "next/router";
 import { chatHeadertypes } from "utils/types";
 import ChatModal from "components/chat/ChatModal";
-import { db } from 'config/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore'
 
-export default function RoomsHeader({ chatData, user }: chatHeadertypes) {
+export default function RoomsHeader({ chatData }: chatHeadertypes) {
   const [isMobile] = useMediaQuery('(max-width: 680px)')
   const router = useRouter()
   const { colorMode } = useColorMode()

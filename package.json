@@ -17,8 +17,6 @@
     "@chakra-ui/react": "^2.5.5",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@moralisweb3/client-firebase-auth-utils": "^2.25.4",
-    "@moralisweb3/client-firebase-evm-auth": "^2.25.4",
     "@pinata/sdk": "^2.1.0",
     "@tanstack/react-query": "^5.28.9",
     "@tinymce/tinymce-react": "^4.3.2",

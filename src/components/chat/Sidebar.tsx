@@ -14,7 +14,7 @@ import ChatRooms from 'components/chat/rooms/ChatRooms'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
-import { chatUserModalProps } from 'utils/types'
+import { chatRoomProps } from 'utils/types'
 
 const Sidebar = ({ fullWidth }: { fullWidth?: boolean }) => {
   const { colorMode } = useColorMode()
@@ -29,7 +29,7 @@ const Sidebar = ({ fullWidth }: { fullWidth?: boolean }) => {
     db, `users`, user!.uid
   ))
 
-  const rooms = roomValues?.docs.map(room =>
+  const rooms = roomValues?.docs.map((room: chatRoomProps) =>
     <ChatRooms key={room.id} id={room.id} data={room.data()} />
   )
 
