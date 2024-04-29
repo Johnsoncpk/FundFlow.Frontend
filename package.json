@@ -35,7 +35,7 @@
     "moment": "^2.30.1",
     "next": "^14.2.1",
     "next-seo": "^6.5.0",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.49.3",
@@ -48,7 +48,7 @@
   "devDependencies": {
     "@moralisweb3/eslint-config": "^1.0.1",
     "@types/node": "18.16.0",
-    "@types/react": "18.0.17",
+    "@types/react": "18.3.1",
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.59.0",
@@ -64,7 +64,7 @@
     "node": "^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.9.0"
   },
   "resolutions": {
-    "@types/react": "18.0.17",
+    "@types/react": "18.3.1",
     "@types/react-dom": "18.0.6"
   }
 }
